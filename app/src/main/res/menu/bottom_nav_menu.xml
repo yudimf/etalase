@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/home_24px"
+        android:title="Beranda" />
+
+    <item
+        android:id="@+id/navigation_category"
+        android:icon="@drawable/notes_24px"
+        android:title="Kategori" />
+
+    <item
+        android:id="@+id/navigation_installerd"
+        android:icon="@drawable/cloud_download_24px"
+        android:title="Terinstal" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/person_24px"
+        android:title="Profile" />
+
+</menu>
