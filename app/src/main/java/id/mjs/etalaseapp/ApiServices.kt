@@ -10,8 +10,9 @@ import retrofit2.http.Streaming
 
 interface ApiServices {
 
-    @POST("source/apk/app-pagination-recyclerview.apk")
+//    @POST("source/apk/app-pagination-recyclerview.apk")
+    @POST("repo/com.uberspot.a2048_25.apk")
     @Streaming
-    fun getAllTeam(): Call<ResponseBody>
+    fun getSampleApps(): Call<ResponseBody>
 
 }

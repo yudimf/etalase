@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import id.mjs.etalaseapp.ApiMain
 import id.mjs.etalaseapp.R
 import kotlinx.android.synthetic.main.activity_download.*
@@ -29,7 +30,7 @@ class DownloadActivity : AppCompatActivity() {
 
         btn_download.setOnClickListener {
             Toast.makeText(this,"Downloading..",Toast.LENGTH_LONG).show()
-            ApiMain().services.getAllTeam().enqueue(object : Callback<ResponseBody> {
+            ApiMain().services.getSampleApps().enqueue(object : Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
 
                 }
@@ -44,10 +45,15 @@ class DownloadActivity : AppCompatActivity() {
                     )
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.setDataAndType(
-                        Uri.fromFile(updatedApk),
+//                        Uri.fromFile(updatedApk),
+                        FileProvider.getUriForFile(applicationContext, applicationContext.packageName+".provider", updatedApk),
                         "application/vnd.android.package-archive"
                     )
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION )
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK )
+                    intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION )
+//                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                 }
             })
@@ -55,7 +61,7 @@ class DownloadActivity : AppCompatActivity() {
 
         imageViewDownload.setOnClickListener{
             val openURL = Intent(Intent.ACTION_VIEW)
-            openURL.data = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.meetings")
+            openURL.data = Uri.parse("https://play.google.com/store/apps/details?id=com.androbaby.game2048")
             startActivity(openURL)
         }
     }
