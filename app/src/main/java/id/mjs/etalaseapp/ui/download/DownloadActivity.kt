@@ -8,7 +8,7 @@ import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.FileProvider
-import id.mjs.etalaseapp.ApiMain
+import id.mjs.etalaseapp.retrofit.ApiMain
 import id.mjs.etalaseapp.R
 import kotlinx.android.synthetic.main.activity_download.*
 import okhttp3.ResponseBody

@@ -39,17 +39,11 @@ class HomeFragment : Fragment() {
         carouselView.setImageListener(imageListener)
 
 
-
-
-
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        val rvListApps = root.findViewById(R.id.rv_list_apps) as RecyclerView
-//        val rvListApps2 = root.findViewById(R.id.rv_list_apps2) as RecyclerView
-//        val rvListApps3 = root.findViewById(R.id.rv_list_apps3) as RecyclerView
         addList()
         val cardViewAdapter = CardViewAdapter(list)
         rv_list_apps.setHasFixedSize(true)

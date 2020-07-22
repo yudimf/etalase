@@ -1,6 +1,7 @@
-package id.mjs.etalaseapp
+package id.mjs.etalaseapp.retrofit
 
 import android.app.Application
+import id.mjs.etalaseapp.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -16,11 +17,15 @@ class ApiMain : Application() {
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .build()
+
     private val retrofit = Retrofit.Builder()
-//        .baseUrl("https://androidwave.com/")
-        .baseUrl("https://f-droid.org/")
+//        .baseUrl("https://f-droid.org/")
+        .baseUrl("https://api-etalase-app.bagustech.id/")
         .client(client)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-    val services: ApiServices = retrofit.create(ApiServices::class.java)
+
+    val services: ApiServices = retrofit.create(
+        ApiServices::class.java)
+
 }

@@ -1,80 +1,76 @@
 package id.mjs.etalaseapp.ui.login
 
+import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import id.mjs.etalaseapp.ApiMain
-import id.mjs.etalaseapp.MainActivity
+import id.mjs.etalaseapp.retrofit.ApiMain
+import id.mjs.etalaseapp.ui.main.MainActivity
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.ui.createaccount.CreateAccountActivity
 import id.mjs.etalaseapp.ui.forgotpassword.ForgotPasswordActivity
+import id.mjs.etalaseapp.model.LoginBody
+import id.mjs.etalaseapp.model.LoginResponse
 import kotlinx.android.synthetic.main.activity_login.*
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
-import java.io.InputStream
 
 class LoginActivity : AppCompatActivity() {
+
+    lateinit var sharedPreferences : SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        btn_login.setOnClickListener{
-            val intent = Intent(this, MainActivity::class.java)
+        sharedPreferences = getSharedPreferences("UserPref", Context.MODE_PRIVATE)
+
+        if (sharedPreferences.getString("token","")!!.isNotEmpty()){
+            val intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
-        btn_create_account.setOnClickListener{
+        btn_login.setOnClickListener {
+            val email = et_email_login.text.toString()
+            val password = et_password_login.text.toString()
+            val data = LoginBody(email, password)
+            ApiMain().services.login(data).enqueue(object : Callback<LoginResponse>{
+                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                    Log.d("diditu","didieu error")
+                }
+
+                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                    if (response.body()?.code == "201"){
+                        Toast.makeText(applicationContext,"Login Berhasil",Toast.LENGTH_SHORT).show()
+                        sharedPreferences.edit().putString("token",response.body()?.data?.token).apply()
+                        val intent = Intent(applicationContext, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                    else{
+                        Toast.makeText(applicationContext,"Username / Password Salah",Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+            })
+
+        }
+
+        btn_create_account.setOnClickListener {
             val intent = Intent(this, CreateAccountActivity::class.java)
             startActivity(intent)
         }
 
-        tv_forgot_password.setOnClickListener{
+        tv_forgot_password.setOnClickListener {
             val intent = Intent(this, ForgotPasswordActivity::class.java)
             startActivity(intent)
         }
 
-//        val fileName = "SampleDownloadApp.apk"
-//        var destination =
-//            getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/"
-//        destination += fileName
-
-//        ApiMain().services.getAllTeam().enqueue(object : Callback<ResponseBody>{
-//            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-//
-//            }
-//
-//            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-//                val path = destination
-//                response.body()?.byteStream()?.saveToFile( path)
-//                Log.d("asup",path)
-//                val sesuatu = File(path)
-//                val updatedApk = File(
-//                    path
-//                )
-//                val intent = Intent(Intent.ACTION_VIEW)
-//                intent.setDataAndType(
-//                    Uri.fromFile(updatedApk),
-//                    "application/vnd.android.package-archive"
-//                )
-//                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//                startActivity(intent)
-//            }
-//
-//
-//        })
 
     }
-
-//    private fun InputStream.saveToFile(file: String) = use { input ->
-//        File(file).outputStream().use { output ->
-//            input.copyTo(output)
-//        }
-//    }
-
 }

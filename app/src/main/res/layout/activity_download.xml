@@ -22,7 +22,7 @@
                 android:id="@+id/imageViewDownload"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/ic_app_3"
+                android:src="@drawable/ic_2048"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,13 +32,14 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="20dp"
                 android:paddingTop="10dp"
-                android:text="Application Name"
+                android:text="2048 Games"
                 android:textSize="16dp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/imageViewDownload"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="20dp"
@@ -47,14 +48,35 @@
                 app:layout_constraintStart_toEndOf="@+id/imageViewDownload"
                 app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
+            <RatingBar
+                android:theme="@style/RatingBar"
+                android:id="@+id/ratingBar"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:layout_margin="12dp"
+                android:layout_marginStart="30dp"
+                android:rating="4.6"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageViewDownload" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="3k"
+                android:layout_margin="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ratingBar" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 MB"
                 android:padding="10dp"
                 android:paddingStart="20dp"
-                android:text="Rating : 5.0"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageViewDownload" />
+                app:layout_constraintEnd_toEndOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -76,6 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginTop="20dp"
             android:text="Tentang Aplikasi"
             android:textStyle="bold"
@@ -89,6 +112,7 @@
             android:layout_height="wrap_content"
             android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
             android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView5"/>
 

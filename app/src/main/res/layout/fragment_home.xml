@@ -10,6 +10,21 @@
         tools:context=".ui.home.HomeFragment"
         android:paddingBottom="20dp">
 
+        <com.mancj.materialsearchbar.MaterialSearchBar
+            style="@style/MaterialSearchBarLight"
+            app:mt_hint="Telusuri Aplikasi dan Game"
+            app:mt_placeholder="Search"
+            app:mt_maxSuggestionsCount="10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/searchBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
         <com.synnapps.carouselview.CarouselView
             android:id="@+id/carouselView"
             android:padding="10dp"
@@ -23,7 +38,7 @@
             app:strokeWidth="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/searchBar" />
 
         <TextView
             android:id="@+id/textView"
