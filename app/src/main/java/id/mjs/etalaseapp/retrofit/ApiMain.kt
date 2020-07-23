@@ -14,18 +14,25 @@ class ApiMain : Application() {
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
             })
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(100, TimeUnit.SECONDS)
+            .writeTimeout(100, TimeUnit.SECONDS)
             .build()
 
     private val retrofit = Retrofit.Builder()
 //        .baseUrl("https://f-droid.org/")
-        .baseUrl("https://api-etalase-app.bagustech.id/")
+        .baseUrl("http://api-etalase-app.bagustech.id/")
         .client(client)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val services: ApiServices = retrofit.create(
-        ApiServices::class.java)
+    private val retrofit2 = Retrofit.Builder()
+        .baseUrl("https://apk.apkmonk.com/")
+        .client(client)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val services: ApiServices = retrofit.create(ApiServices::class.java)
+
+    val services2: ApiServices = retrofit2.create(ApiServices::class.java)
 
 }
