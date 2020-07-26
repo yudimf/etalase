@@ -2,20 +2,17 @@ package id.mjs.etalaseapp.ui.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.synnapps.carouselview.CarouselView
 import com.synnapps.carouselview.ImageListener
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.adapter.CardViewAdapter
 import id.mjs.etalaseapp.model.AppModel
-import id.mjs.etalaseapp.ui.createaccount.CreateAccountActivity
 import id.mjs.etalaseapp.ui.download.DownloadActivity
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -25,9 +22,9 @@ class HomeFragment : Fragment() {
     private var list = ArrayList<AppModel>()
 
     private var sampleImages = arrayOf(
-        "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg",
-        "https://raw.githubusercontent.com/sayyam/carouselview/master/sample/src/main/res/drawable/image_1.jpg",
-        "https://raw.githubusercontent.com/sayyam/carouselview/master/sample/src/main/res/drawable/image_2.jpg"
+        "https://raw.githubusercontent.com/yudimf/sample_image/master/black_ic.jpeg",
+        "https://raw.githubusercontent.com/yudimf/sample_image/master/white_ic.jpeg",
+        "https://raw.githubusercontent.com/yudimf/sample_image/master/black_ic.jpeg"
     )
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -61,6 +58,7 @@ class HomeFragment : Fragment() {
         cardViewAdapter.setOnItemClickCallback(object : CardViewAdapter.OnItemClickCallback{
             override fun onItemClicked(data: AppModel) {
                 val intent = Intent(context, DownloadActivity::class.java)
+                intent.putExtra(DownloadActivity.EXTRA_APP_MODEL,data)
                 startActivity(intent)
             }
         })
@@ -68,7 +66,7 @@ class HomeFragment : Fragment() {
 
     private fun addList(){
         for (i in 0 until 9){
-            list.add(AppModel("link", "Aplikasi $i","desc"))
+            list.add(AppModel(1,R.drawable.icon_wawa,"Wawa Adventure Games","","https://play.google.com/store/apps/details?id=games.wawa","",false))
         }
     }
 

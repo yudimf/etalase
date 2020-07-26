@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:visibility="gone"
+        android:text="1"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/img_list_app_item"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:src="@drawable/ic_home_black_24dp"/>
+
+    <LinearLayout
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textSize="12sp"
+            android:id="@+id/txt_list_app_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Arti App-mobile art"/>
+        <TextView
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="21 MB"/>
+        <TextView
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4.6 "
+            android:drawableRight="@drawable/ic_baseline_star_24" />
+
+    </LinearLayout>
+
+</LinearLayout>

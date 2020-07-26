@@ -5,7 +5,11 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class AppModel (
-    var photo: String,
+    var categoryId : Int,
+    var photo: Int,
     var name: String,
-    var description: String
+    var downloadLink : String,
+    var playstoreLink: String,
+    var description: String,
+    var is_embeded_app: Boolean
 ) : Parcelable

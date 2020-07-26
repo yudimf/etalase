@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/navigation_category"
-        android:name="id.mjs.etalaseapp.ui.dashboard.DashboardFragment"
+        android:name="id.mjs.etalaseapp.ui.category.CategoryFragment"
         android:label="Category"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_category" />
 
     <fragment
         android:id="@+id/navigation_installerd"

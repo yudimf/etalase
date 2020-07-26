@@ -1,10 +1,10 @@
-package id.mjs.etalaseapp.ui.dashboard
+package id.mjs.etalaseapp.ui.category
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class DashboardViewModel : ViewModel() {
+class CategoryViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is Category Fragment"
