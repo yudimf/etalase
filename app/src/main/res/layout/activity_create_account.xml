@@ -22,54 +22,120 @@
             app:layout_constraintTop_toTopOf="parent"
             android:contentDescription="Apps Logo" />
 
-        <EditText
-            android:id="@+id/et_name_create_account"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/name_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="40dp"
-            android:hint="Nama"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/create_account_logo"/>
+            app:layout_constraintTop_toBottomOf="@+id/create_account_logo">
 
-        <EditText
-            android:id="@+id/et_email_create_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="40dp"
-            android:hint="Email (Telepon untuk akun seluler)"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_name_create_account"/>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_name_register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nama"
+                android:inputType="text" />
 
-        <EditText
-            android:id="@+id/et_password_create_account"
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/date_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="40dp"
-            android:hint="Password"
-            android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_email_create_account" />
+            app:layout_constraintTop_toBottomOf="@+id/name_register">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_date_register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tanggal Lahir"
+                android:inputType="date" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/email_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/date_register">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_email_register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Alamat Email Anda"
+                android:inputType="textEmailAddress" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/password_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:passwordToggleEnabled="true"
+            app:layout_constraintTop_toBottomOf="@+id/email_register">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_password_register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Kata Sandi"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/password_confirmation_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:passwordToggleEnabled="true"
+            app:layout_constraintTop_toBottomOf="@+id/password_register">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_password_confirmation_register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Konfirmasi Kata Sandi"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
-            android:id="@+id/password_information"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/text_confirmation"
             android:layout_marginStart="40dp"
-            android:text="Kata sandi harus setidaknya 6 karakter"
+            android:layout_marginEnd="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_password_create_account" />
+            app:layout_constraintTop_toBottomOf="@+id/password_confirmation_register"/>
 
         <Button
-            android:id="@+id/btn_login"
+            android:id="@+id/btn_resgitration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
@@ -80,7 +146,34 @@
             android:textColor="#fff"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/password_information" />
+            app:layout_constraintTop_toBottomOf="@+id/text_confirmation" />
+
+        <TextView
+            android:id="@+id/have_account"
+            android:gravity="center_horizontal"
+            android:text="Sudah Punya Akun?"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_resgitration"/>
+
+        <Button
+            android:id="@+id/btn_to_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="40dp"
+            android:background="#555555"
+            android:text="Login"
+            android:textColor="#fff"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/have_account" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

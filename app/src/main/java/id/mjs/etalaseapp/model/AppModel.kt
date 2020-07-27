@@ -11,5 +11,6 @@ class AppModel (
     var downloadLink : String,
     var playstoreLink: String,
     var description: String,
-    var is_embeded_app: Boolean
+    var is_embeded_app: Boolean,
+    var file_size: Int
 ) : Parcelable

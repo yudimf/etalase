@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.model.AppModel
+import kotlinx.android.synthetic.main.item_app_cardview.view.*
 
 class CardViewAdapter(private val listAppModel: ArrayList<AppModel>) : RecyclerView.Adapter<CardViewAdapter.CardViewViewHolder>() {
 
@@ -33,6 +34,10 @@ class CardViewAdapter(private val listAppModel: ArrayList<AppModel>) : RecyclerV
     inner class CardViewViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         fun bind(appModel: AppModel){
             with(itemView) {
+                img_app_card.setImageResource(appModel.photo)
+                title_app_card.text = appModel.name
+                val fileSize = "${appModel.file_size} MB"
+                info_app_card.text = fileSize
                 itemView.setOnClickListener {
                     onItemClickCallback?.onItemClicked(appModel)
                 }

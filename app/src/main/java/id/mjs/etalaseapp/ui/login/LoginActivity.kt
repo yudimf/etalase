@@ -12,7 +12,7 @@ import id.mjs.etalaseapp.ui.main.MainActivity
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.ui.createaccount.CreateAccountActivity
 import id.mjs.etalaseapp.ui.forgotpassword.ForgotPasswordActivity
-import id.mjs.etalaseapp.model.LoginBody
+import id.mjs.etalaseapp.model.LoginRequest
 import id.mjs.etalaseapp.model.LoginResponse
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
@@ -38,7 +38,7 @@ class LoginActivity : AppCompatActivity() {
         btn_login.setOnClickListener {
             val email = et_email_login.text.toString()
             val password = et_password_login.text.toString()
-            val data = LoginBody(email, password)
+            val data = LoginRequest(email, password)
             ApiMain().services.login(data).enqueue(object : Callback<LoginResponse>{
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                     Log.d("diditu","didieu error")

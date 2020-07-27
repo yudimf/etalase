@@ -2,7 +2,7 @@ package id.mjs.etalaseapp.model
 
 import com.google.gson.annotations.SerializedName
 
-data class LoginBody (
+data class LoginRequest (
     @SerializedName("email")
     var email: String? = null,
 

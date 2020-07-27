@@ -1,6 +1,7 @@
 package id.mjs.etalaseapp.retrofit
 
-import id.mjs.etalaseapp.model.LoginBody
+import id.mjs.etalaseapp.model.ForgotPasswordResponse
+import id.mjs.etalaseapp.model.LoginRequest
 import id.mjs.etalaseapp.model.LoginResponse
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -15,10 +16,9 @@ interface ApiServices {
 
     @Headers("Content-Type: application/json")
     @POST("api/v1/login")
-    fun login(@Body data : LoginBody) : Call<LoginResponse>
+    fun login(@Body data : LoginRequest) : Call<LoginResponse>
 
-    @POST("repo/eu.siacs.conversations_395.apk")
-    @Streaming
-    fun getSampleApps2(): Call<ResponseBody>
+    @POST("api/v1/forgot-password")
+    fun forgotPassword(@Query("email") email:String) : Call<ForgotPasswordResponse>
 
 }

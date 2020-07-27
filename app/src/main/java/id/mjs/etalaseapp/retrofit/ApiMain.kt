@@ -19,20 +19,11 @@ class ApiMain : Application() {
             .build()
 
     private val retrofit = Retrofit.Builder()
-//        .baseUrl("https://f-droid.org/")
         .baseUrl("http://api-etalase-app.bagustech.id/")
         .client(client)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    private val retrofit2 = Retrofit.Builder()
-        .baseUrl("https://apk.apkmonk.com/")
-        .client(client)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
     val services: ApiServices = retrofit.create(ApiServices::class.java)
-
-    val services2: ApiServices = retrofit2.create(ApiServices::class.java)
 
 }

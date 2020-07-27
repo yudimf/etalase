@@ -1,11 +1,393 @@
 <resources>
-    <string name="app_name">EtalaseApp</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+<string name="app_name">EtalaseApp</string>
+<string name="title_home">Home</string>
+<string name="title_dashboard">Dashboard</string>
+<string name="title_notifications">Notifications</string>
+<!-- TODO: Remove or change this placeholder text -->
+<string name="hello_blank_fragment"></string>
 
-    <string name="dummyemail">user@gmail.com</string>
-    <string name="dummypassword">user123</string>
+<string name="dummyemail">user@gmail.com</string>
+<string name="dummypassword">user123</string>
+
+<string name="desc_tokopedia">
+"Welcome to Tokopedia!
+
+Tokopedia is an online marketplace that has been trusted throughout Indonesia. Fulfill your daily needs with just 1 application. Shop for all your needs here! From fashion, gadgets, electronics, to makeup and skin care. You can also pay bills and top-ups such as paying PLN, credit card bills, BPJS, and investments such as gold and mutual funds. Need to travel? You can buy flight and train tickets, hotel booking, and other traveling equipment at Tokopedia.
+We are providing various systems to support the safety and convenience shopping at Tokopedia. There are a lot of exciting promos with the lowest prices, which also comes with variations in payment and delivery.
+
+Enjoy the best online shopping experience that is easy, affordable, and safe only at Tokopedia.
+
+EASY TO USE
+● Choose according to your needs - Many choices of payment and shipping methods
+● Advanced search system - Get the product you want with fast and accurate search
+● Easy to navigate and incredibly user-friendly
+
+SECURE TRANSACTION GUARANTEE
+● Trusted Seller - You can check the store's reputation, store statistics, or see stores with the Power Merchant and Official Store sign
+● Safe Shopping - There is a warranty option for every item you buy
+● Find out with reviews - Look at the experiences of other buyers to confirm choices
+● Track packages with more certainty - Follow the progress of your packages in real-time
+
+MORE PROMOS FOR YOU
+● Free shipping every day
+● Daily promos - There are always special cashbacks and discounts
+● Exciting Deals - Get lots of benefits at low prices
+
+Find out more about Tokopedia at our social media platform:
+
+INSTAGRAM - @Tokopedia
+FACEBOOK - Tokopedia
+TWITTER - @Tokopedia
+YOUTUBE - Tokopedia"
+</string>
+<string name="desc_alfacart">
+"Alfacart.com adalah sebuah terobosan dalam industri ritel di Indonesia, untuk memenuhi kebutuhan masyarakat Indonesia akan sebuah cara berbelanja yang praktis dan mudah. Menyediakan beragam kebutuhan pribadi maupun keluarga mulai dari fashion, peralatan elektronik, handphone, komputer dan laptop, kebutuhan rumah tangga sehari-hari, peralatan dapur, hobi dan gaya hidup sampai kesehatan dan kecantikan.
+
+Berawal dengan nama Alfaonline.com pada 18 Februari 2013, dikembangkan oleh Alfamart sebagai alternative channel untuk berbelanja. April 2015 berubah entitas dan bernaung di PT Sumber Trijaya Lestari, sebagai anak perusahaan PT Sumber Alfaria Trijaya (Alfamart), dan Mei 2016 berubah nama menjadi Alfacart.com.
+
+Belanja Online Jadi Dekat – Belanja online bisa dari mana saja, kapan saja, bisa diakses dengan desktop atau mobile application. Pesanan Alfacart.com bisa diantar atau diambil di Pick Up Point terdekat."
+</string>
+<string name="desc_alfagift">
+"Alfagift is a digital application that allows Alfamart's consumers to get and connect member cards virtually, join loyalty programs and shop for daily needs, both Android and iOS phones.
+
+Complete your daily shopping needs in one application!
+
+Alfagift application can:
+1. Online shopping and online payment.
+2. Pick up your order in store or send to your home.
+3. Check new promo catalogue every day.
+4. Special offers and programs for member.
+4. Update member information and redeem point with gift.
+5. Find Alfamart's offline store around your location.
+
+Download Alfagift now and enjoy new experienced every day.
+
+www.alfamartku.com
+Facebook : Alfamart
+Twitter : Alfamart
+Instagram : Alfamart
+LINE : @Alfamart"
+</string>
+<string name="desc_babe">
+"BaBe (Baca Berita)
+
+BaBe, The Free Personalized News App with your chosen favorite news at “Untukmu” Channel, equipped with Push Notification so you don’t miss any news.
+
+News also available in Video Format with many kind of in-app interaction (likes, comment, share, survey and opinion). User could customize the channel order based on their preference from many kind of news.
+
+BaBe is the news app with Hoax Filter technology, make every news appeared is always trusted. BaBe was installed in more than 30 million users in all across Indonesia.
+
+--------
+
+BaBe’s Top Features
+
+“Untukmu” – at BaBe, news article can be selected and appeared according to what you like and suits your need, thanks to BaBe’s Artificial Intelligence (AI) technology.
+
+Give comments and discuss the news with millions of BaBe users.
+
+Choose easily news categories you prefer in Category Tab
+
+There are many categories in BaBe: National and Politics, Entertainment, Sport, Lifestyle, and more than 30 other categories.
+
+Website: www.babe.co.id
+E-mail: feedback@babe.co.id
+
+------------------------
+Required Permissions:
+* WRITE_EXTERNAL_STORAGE (To save image into SD Card)
+* READ_EXTERNAL_STORAGE (To read cache from SD Card)
+* GET_ACCOUNTS (To get user account for login if user wants to do social interaction)
+* ACCESS_FINE_LOCATION (To personalize the news feed based on location)"
+</string>
+
+<string name="desc_baca">
+"Baca - Berita, Video, Komunitas Game dan Nama Keren
+
+BACA menyediakan berita terkini dan terupdate dengan narasumber terpercaya setiap harinya. Berbagai kategori berita populer dari dalam dan luar negeri tersedia, mulai dari berita dunia, berita nasional, berita politik, berita selebriti, lifestyle dan masih banyak lagi. Semua tersedia dalam aplikasi berita BACA.
+
+Fitur unggulan BACA:
+- Berita Rekomendasi
+- Berita Terkini
+- Video Humor dan Lifestyle
+- Komunitas Game
+
+Berbagai macam kategori berita:
+Politik
+Baca berita politik terbaru, pilpres, pilgub, pilkada, berita politik Indonesia dan luar negeri.
+
+Ekonomi
+Baca berita ekonomi dan bisnis serta informasi terbaru tentang kurs mata uang internasional.
+
+Entertainment
+Baca berita selebriti, gosip, gaya hidup, humor, kuliner serta tren fashion terkini.
+
+Olahraga
+Baca berita cabang olahraga kesukaanmu baik di dalam maupun luar negeri.
+
+Dan masih banyak kategori berita lainnya.
+
+Komunitas Game
+Adalah portal komunitas para gamer untuk berbagi cerita seru dan lucu, serta tips seputar game dan video dari para pemain favoritmu. Kamu bisa diskusi apa saja tentang game di sini:
+- Pengen nama keren untuk karakter game-mu?
+- Bingung mau main game apa dan butuh rekomendasi?
+- Nyari teman mabar atau rekrut anggota guild?
+- Nyari tips untuk kalahin boss yang susah banget?
+- Nyari build hero favoritmu biar selalu menang?
+- Pamer momen kamu menang atau skor tertinggi?
+- Pamer baru dapat skin rare dari gacha atau bundle?
+- Pengen belajar dari aksi para player pro?
+- Nyari hiburan dari konten kocak seputar game?
+
+Posting Konten
+Kamu bisa ikut membagikan konten game buatanmu ke dalam Komunitas Game. Kamu juga bisa berbagi tips dan trik tentang game, atau bertanya pada para ahlinya di sini.
+Bergabung dalam Topik
+Temukan konten-konten yang lebih spesifik sesuai dengan minatmu di Topik yang tersedia. Kamu juga dapat menggunakan fungsi pencarian dan mengikuti Topik yang kamu sukai.
+
+Share, Komentar, dan Voting
+Semua konten dapat kamu share, komentari, dan berikan voting. Semua aktifitas tersebut akan menentukan seberapa populernya konten tersebut.
+
+Kreator Nama
+Bosan dengan nama karakter yang biasa saja saat main game? Gunakan fitur Kreator Nama untuk ciptakan nama unik dan keren untuk karaktermu!
+
+Nama samaran
+Ubah nama kamu di aplikasi Baca dengan nama samaran untuk posting dan berkomentar, jadi tidak perlu sungkan lagi! Kamu juga bisa gunakan nama yang kamu buat dengan fitur Kreator Nama, lho.
+Dan berbagai macam fitur menarik lainnya yang dapat kamu temukan di aplikasi BACA.
+Tunggu apa lagi, download BACA sekarang sebagai aplikasi berita harianmu.
+
+Website: http://www.baca.co.id
+Facebook: bacaid (https://www.facebook.com/bacaid)
+Instagram: @bacaid (https://instagram.com/bacaid)
+Youtube Channel: https://www.youtube.com/bacaid
+Feedback Email: baca-feedback@newsinpalm.com"
+</string>
+<string name="desc_blibli">
+"Blibli Bagi-Bagi Hepi di ulang tahun ke-9. Bebas #PilihBahagiamu dengan belanja dari beragam produk mulai dari kebutuhan ibu, fashion muslim, sembako, bumbu masakan, produk segar bernutrisi, multivitamin, gadget, elektronik, alat sanitasi, hingga kebutuhan bayar tagihan bulanan seperti pulsa, paket data, listrik, dan BPJS. Semua serba mudah, dijamin puas.
+
+Belanja produk harian seperti bumbu dapur, sembako, kebutuhan ibu anak, perawatan rumah tangga, perawatan kulit tubuh, dan produk grosiran semua ada di kategori BlibliMart. Belanja bebas panik kehabisan stok, tinggal klik barang langsung dikirim.
+
+Di Blibli kamu juga bisa tukar tambah, mulai dari gadget, barang elektronik, dan masih banyak yang lainnya. Pilihannya banyak, pasti ori, prosesnya cepat, juga mudah.
+
+Kamu juga bisa cobain fitur COD (bayar di tempat) belanja lebih aman dan mudah, bayarnya setelah barang kamu terima.
+
+Tidak ketinggalan hadir pula kemudahan mencicil smartphone impian. Tersedia cicilan buat kamu pemegang kartu kredit. Dan buat kamu yang tidak punya kartu kredit juga bisa kok ikutan mencicil.
+
+Kamu bebas untuk #PilihBahagiamu, semua Blibli berikan #KarenaKamuNo1
+
+Belanja online dengan beragam keuntungan di Blibli:
+✔️ GRATIS ONGKIR/PENGIRIMAN KE SELURUH INDONESIA*
+✔️ JAMINAN 15 HARI PENGEMBALIAN PRODUK
+✔️ BERAGAM CARA PEMBAYARAN YANG AMAN TERPERCAYA
+✔️ KUALITAS PRODUK TERJAMIN
+✔️ #PilihBahagiamu SETIAP HARI DENGAN BANYAK PROMO MENARIK!
+- Promo menarik selama 7 hari berturut-turut untuk para Ibu, Ayah, Milenial, juga banyak pilihan produk muslim, kecantikan dan kesehatan, dan penawaran terbaik untuk keluarga.
+- Cashback hingga Rp 999 Ribu
+- Brand Deals yang berisikan promo terbaik setiap hari dengan diskon hingga 80%
+- Live streaming Kencan Bareng Artis di website Blibli
+
+✔️ DAPAT POIN REWARDS DAN KEUNTUNGAN EKSKLUSIF UNTUK LOYALTY MEMBER
+Gratis 2.500 Poin Rewards setelah registrasi member, verifikasi nomor handphone, hingga mengikuti quest. Poin didapat dari setiap kali BELANJA / MENGULAS PRODUK untuk ditukarkan dengan voucher belanja senilai hingga Rp 500.000.
+
+
+
+Customer Care : customer.care@blibli.com atau telepon 0804 1 871 871.
+Facebook : Blibli.com
+Twitter dan Instagram : @bliblidotcom
+Blog : https://www.blibli.com/friends/
+
+*Syarat dan ketentuan berlaku"
+</string>
+<string name="desc_detik">
+"detikcom comes with a new face!
+Install now or update your detikcom app to get the best news reading experience and to satisfy your digital lifestyle.
+
+detikcom app has innovated beyond providing the latest news by including a variety of services to ease transactions like purchasing Trans Studio or Trans Snow World tickets and to get information on the latest events and promos.
+
+Highlighted Features:
+
+Category
+Explore the latest stories from a variety of categories, such as national politics, soccer, economy and business, celebrity gossip, latest technology, healthy lifestyle, culinary, travel destinations, fashion, and automotive
+
+Breaking News
+Live stream important and breaking events
+
+Most Popular Tags
+A collection of the latest and most talked about issues
+
+Video
+A variety of exclusive, informative, entertaining, and inspiring videos
+
+Local News
+Choose a province from ""Berita Daerah"" to follow the latest news from your area
+
+Night Mode
+Activate night mode for a better reading experience at night
+
+We want to continue to innovate and improve our services. Your feedback is important to us. Send us an email at info@detik.com"
+</string>
+<string name="desc_matahari_dept">
+"Matahari Department Store sebagai department store terbesar yang menjadi pilihan utama masyarakat Indonesia kini hadir secara online lewat aplikasi Matahari untuk memenuhi ekspektasi pelanggan yang luas dan menghadirkan pengalaman belanja online yang berkualitas dan sesuai dengan cita rasa khas Indonesia.
+
+Lewat aplikasi Matahari pengguna dapat menikmati:
+
+Update Promo Produk Matahari
+Pengguna dapat langsung melihat berbagai update promo terkini produk-produk eksklusif Matahari dan berbagai merek ternama lainnya melalui aplikasi Matahari.
+
+Diskon Khusus Pengguna Aplikasi Matahari
+Berbagai diskon menarik tersedia khusus bagi pengguna aplikasi Matahari.
+
+Berbagai Reward Menarik
+Dengan berbelanja dan merekomendasikan aplikasi Matahari pengguna dapat memperoleh berbagai reward menarik di aplikasi Matahari.
+
+Berbagai Benefit Khusus Member MRO (Matahari Reward OVO)
+Berbagai benefit bagi member MRO (Matahari Reward OVO) mulai dari diskon khusus di berbagai merchant hingga reward menarik dengan menunjukkan membership MRO dapat diperoleh melalui aplikasi Matahari.
+
+Lokasi dan Diskon di Gerai Matahari terdekat
+Pengguna dapat menemukan lokasi dan informasi berbagai gerai Matahari terdekat dan mendapatkan diskon khusus dengan menggunakan aplikasi Matahari.
+
+Nikmati kemudahan berbelanja dan berbagai penawaran menarik dari Matahari dengan mendownload aplikasinya sekarang.
+
+
+Untuk bantuan penggunaan aplikasi dan informasi lainnya hubungi kami di Halo Matahari (021)1500838."
+</string>
+<string name="desc_catfiz">
+"Voice call is now available on Catfiz!
+
+Catfiz is a lightweight but powerfull messenger. Featuring combination of secure instant messaging, social-media interaction, storage service and multimedia streaming.
+
+* PRIVACY :
+- No phone number exposed
+- Can use NIC number or ID
+- Communicate only with friends or from your Contacts list.
+- Block / Blacklist selected contact
+
+* RICH INTERACTION
+- UPDATES tab gives you timeline of friend's activities related to 'status' and 'profile picture'
+- Give more expression by commenting on their status, quoting their message and give 'like'.
+- Emoticon, Emoji, Sticker also available
+
+* BIGGER NEED
+- Send/share 'any' file message up to 500 MB
+- 2000 Group member
+
+* EASY TO SHARE CONTENT
+- All files that appear in chats or groups are instantly ready to forward as a link.
+- Download only when you need or save the link to FIZZLINK internal cloud storage list.
+
+* STREAMING - SAVE YOUR MEMORY !
+- Direct PLAY. No need to download large multimedia.
+- Stream from the beginning, middle or end of your media file.
+- You can download it later while on wi-fi.
+
+* COMPLETE FUNCTION
+- Photo messages and share,
+- Voice message and Video message,
+- Message delivery status (queue, sent, delivered, read),
+
+* Sync your phone book contacts to add to you friend recommendation list, so you can add them easily.
+
+Use Catfiz for personal, official, community or larger organization
+Be a part of Catfiz and enjoy true messenger experience with friends."
+</string>
+<string name="desc_wawa">
+"WELCOME TO WAWA GAMES, THE ULTIMATE DESTINATION WHERE YOU CAN PLAY REAL-LIFE ARCADE GAMES ON YOUR SMARTPHONE, HAVE FUN, AND ULTIMATELY WIN EXCITING PRIZES!
+
+Wawa Games gives you a new exciting experience of conveniently playing your favorite arcade game machines remotely using live video streaming in real time. Play various arcade games from the legendary Crane Game Machines (AKA UFO Catcher/ Claw Machine) with their irresistible toys, cute yet extravagant mini games, to the generous ticket machines.
+
+⭐️ Earn e-tickets for playing on the arcade machines.
+
+⭐️ Play online anytime-anywhere 24/7 your favorite arcade games on your smartphone and showcase your skills to win exciting prizes that will be delivered directly to you.
+
+⭐️ Invite your family and friends to compete on the leaderboard.
+
+⭐️ Redeem your e-tickets into shopping vouchers, mobile phone prepaid credits, GO-PAY or Grab e-Vouchers, and many others.
+
+Features:
+👍 Dozens of Prize Redemption Arcade Machines such as the Claw Machines (AKA mesin capit boneka) or ""Cut the Strings"" Machines.
+👍 Various Ticket Redemption Arcade Machines such as the Superball, Coin Pushers, Pinball, Happy Soccer, etc.
+👍 New prizes line-up regularly from cute dolls and plushies, toys, and cool action figures
+👍 Mini games: Fishing Frenzy, Raging Rodeo, and Whac-a-Mole
+👍 Real arcade gaming skills needed to win prizes
+👍 Huge jackpot tickets
+👍 Ship and track the shipment of your prizes
+👍 Tickets redemption to exchange with various shopping e-vouchers or physical prizes
+
+Contact Us:
+You can get assistance from our customer service specialist via the Customer Services button in the game to help you with any problem you may encounter while playing. You can also write us an email at hello@wawa.games and we will get back to you as quickly as possible.
+
+We will be very happy to hear your thoughts or suggestions to improve Wawa Games via:
+
+Official Website: https://wawa.games/
+Facebook: https://www.facebook.com/playwawagames
+Instagram: https://www.instagram.com/playwawagames
+Twitter: https://twitter.com/playwawagames
+
+Don't forget to use #PlayWawa on your social media posts. We will keep an eye and randomly send you out free Wawa Coins! Please let the posts flood in!
+
+Check back for future updates!
+
+PLEASE NOTE! Wawa Games app connects you to the actual Arcade Machines remotely using live video streaming and controls in real time. Therefore, if your connection is unstable, there will be a delay of 1-2 seconds on the video streaming compared to the controls. There may be further connection delay when you are playing from a location with weaker connections.
+
+We recommend you to use Wi-Fi for better playing experience. Mind you that good 4G coverage does not automatically mean fast and reliable connection to Wawa, you need to verify using speed test application to confirm the speed and reliability of your cellular data connection.
+
+🔽 Notes 🔽
+* Please be sure to check “Terms of Service” before using. *
+* The possession of multiple accounts is basically prohibited *
+
+Terms of Service: https://wawa.games/terms.php
+Privacy Policy: https://wawa.games/policy.php"
+</string>
+<string name="desc_cnn">
+"CNN Indonesia provides current news and information quickly and reliably. Our news can be accessed 24 hours a day, 7 days a week, equipped with various topics ranging from politics, world news, economy, modern lifestyle, and soccer news.
+
+With a new design, you can explore various news categories more easily and quickly than before, just Tap or Swipe news categories you want to read. You can also enjoy Free Live Broadcast CNN TV.
+
+
+Highlighted Features :
+-CNN Indonesia TV Live Stream
+-Live Reports
+-Focus
+-Push Notification
+-Night Mode
+-Breaking news
+
+A Variety of News Categories:
+-National
+-Economy
+-International
+-Sports
+-Technology
+-Entertainment
+-Lifestyle
+-Infographic, Photo Video
+
+We appreciate your comments and feedback. Please contact us at appsupport@cnnindonesia.com"
+</string>
+<string name="desc_vidio">
+"You can watch international and national TV, live streaming channels, favorite movies and series as well as fun and entertaining videos.
+
+Vidio is the most complete media streaming platform in Indonesia that allows you to watch anything, anytime, anywhere.
+
+With all comfort at home, enjoy our best selected programs that you like starting from:
+- Live streaming TV Channels, such as SCTV, Indosiar, O Channel
+- Commenting such sport events: NBA, English Premier:League, Champions League, badminton, tennis at beIN Sports Channel*
+- Having the most actual, sharp, and reliable news updates from Liputan 6
+
+Still looking for any other highly rated yet light-hearted exclusive programs?
+- Local drama series and TV shows: Liga Dangdut Indonesia, Cinta Karena Cinta, Samudra Cinta, Anak Menteng, FTV, D'Academy, Stand Up Comedy Academy.
+- Gossips and updated news about celebrities
+- Original Movies and Series from Vidio*, such as Heart series, I Love You Baby, Get Married and Omen
+- Korean drama*, education channel for kids!
+- Thousands of drama series and movies in HD quality for all ages*
+- Listen to live Radio Stations, such as Prambors, Hard Rock FM, Trax FM, and other radio stations
+- Video clips and music performance starting from local to international artists
+- Documentary films and travel destination reference both in domestic and overseas
+- Recipes and cooking video and world's greatest culinary reference
+- Creative contents uploaded from our young creators at Vidio!
+
+Psst, one of our exclusive contents are Gundala and Parasite. Isn't it cool?!
+
+To get the best entertainment experience, Vidio requires internet connection via WiFi or data package from your telecommunication provider (not included in Vidio subscription package). Internet quota consumption will determine by duration of content consumed.
+
+*Some content need subscription packages that available start from IDR 10.000/Day"
+</string>
 </resources>

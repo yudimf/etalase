@@ -35,7 +35,6 @@ class AppsCategoryFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_apps_category, container, false)
 
         addDummyList()
-        Log.d("size",listCategory.size.toString())
         val adapter = CategoryAdapter(listCategory)
         val recyclerView = root.findViewById<RecyclerView>(R.id.rv_apps_category)
         recyclerView.setHasFixedSize(true)
