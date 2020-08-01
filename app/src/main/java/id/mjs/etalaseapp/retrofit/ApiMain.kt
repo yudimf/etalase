@@ -19,7 +19,7 @@ class ApiMain : Application() {
             .build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("http://api-etalase-app.bagustech.id/")
+        .baseUrl("https://api-etalase-app.bagustech.id/")
         .client(client)
         .addConverterFactory(GsonConverterFactory.create())
         .build()

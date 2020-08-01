@@ -1,9 +1,11 @@
 package id.mjs.etalaseapp.ui.download
 
+import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +13,8 @@ import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -54,13 +58,11 @@ class DownloadActivity : AppCompatActivity() {
                 startActivity(openURL)
             }
             else{
-                val intent = Intent(this, DownloadService::class.java)
-                startService(intent)
-                btn_download.visibility = View.INVISIBLE
-                progress.visibility = View.VISIBLE
-                progress_text.visibility = View.VISIBLE
-                progress.isIndeterminate = true
-                Toast.makeText(this,"Downloading..",Toast.LENGTH_LONG).show()
+                if (checkPermission()) {
+                    startDownload()
+                } else {
+                    requestPermission()
+                }
             }
         }
 
@@ -77,6 +79,26 @@ class DownloadActivity : AppCompatActivity() {
         }
 
         registerReceiver()
+    }
+
+    private fun checkPermission(): Boolean {
+        val result = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        return result == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestPermission() {
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), PERMISSION_REQUEST_CODE)
+    }
+
+    private fun startDownload(){
+        val intent = Intent(this, DownloadService::class.java)
+        startService(intent)
+        btn_download.visibility = View.INVISIBLE
+        progress.visibility = View.VISIBLE
+        progress_text.visibility = View.VISIBLE
+        progress.isIndeterminate = true
+        Toast.makeText(this,"Downloading..",Toast.LENGTH_LONG).show()
     }
 
     private fun InputStream.saveToFile(file: String) = use { input ->

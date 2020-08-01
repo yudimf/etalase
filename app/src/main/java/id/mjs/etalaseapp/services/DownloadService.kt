@@ -1,9 +1,11 @@
 package id.mjs.etalaseapp.services
 
 import android.app.IntentService
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Environment
 import android.util.Log
 import android.widget.Toast
@@ -19,6 +21,7 @@ import java.io.*
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
+
 class DownloadService : IntentService("Download Service") {
     private var notificationBuilder: NotificationCompat.Builder? = null
     private var notificationManager: NotificationManager? = null
@@ -26,14 +29,26 @@ class DownloadService : IntentService("Download Service") {
     private var totalFileSize = 0
 
     override fun onHandleIntent(p0: Intent?) {
-        Log.d("asupdieu","dieu")
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "my_channel_01"
+            val name: CharSequence = "my_channel"
+            val description = "This is my channel"
+            val importance = NotificationManager.IMPORTANCE_LOW
+            val mChannel = NotificationChannel(channelId, name, importance)
+            mChannel.description = description
+            notificationManager!!.createNotificationChannel(mChannel)
+        }
+
         notificationBuilder = NotificationCompat.Builder(this)
             .setSmallIcon(R.drawable.ic_download)
             .setContentTitle("Download")
             .setContentText("Downloading File")
             .setAutoCancel(true)
-        notificationManager?.notify(0, notificationBuilder?.build())
+
+//        notificationManager?.notify(0, notificationBuilder?.build())
+
         initDownload()
     }
 
@@ -50,8 +65,7 @@ class DownloadService : IntentService("Download Service") {
     private fun downloadFile(body: ResponseBody?){
 
         val fileName = """${System.currentTimeMillis()}.apk"""
-        var destination =
-            getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/"
+        var destination = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/"
         destination += fileName
 
         val path = destination
@@ -63,14 +77,13 @@ class DownloadService : IntentService("Download Service") {
         var count: Int
         val data = ByteArray(1024 * 4)
         val fileSize = body!!.contentLength()
-        Log.d("filesize",fileSize.toString())
         val bis: InputStream = BufferedInputStream(body.byteStream(), 1024 * 8)
-        val outputFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "file.apk")
         val output: OutputStream = FileOutputStream(updatedApk)
         var total: Long = 0
         val startTime = System.currentTimeMillis()
         var timeCount = 1
         while (bis.read(data).also { count = it } != -1) {
+            Log.d("asupdieulah","ya")
             total += count.toLong()
             totalFileSize = (fileSize / 1024.0.pow(2.0)).toInt()
             val current = (total / 1024.0.pow(2.0)).roundToInt().toDouble()
@@ -78,13 +91,13 @@ class DownloadService : IntentService("Download Service") {
             val currentTime = System.currentTimeMillis() - startTime
             val download = Download()
             download.totalFileSize = totalFileSize
-            if (currentTime > 1000 * timeCount) {
+//            if (currentTime > 1000 * timeCount) {
                 Log.d("currentSize",current.toString())
                 download.currentFileSize = current.toInt()
                 download.progress = progress
                 sendNotification(download)
                 timeCount++
-            }
+//            }
             output.write(data, 0, count)
         }
         onDownloadComplete()
@@ -94,10 +107,11 @@ class DownloadService : IntentService("Download Service") {
     }
 
     private fun sendNotification(download: Download) {
+        Log.d("sendNotification",download.toString())
         sendIntent(download)
-//                notificationBuilder.setProgress(100,download.getProgress(),false);
-        notificationBuilder!!.setContentText(String.format("Downloaded (%d/%d) MB", download.currentFileSize, download.totalFileSize))
-        notificationManager!!.notify(0, notificationBuilder!!.build())
+//        notificationBuilder!!.setProgress(100,download.progress,false)
+//        notificationBuilder!!.setContentText(String.format("Downloaded (%d/%d) MB", download.currentFileSize, download.totalFileSize))
+//        notificationManager!!.notify(0, notificationBuilder!!.build())
     }
 
     private fun sendIntent(download: Download) {
@@ -110,10 +124,12 @@ class DownloadService : IntentService("Download Service") {
         val download = Download()
         download.progress = 100
         sendIntent(download)
-        notificationManager!!.cancel(0)
-        notificationBuilder!!.setProgress(0, 0, false)
-        notificationBuilder!!.setContentText("File Downloaded")
-        notificationManager!!.notify(0, notificationBuilder!!.build())
+//        notificationManager!!.cancel(0)
+//        notificationBuilder!!.setProgress(0, 0, false)
+//        notificationBuilder!!.setContentText("File Downloaded")
+//        notificationManager!!.notify(0, notificationBuilder!!.build())
+
+        Log.d("installing","masuk")
 
         val intent = Intent(Intent.ACTION_VIEW)
         intent.setDataAndType(

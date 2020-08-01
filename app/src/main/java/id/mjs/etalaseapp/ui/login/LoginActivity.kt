@@ -3,6 +3,7 @@ package id.mjs.etalaseapp.ui.login
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -39,9 +40,11 @@ class LoginActivity : AppCompatActivity() {
             val email = et_email_login.text.toString()
             val password = et_password_login.text.toString()
             val data = LoginRequest(email, password)
+            btn_login.setBackgroundColor(resources.getColor(R.color.colorDisable))
             ApiMain().services.login(data).enqueue(object : Callback<LoginResponse>{
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                    Log.d("diditu","didieu error")
+                    Toast.makeText(applicationContext,"Connection Fail",Toast.LENGTH_SHORT).show()
+                    btn_login.setBackgroundColor(resources.getColor(R.color.colorACtive))
                 }
 
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
@@ -55,6 +58,7 @@ class LoginActivity : AppCompatActivity() {
                     else{
                         Toast.makeText(applicationContext,"Username / Password Salah",Toast.LENGTH_SHORT).show()
                     }
+                    btn_login.setBackgroundColor(resources.getColor(R.color.colorACtive))
                 }
 
             })
@@ -69,6 +73,12 @@ class LoginActivity : AppCompatActivity() {
         tv_forgot_password.setOnClickListener {
             val intent = Intent(this, ForgotPasswordActivity::class.java)
             startActivity(intent)
+        }
+
+        powered_by.setOnClickListener{
+            val openURL = Intent(Intent.ACTION_VIEW)
+            openURL.data = Uri.parse("https://ar-tek.co.id/")
+            startActivity(openURL)
         }
 
 
