@@ -1,4 +1,4 @@
-package id.mjs.etalaseapp.model
+package id.mjs.etalaseapp.model.request
 
 import com.google.gson.annotations.SerializedName
 
@@ -7,5 +7,8 @@ data class LoginRequest (
     var email: String? = null,
 
     @SerializedName("password")
-    var password: String? = null
+    var password: String? = null,
+
+    @SerializedName("sdk_version")
+    var sdk_version: String? = null
 )

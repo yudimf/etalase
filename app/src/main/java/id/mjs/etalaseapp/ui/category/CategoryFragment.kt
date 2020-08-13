@@ -10,7 +10,6 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.adapter.CategoryPagerAdapter
-import id.mjs.etalaseapp.model.Category
 
 class CategoryFragment : Fragment() {
 

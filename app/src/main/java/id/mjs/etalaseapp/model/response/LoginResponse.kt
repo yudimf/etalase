@@ -1,8 +1,8 @@
-package id.mjs.etalaseapp.model
+package id.mjs.etalaseapp.model.response
 
 import com.google.gson.annotations.SerializedName
 
-data class ForgotPasswordResponse (
+data class LoginResponse (
     @SerializedName("code")
     var code: String? = null,
 
@@ -10,6 +10,5 @@ data class ForgotPasswordResponse (
     var message: String? = null,
 
     @SerializedName("data")
-    var data: String? = null
-
+    var data: LoginDataResponse? = null
 )

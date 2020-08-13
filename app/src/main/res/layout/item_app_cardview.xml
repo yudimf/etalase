@@ -17,22 +17,25 @@
         android:paddingBottom="5dp">
         <ImageView
             android:id="@+id/img_app_card"
-            android:padding="10dp"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:padding="5dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
             android:src="@drawable/ic_app_3"/>
 
         <TextView
             android:id="@+id/title_app_card"
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:textStyle="bold"
+            android:maxLines="1"
+            android:textSize="11sp"
             android:text="Application 1"/>
         <TextView
             android:id="@+id/info_app_card"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="10 MB"
             android:textSize="10sp"

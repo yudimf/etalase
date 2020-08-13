@@ -3,18 +3,22 @@ package id.mjs.etalaseapp.ui.login
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.github.razir.progressbutton.bindProgressButton
+import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.showProgress
 import id.mjs.etalaseapp.retrofit.ApiMain
 import id.mjs.etalaseapp.ui.main.MainActivity
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.ui.createaccount.CreateAccountActivity
 import id.mjs.etalaseapp.ui.forgotpassword.ForgotPasswordActivity
-import id.mjs.etalaseapp.model.LoginRequest
-import id.mjs.etalaseapp.model.LoginResponse
+import id.mjs.etalaseapp.model.request.LoginRequest
+import id.mjs.etalaseapp.model.response.LoginResponse
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,15 +40,28 @@ class LoginActivity : AppCompatActivity() {
             finish()
         }
 
+
+        bindProgressButton(btn_login)
         btn_login.setOnClickListener {
             val email = et_email_login.text.toString()
             val password = et_password_login.text.toString()
-            val data = LoginRequest(email, password)
+            val sdkVersion = Build.VERSION.SDK_INT.toString()
+            val data = LoginRequest(
+                email,
+                password,
+                sdkVersion
+            )
             btn_login.setBackgroundColor(resources.getColor(R.color.colorDisable))
+            btn_login.isClickable = false
+            btn_login.showProgress {
+                progressColor = Color.WHITE
+            }
             ApiMain().services.login(data).enqueue(object : Callback<LoginResponse>{
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                     Toast.makeText(applicationContext,"Connection Fail",Toast.LENGTH_SHORT).show()
-                    btn_login.setBackgroundColor(resources.getColor(R.color.colorACtive))
+                    btn_login.setBackgroundColor(resources.getColor(R.color.colorActive))
+                    btn_login.isClickable = true
+                    btn_login.hideProgress(R.string.done)
                 }
 
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
@@ -58,7 +75,9 @@ class LoginActivity : AppCompatActivity() {
                     else{
                         Toast.makeText(applicationContext,"Username / Password Salah",Toast.LENGTH_SHORT).show()
                     }
-                    btn_login.setBackgroundColor(resources.getColor(R.color.colorACtive))
+                    btn_login.setBackgroundColor(resources.getColor(R.color.colorActive))
+                    btn_login.isClickable = true
+                    btn_login.hideProgress(R.string.login)
                 }
 
             })

@@ -46,10 +46,7 @@ class GamesCategoryFragment : Fragment() {
             }
 
         })
-
         return root
-
-
     }
 
     private fun addDummyList(){

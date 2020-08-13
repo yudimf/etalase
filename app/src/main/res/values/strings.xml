@@ -5,10 +5,11 @@
     <string name="title_notifications">Notifications</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment"></string>
-
+    <string name="login">Login</string>
+    <string name="done">Done</string>
     <string name="dummyemail">user@gmail.com</string>
     <string name="dummypassword">user123</string>
-
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</string>
     <string name="desc_tokopedia">
 "Welcome to Tokopedia!
 

@@ -2,14 +2,11 @@ package id.mjs.etalaseapp.ui.forgotpassword
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.telecom.Call
-import android.util.Log
 import android.widget.Toast
 import id.mjs.etalaseapp.R
-import id.mjs.etalaseapp.model.ForgotPasswordResponse
+import id.mjs.etalaseapp.model.response.ForgotPasswordResponse
 import id.mjs.etalaseapp.retrofit.ApiMain
 import kotlinx.android.synthetic.main.activity_forgot_password.*
-import okhttp3.ResponseBody
 import retrofit2.Callback
 import retrofit2.Response
 

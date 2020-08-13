@@ -1,4 +1,4 @@
-package id.mjs.etalaseapp.model
+package id.mjs.etalaseapp.model.response
 
 import com.google.gson.annotations.SerializedName
 

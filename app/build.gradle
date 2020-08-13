@@ -52,6 +52,8 @@ dependencies {
 
     implementation 'com.github.mancj:MaterialSearchBar:0.8.5'
 
+    implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
+
     implementation"com.synnapps:carouselview:0.1.5"
     implementation 'com.squareup.picasso:picasso:2.71828'
     testImplementation 'junit:junit:4.12'

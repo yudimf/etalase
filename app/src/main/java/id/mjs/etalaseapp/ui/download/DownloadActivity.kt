@@ -9,27 +9,23 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import id.mjs.etalaseapp.retrofit.ApiMain
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.adapter.CardViewAdapter
+import id.mjs.etalaseapp.adapter.ReviewAdapter
 import id.mjs.etalaseapp.model.AppModel
 import id.mjs.etalaseapp.model.Download
+import id.mjs.etalaseapp.model.Review
 import id.mjs.etalaseapp.services.DownloadService
+import id.mjs.etalaseapp.ui.detail.DetailActivity
+import id.mjs.etalaseapp.ui.main.MainActivity
+import id.mjs.etalaseapp.ui.review.ReviewActivity
 import kotlinx.android.synthetic.main.activity_download.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.File
 import java.io.InputStream
 
@@ -38,20 +34,34 @@ class DownloadActivity : AppCompatActivity() {
     lateinit var appModelSelected : AppModel
 
     private var list = ArrayList<AppModel>()
-
+    private var listReview = ArrayList<Review>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_download)
-
         appModelSelected = intent.getParcelableExtra(EXTRA_APP_MODEL) as AppModel
+        initLayout()
+        registerReceiver()
+    }
 
+    private fun initSimilarAppsLayout(){
         addList()
         val cardViewAdapter = CardViewAdapter(list)
         rv_list_apps_sejenis.setHasFixedSize(true)
         rv_list_apps_sejenis.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rv_list_apps_sejenis.adapter = cardViewAdapter
+    }
 
-        btn_download.setOnClickListener {
+    private fun initReviewLayout(){
+        listReview.add(Review(1,"1",1,"1","1"))
+        listReview.add(Review(1,"1",1,"1","1"))
+        val reviewAdapter = ReviewAdapter(listReview)
+        rv_review.setHasFixedSize(true)
+        rv_review.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        rv_review.adapter = reviewAdapter
+    }
+
+    private fun initDownloadButton(){
+        btn_download_1.setOnClickListener {
             if (appModelSelected.is_embeded_app){
                 val openURL = Intent(Intent.ACTION_VIEW)
                 openURL.data = Uri.parse(appModelSelected.playstoreLink)
@@ -65,20 +75,34 @@ class DownloadActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
-        imageViewDownload.setImageResource(appModelSelected.photo)
-        textView4.text = appModelSelected.name
-        tv_tentang_app.text = appModelSelected.description
+    private fun initLayout(){
+        initSimilarAppsLayout()
+        initReviewLayout()
+        initDownloadButton()
+
+        image_view_download_1.setImageResource(appModelSelected.photo)
+        app_name_download_1.text = appModelSelected.name
         val fileSize = appModelSelected.file_size.toString() + "  MB"
-        download_file_size.text = fileSize
+        file_size_download_1.text = fileSize
 
-        imageViewDownload.setOnClickListener{
+        image_view_download_1.setOnClickListener{
             val openURL = Intent(Intent.ACTION_VIEW)
             openURL.data = Uri.parse(appModelSelected.playstoreLink)
             startActivity(openURL)
         }
 
-        registerReceiver()
+        detail_app_btn.setOnClickListener {
+            val intent = Intent(applicationContext, DetailActivity::class.java)
+            startActivity(intent)
+        }
+
+        all_review_btn.setOnClickListener {
+            val intent = Intent(applicationContext, ReviewActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     private fun checkPermission(): Boolean {
@@ -94,10 +118,10 @@ class DownloadActivity : AppCompatActivity() {
     private fun startDownload(){
         val intent = Intent(this, DownloadService::class.java)
         startService(intent)
-        btn_download.visibility = View.INVISIBLE
-        progress.visibility = View.VISIBLE
-        progress_text.visibility = View.VISIBLE
-        progress.isIndeterminate = true
+        btn_download_1.visibility = View.INVISIBLE
+        progress_bar_download.visibility = View.VISIBLE
+        progress_text_download.visibility = View.VISIBLE
+        progress_bar_download.isIndeterminate = true
         Toast.makeText(this,"Downloading..",Toast.LENGTH_LONG).show()
     }
 
@@ -118,12 +142,12 @@ class DownloadActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action == MESSAGE_PROGRESS) {
                 val download: Download = intent.getParcelableExtra("download")
-                progress!!.progress = download.progress
+                progress_bar_download!!.progress = download.progress
                 if (download.progress == 100) {
-                    progress_text!!.text = "File Download Complete"
+                    progress_text_download!!.text = "File Download Complete"
                 } else {
-                    progress.isIndeterminate = false
-                    progress_text!!.text = String.format("Downloaded (%d/%d) MB", download.currentFileSize, download.totalFileSize)
+                    progress_bar_download.isIndeterminate = false
+                    progress_text_download!!.text = String.format("Downloaded (%d/%d) MB", download.currentFileSize, download.totalFileSize)
                 }
             }
         }
