@@ -1,9 +1,11 @@
 package id.mjs.etalaseapp.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.model.Category
 import kotlinx.android.synthetic.main.item_category.view.*
@@ -35,7 +37,11 @@ class CategoryAdapter(private val listCategory: ArrayList<Category>) : RecyclerV
         fun bind(category: Category){
             with(itemView) {
                 txt_category_item.text = category.categoryName
-                img_category_item.setImageResource(category.categoryImage)
+                Log.d("path","https://api-etalase-app.bagustech.id/"+category.categoryImage)
+                val picasso = Picasso.get()
+                picasso.load("https://api-etalase-app.bagustech.id/"+category.categoryImage)
+                    .placeholder(R.drawable.ic_home_black_24dp)
+                    .into(img_category_item)
                 itemView.setOnClickListener {
                     onItemClickCallback?.onItemClicked(category)
                 }

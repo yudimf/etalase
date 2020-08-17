@@ -13,6 +13,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.FileProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import id.mjs.etalaseapp.R
+import id.mjs.etalaseapp.model.AppModel
 import id.mjs.etalaseapp.model.Download
 import id.mjs.etalaseapp.retrofit.ApiMain
 import id.mjs.etalaseapp.ui.download.DownloadActivity
@@ -28,8 +29,18 @@ class DownloadService : IntentService("Download Service") {
     private lateinit var updatedApk : File
     private var totalFileSize = 0
 
+    lateinit var appModelSelected : AppModel
+
+    companion object {
+        const val EXTRA_APP_MODEL = "extra_app_model"
+    }
+
     override fun onHandleIntent(p0: Intent?) {
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        appModelSelected = p0?.getParcelableExtra(DownloadActivity.EXTRA_APP_MODEL) as AppModel
+
+        Log.d("appmodelselected",appModelSelected.name)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "my_channel_01"
@@ -53,7 +64,8 @@ class DownloadService : IntentService("Download Service") {
     }
 
     private fun initDownload(){
-        val request = ApiMain().services.getSampleApps()
+//        val request = ApiMain().services.getSampleApps()
+        val request = ApiMain().services.getApps(appModelSelected.downloadLink)
         try {
             downloadFile(request.execute().body())
         }catch (e: IOException) {

@@ -50,13 +50,13 @@ class GamesCategoryFragment : Fragment() {
     }
 
     private fun addDummyList(){
-        listCategory.add(Category(71,"Game Edukasi",R.drawable.ic_book))
-        listCategory.add(Category(72,"Game Teka Teki",R.drawable.ic_puzzle))
-        listCategory.add(Category(73,"Game Keluarga",R.drawable.ic_family))
-        listCategory.add(Category(74,"Game Kasual",R.drawable.ic_tshirt))
-        listCategory.add(Category(75,"Game Aksi Petualangan",R.drawable.ic_binocular))
-        listCategory.add(Category(76,"Game Simulasi",R.drawable.ic_simulation))
-        listCategory.add(Category(77,"Game Musik",R.drawable.ic_music))
-        listCategory.add(Category(78,"Game Strategi",R.drawable.ic_cheess))
+//        listCategory.add(Category(71,"Game Edukasi",R.drawable.ic_book))
+//        listCategory.add(Category(72,"Game Teka Teki",R.drawable.ic_puzzle))
+//        listCategory.add(Category(73,"Game Keluarga",R.drawable.ic_family))
+//        listCategory.add(Category(74,"Game Kasual",R.drawable.ic_tshirt))
+//        listCategory.add(Category(75,"Game Aksi Petualangan",R.drawable.ic_binocular))
+//        listCategory.add(Category(76,"Game Simulasi",R.drawable.ic_simulation))
+//        listCategory.add(Category(77,"Game Musik",R.drawable.ic_music))
+//        listCategory.add(Category(78,"Game Strategi",R.drawable.ic_cheess))
     }
 }

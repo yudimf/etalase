@@ -17,16 +17,23 @@
         android:id="@+id/app_name_item_grid"
         android:layout_gravity="center"
         android:text="App Name"
+        android:textStyle="bold"
+        android:textSize="12sp"
         android:maxLines="1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <Button
+        android:layout_marginTop="4dp"
+        android:background="@drawable/rounded_button"
         android:id="@+id/btn_update_item_grid"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="24dp"
         android:layout_gravity="center"
-        android:text="Perbaharui"/>
+        android:text="Perbaharui"
+        android:textAllCaps="false"
+        android:textSize="10sp"
+        android:textColor="@color/colorActive"/>
 
 
 

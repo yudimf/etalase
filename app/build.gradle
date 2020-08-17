@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+
 android {
     compileSdkVersion 29
 
@@ -49,10 +50,15 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
     implementation 'com.squareup.okhttp3:okhttp:4.2.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.0'
+    implementation 'com.github.dhaval2404:imagepicker:1.7.4'
 
     implementation 'com.github.mancj:MaterialSearchBar:0.8.5'
 
     implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
+
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
     implementation"com.synnapps:carouselview:0.1.5"
     implementation 'com.squareup.picasso:picasso:2.71828'

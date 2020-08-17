@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
         <ImageView
-            android:id="@+id/create_account_logo"
+            android:id="@+id/create_account_image"
             android:layout_width="170dp"
             android:layout_height="170dp"
             android:layout_marginTop="20dp"
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/create_account_logo">
+            app:layout_constraintTop_toBottomOf="@+id/create_account_image">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                     android:inputType="textEmailAddress"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/create_account_logo">
+                    app:layout_constraintTop_toBottomOf="@+id/create_account_image">
                 </com.google.android.material.textfield.TextInputEditText>
 
             </com.google.android.material.textfield.TextInputLayout>

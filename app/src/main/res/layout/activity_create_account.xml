@@ -9,14 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".ui.CreateAccountActivity"
+        android:layout_margin="20dp"
         android:paddingBottom="40dp">
 
-        <ImageView
-            android:id="@+id/create_account_logo"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/create_account_image"
             android:layout_width="170dp"
             android:layout_height="170dp"
             android:layout_marginTop="40dp"
-            android:src="@drawable/ic_etalase_app"
+            android:src="@drawable/upload_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -26,12 +27,10 @@
             android:id="@+id/name_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/create_account_logo">
+            app:layout_constraintTop_toBottomOf="@+id/create_account_image">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_name_register"
@@ -47,9 +46,7 @@
             android:focusable="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/name_register">
@@ -68,9 +65,7 @@
             android:id="@+id/email_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/date_register">
@@ -88,9 +83,7 @@
             android:id="@+id/password_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:passwordToggleEnabled="true"
@@ -107,8 +100,7 @@
 
         <TextView
             android:id="@+id/length_confirmation"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
+
             android:textSize="12sp"
             android:layout_width="match_parent"
             android:textColor="@color/colorDisable"
@@ -121,9 +113,7 @@
             android:id="@+id/password_confirmation_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
             android:layout_marginTop="15dp"
-            android:layout_marginEnd="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:passwordToggleEnabled="true"
@@ -141,8 +131,6 @@
         <TextView
             android:id="@+id/text_confirmation"
             android:textSize="12sp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
             android:layout_width="match_parent"
             android:textColor="@color/colorDisable"
             android:layout_height="wrap_content"
@@ -150,87 +138,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/password_confirmation_register"/>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/country_register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="40dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/password_confirmation_register">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_country_register"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Kota"
-                />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/address_register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="40dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/country_register">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_address_register"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Alamat"
-                />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/website_register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="40dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/address_register">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_website_register"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Website"
-                />
-
-        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btn_resgitration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="40dp"
             android:background="#2C98F0"
             android:text="Buat Akun"
             android:textColor="#fff"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/website_register" />
+            app:layout_constraintTop_toBottomOf="@+id/text_confirmation" />
 
         <TextView
             android:id="@+id/have_account"
             android:gravity="center_horizontal"
             android:text="Sudah Punya Akun?"
             android:layout_marginTop="20dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -241,9 +166,7 @@
             android:id="@+id/btn_to_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="40dp"
             android:background="#555555"
             android:text="Login"
             android:textColor="#fff"

@@ -9,8 +9,9 @@ class AppModel (
     var photo: Int,
     var name: String,
     var downloadLink : String,
-    var playstoreLink: String,
+    var playStoreLink: String,
     var description: String,
     var is_embeded_app: Boolean,
-    var file_size: Int
+    var file_size: Int,
+    var photoPath:String
 ) : Parcelable

@@ -67,6 +67,8 @@ class LoginActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                     if (response.body()?.code == "201"){
                         Toast.makeText(applicationContext,"Login Berhasil",Toast.LENGTH_SHORT).show()
+                        sharedPreferences.edit().putString("name",response.body()?.data?.name).apply()
+                        sharedPreferences.edit().putString("email",response.body()?.data?.email).apply()
                         sharedPreferences.edit().putString("token",response.body()?.data?.token).apply()
                         val intent = Intent(applicationContext, MainActivity::class.java)
                         startActivity(intent)

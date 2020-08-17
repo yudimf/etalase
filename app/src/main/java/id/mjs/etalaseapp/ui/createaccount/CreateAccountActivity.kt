@@ -1,28 +1,41 @@
 package id.mjs.etalaseapp.ui.createaccount
 
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.github.dhaval2404.imagepicker.ImagePicker
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.model.request.RegisterRequest
-import id.mjs.etalaseapp.model.response.LoginDataResponse
 import id.mjs.etalaseapp.model.response.LoginResponse
 import id.mjs.etalaseapp.retrofit.ApiMain
 import kotlinx.android.synthetic.main.activity_create_account.*
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.ResponseBody
+
 
 class CreateAccountActivity : AppCompatActivity() {
 
     private val myCalendar = Calendar.getInstance()
+    private lateinit var photoFile : File
+    private lateinit var filePath : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,16 +43,87 @@ class CreateAccountActivity : AppCompatActivity() {
 
         passwordListener()
         datePickerListener()
+//        btnListener()
 
+        create_account_image.setOnClickListener {
+            ImagePicker.with(this)
+                .cropSquare()
+                .compress(1024)
+                .maxResultSize(620, 620)
+                .galleryOnly()
+                .start()
+        }
+
+        btn_resgitration.setOnClickListener {
+            if (!(filePath.isBlank() && et_email_register.text.toString().isEmpty() && et_password_register.text.toString().isEmpty() && et_name_register.text.toString().isEmpty() && et_date_register.text.toString().isEmpty())){
+                val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),photoFile)
+                val bodyPhoto = MultipartBody.Part.createFormData("photo",photoFile.name,requestFile)
+
+                val email = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),et_email_register.text.toString())
+                val password = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),et_password_register.text.toString())
+                val name = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),et_name_register.text.toString())
+                val sdkVersion = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),Build.VERSION.SDK_INT.toString())
+                val birthday = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),et_date_register.text.toString())
+
+                ApiMain().services.registerUser(email,password,name,sdkVersion,birthday,bodyPhoto).enqueue(object:Callback<LoginResponse>{
+                    override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                        Toast.makeText(applicationContext,"Lengkapi Data",Toast.LENGTH_LONG).show()
+                    }
+
+                    override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                        Log.d("registerresponse",response.body()?.message)
+                        if (response.body()?.code == "500"){
+                            Toast.makeText(applicationContext,response.body()?.message,Toast.LENGTH_LONG).show()
+                            finish()
+                        }
+                        else if(response.body()?.code == "505"){
+                            Toast.makeText(applicationContext,response.body()?.message,Toast.LENGTH_LONG).show()
+                        }
+                    }
+                })
+            }
+            else{
+                Toast.makeText(applicationContext,"Silahkan Lengkapi Data",Toast.LENGTH_LONG).show()
+            }
+
+
+        }
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (resultCode) {
+            Activity.RESULT_OK -> {
+                //Image Uri will not be null for RESULT_OK
+                val fileUri = data?.data
+                create_account_image.setImageURI(fileUri)
+
+                //You can get File object from intent
+                photoFile = ImagePicker.getFile(data)!!
+
+                //You can also get File Path from intent
+                filePath = ImagePicker.getFilePath(data)!!
+            }
+            ImagePicker.RESULT_ERROR -> {
+                Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+                Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun btnListener(){
         btn_resgitration.setOnClickListener {
             val data = RegisterRequest(
                 et_name_register.text.toString(),
                 et_password_register.text.toString(),
                 et_password_confirmation_register.text.toString(),
                 et_email_register.text.toString(),
-                et_website_register.text.toString(),
-                et_country_register.text.toString(),
-                et_address_register.text.toString(),
+                "",
+                "et_country_register.text.toString()",
+                "et_address_register.text.toString()",
                 2,
                 Build.VERSION.SDK_INT.toString()
             )
@@ -63,7 +147,6 @@ class CreateAccountActivity : AppCompatActivity() {
         btn_to_login.setOnClickListener {
             finish()
         }
-
     }
 
     private fun datePickerListener(){
@@ -77,7 +160,7 @@ class CreateAccountActivity : AppCompatActivity() {
                 myCalendar.set(Calendar.YEAR, year)
                 myCalendar.set(Calendar.MONTH, monthOfYear)
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                val myFormat = "MMMM dd, yyyy" //In which you need put here
+                val myFormat = "yyyy-MM-dd" //In which you need put here
                 val sdf = SimpleDateFormat(myFormat, Locale.US)
                 et_date_register.setText(sdf.format(myCalendar.time))
             }, years, month, day)
