@@ -46,6 +46,9 @@ interface ApiServices {
     @GET("api/v1/apps")
     fun getApps(@Header("jwt") jwt : String?, @Query("category_id") category_id : Int) : Call<ListAppDataResponse>
 
+    @GET("api/v1/apps")
+    fun getAllApp(@Header("jwt") jwt : String?) : Call<ListAppDataResponse>
+
     @GET("api/v1/user-info")
     fun getUserInfo(@Header("jwt") jwt : String?) : Call<UserInfoResponse>
 

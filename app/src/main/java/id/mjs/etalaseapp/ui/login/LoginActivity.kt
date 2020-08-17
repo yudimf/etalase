@@ -61,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(applicationContext,"Connection Fail",Toast.LENGTH_SHORT).show()
                     btn_login.setBackgroundColor(resources.getColor(R.color.colorActive))
                     btn_login.isClickable = true
-                    btn_login.hideProgress(R.string.done)
+                    btn_login.hideProgress("Login")
                 }
 
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {

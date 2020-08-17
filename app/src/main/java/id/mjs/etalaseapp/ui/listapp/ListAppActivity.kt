@@ -5,13 +5,11 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.adapter.ListAppsAdapter
 import id.mjs.etalaseapp.model.AppModel
 import id.mjs.etalaseapp.model.Category
-import id.mjs.etalaseapp.model.Download
 import id.mjs.etalaseapp.model.response.ListAppDataResponse
 import id.mjs.etalaseapp.retrofit.ApiMain
 import id.mjs.etalaseapp.ui.download.DownloadActivity
@@ -73,9 +71,15 @@ class ListAppActivity : AppCompatActivity() {
                         val name = app.name
                         val downloadLink = app.apk_file
                         val playStoreLink = "kosong"
-                        val description = "app.description"
-                        val isEmbededApp = false
-                        val fileSize = 11
+                        var description : String? = ""
+                        if (app.description != null){
+                            description = app.description
+                        }
+                        val isEmbeddedApp = false
+                        var fileSize = 0
+                        if (app.file_size != null){
+                            fileSize = app.file_size!! / 1024 / 1024
+                        }
                         val photoPath = app.app_icon
 
                         val appModel = AppModel(
@@ -85,8 +89,8 @@ class ListAppActivity : AppCompatActivity() {
                             downloadLink!!,
                             playStoreLink,
                             description!!,
-                            isEmbededApp,
-                            fileSize!!,
+                            isEmbeddedApp,
+                            fileSize,
                             photoPath!!
                         )
 
@@ -98,6 +102,10 @@ class ListAppActivity : AppCompatActivity() {
             }
 
         })
+
+        btn_back_list_app.setOnClickListener {
+            finish()
+        }
 
     }
 

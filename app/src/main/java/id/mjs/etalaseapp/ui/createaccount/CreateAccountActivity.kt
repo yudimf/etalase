@@ -6,8 +6,10 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
+import android.util.Patterns
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -17,7 +19,8 @@ import id.mjs.etalaseapp.model.request.RegisterRequest
 import id.mjs.etalaseapp.model.response.LoginResponse
 import id.mjs.etalaseapp.retrofit.ApiMain
 import kotlinx.android.synthetic.main.activity_create_account.*
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,10 +28,6 @@ import retrofit2.Response
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.ResponseBody
 
 
 class CreateAccountActivity : AppCompatActivity() {
@@ -36,10 +35,15 @@ class CreateAccountActivity : AppCompatActivity() {
     private val myCalendar = Calendar.getInstance()
     private lateinit var photoFile : File
     private lateinit var filePath : String
+    private var isFileAssign : Boolean = false
+    private var validatePassword : Boolean = false
+    private var validatePasswordConfirmation : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_account)
+
+        Log.d("isvalidemail",isValidEmail("yudi").toString())
 
         passwordListener()
         datePickerListener()
@@ -54,8 +58,15 @@ class CreateAccountActivity : AppCompatActivity() {
                 .start()
         }
 
+        btn_to_login.setOnClickListener {
+            finish()
+        }
+
         btn_resgitration.setOnClickListener {
-            if (!(filePath.isBlank() && et_email_register.text.toString().isEmpty() && et_password_register.text.toString().isEmpty() && et_name_register.text.toString().isEmpty() && et_date_register.text.toString().isEmpty())){
+
+            Log.d("validateinput",validateInput().toString())
+
+            if (validateInput()){
                 val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),photoFile)
                 val bodyPhoto = MultipartBody.Part.createFormData("photo",photoFile.name,requestFile)
 
@@ -86,15 +97,35 @@ class CreateAccountActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext,"Silahkan Lengkapi Data",Toast.LENGTH_LONG).show()
             }
 
-
         }
 
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email)
+            .matches()
+    }
+
+    private fun validateInput() : Boolean{
+
+        return (isFileAssign
+                    && validatePassword
+                    && validatePasswordConfirmation
+                    && isValidEmail(et_email_register.text.toString())
+                    && !et_email_register.text.isNullOrEmpty()
+                    && !et_password_register.text.isNullOrEmpty()
+                    && !et_name_register.text.isNullOrEmpty()
+                    && !et_date_register.text.isNullOrEmpty()
+                )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (resultCode) {
             Activity.RESULT_OK -> {
+
+                isFileAssign = true
+
                 //Image Uri will not be null for RESULT_OK
                 val fileUri = data?.data
                 create_account_image.setImageURI(fileUri)
@@ -181,9 +212,24 @@ class CreateAccountActivity : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (et_password_register.text.toString().length < 6){
                     length_confirmation.text = "Kata sandi harus setidaknya 6 karakter"
+                    validatePassword = false
                 }
                 else{
                     length_confirmation.text = ""
+                    validatePassword = true
+                }
+
+                if (et_password_register.text.toString() == et_password_confirmation_register.text.toString()){
+                    text_confirmation.text = "Kata Sandi Sesuai"
+                    text_confirmation.setTextColor(ContextCompat.getColor(applicationContext,R.color.colorDisable))
+                    validatePasswordConfirmation = true
+                }
+                else{
+                    if (et_password_confirmation_register.text.toString().isNotEmpty()){
+                        text_confirmation.text = "Kata Sandi Tidak Sesuai"
+                        text_confirmation.setTextColor(ContextCompat.getColor(applicationContext,R.color.colorDanger))
+                        validatePasswordConfirmation = false
+                    }
                 }
             }
 
@@ -202,11 +248,13 @@ class CreateAccountActivity : AppCompatActivity() {
                 if (et_password_register.text.toString() == et_password_confirmation_register.text.toString()){
                     text_confirmation.text = "Kata Sandi Sesuai"
                     text_confirmation.setTextColor(ContextCompat.getColor(applicationContext,R.color.colorDisable))
+                    validatePasswordConfirmation = true
                 }
                 else{
                     if (et_password_confirmation_register.text.toString().isNotEmpty()){
                         text_confirmation.text = "Kata Sandi Tidak Sesuai"
                         text_confirmation.setTextColor(ContextCompat.getColor(applicationContext,R.color.colorDanger))
+                        validatePasswordConfirmation = false
                     }
                 }
             }

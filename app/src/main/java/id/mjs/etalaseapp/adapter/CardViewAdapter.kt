@@ -4,9 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.model.AppModel
+import id.mjs.etalaseapp.utils.Utils
 import kotlinx.android.synthetic.main.item_app_cardview.view.*
+import kotlinx.android.synthetic.main.item_category.view.*
 
 class CardViewAdapter(private val listAppModel: ArrayList<AppModel>) : RecyclerView.Adapter<CardViewAdapter.CardViewViewHolder>() {
 
@@ -34,7 +37,9 @@ class CardViewAdapter(private val listAppModel: ArrayList<AppModel>) : RecyclerV
     inner class CardViewViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         fun bind(appModel: AppModel){
             with(itemView) {
-                img_app_card.setImageResource(appModel.photo)
+                val picasso = Picasso.get()
+                picasso.load(Utils.baseUrl+"apps/"+appModel.photoPath)
+                    .into(img_app_card)
                 title_app_card.text = appModel.name
                 val fileSize = "${appModel.file_size} MB"
                 info_app_card.text = fileSize

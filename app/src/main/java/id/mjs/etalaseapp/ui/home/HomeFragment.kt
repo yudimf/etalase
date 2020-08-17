@@ -1,6 +1,8 @@
 package id.mjs.etalaseapp.ui.home
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,8 +15,13 @@ import com.synnapps.carouselview.ImageListener
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.adapter.CardViewAdapter
 import id.mjs.etalaseapp.model.AppModel
+import id.mjs.etalaseapp.model.response.ListAppDataResponse
+import id.mjs.etalaseapp.retrofit.ApiMain
 import id.mjs.etalaseapp.ui.download.DownloadActivity
 import kotlinx.android.synthetic.main.fragment_home.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class HomeFragment : Fragment() {
 
@@ -22,6 +29,10 @@ class HomeFragment : Fragment() {
     private var list = ArrayList<AppModel>()
     private var list2 = ArrayList<AppModel>()
     private var list3 = ArrayList<AppModel>()
+
+    private val cardViewAdapter = CardViewAdapter(list)
+
+    lateinit var sharedPreferences : SharedPreferences
 
     private var sampleImages = arrayOf(
         "https://raw.githubusercontent.com/yudimf/sample_image/master/black_ic.jpeg",
@@ -33,6 +44,7 @@ class HomeFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val carouselView = root.findViewById(R.id.carouselView) as CarouselView
 
+        sharedPreferences = context?.getSharedPreferences("UserPref", Context.MODE_PRIVATE)!!
 
         carouselView.pageCount = sampleImages.size
         carouselView.setImageListener(imageListener)
@@ -43,23 +55,25 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        addList()
-        val cardViewAdapter = CardViewAdapter(list)
+
         rv_list_apps.setHasFixedSize(true)
         rv_list_apps.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
         rv_list_apps.adapter = cardViewAdapter
 
+        addList()
+
+
         addList2()
-        val cardViewAdapter2 = CardViewAdapter(list2)
+//        val cardViewAdapter2 = CardViewAdapter(list)
         rv_list_apps2.setHasFixedSize(true)
         rv_list_apps2.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
-        rv_list_apps2.adapter = cardViewAdapter2
+        rv_list_apps2.adapter = cardViewAdapter
 
         addList3()
-        val cardViewAdapter3 = CardViewAdapter(list3)
+//        val cardViewAdapter3 = CardViewAdapter(list)
         rv_list_apps3.setHasFixedSize(true)
         rv_list_apps3.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
-        rv_list_apps3.adapter = cardViewAdapter3
+        rv_list_apps3.adapter = cardViewAdapter
 
         cardViewAdapter.setOnItemClickCallback(object : CardViewAdapter.OnItemClickCallback{
             override fun onItemClicked(data: AppModel) {
@@ -69,26 +83,75 @@ class HomeFragment : Fragment() {
             }
         })
 
-        cardViewAdapter2.setOnItemClickCallback(object : CardViewAdapter.OnItemClickCallback{
-            override fun onItemClicked(data: AppModel) {
-                val intent = Intent(context, DownloadActivity::class.java)
-                intent.putExtra(DownloadActivity.EXTRA_APP_MODEL,data)
-                startActivity(intent)
-            }
-        })
-
-        cardViewAdapter3.setOnItemClickCallback(object : CardViewAdapter.OnItemClickCallback{
-            override fun onItemClicked(data: AppModel) {
-                val intent = Intent(context, DownloadActivity::class.java)
-                intent.putExtra(DownloadActivity.EXTRA_APP_MODEL,data)
-                startActivity(intent)
-            }
-        })
+//        cardViewAdapter2.setOnItemClickCallback(object : CardViewAdapter.OnItemClickCallback{
+//            override fun onItemClicked(data: AppModel) {
+//                val intent = Intent(context, DownloadActivity::class.java)
+//                intent.putExtra(DownloadActivity.EXTRA_APP_MODEL,data)
+//                startActivity(intent)
+//            }
+//        })
+//
+//        cardViewAdapter3.setOnItemClickCallback(object : CardViewAdapter.OnItemClickCallback{
+//            override fun onItemClicked(data: AppModel) {
+//                val intent = Intent(context, DownloadActivity::class.java)
+//                intent.putExtra(DownloadActivity.EXTRA_APP_MODEL,data)
+//                startActivity(intent)
+//            }
+//        })
 
     }
 
     private fun addList(){
-        list.add(AppModel(7,R.drawable.icon_wawa,"Wawa Adventure Games","test-apps.apk","https://play.google.com/store/apps/details?id=games.wawa",getString(R.string.desc_wawa),false,63,""))
+        val jwt = sharedPreferences.getString("token", "")
+
+        ApiMain().services.getAllApp(jwt).enqueue(object :Callback<ListAppDataResponse>{
+            override fun onFailure(call: Call<ListAppDataResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onResponse(call: Call<ListAppDataResponse>, response: Response<ListAppDataResponse>) {
+                val data = response.body()?.data
+                if (data != null){
+                    for (app in data){
+                        val categoryId = app.category_id
+                        val photo = 0
+                        val name = app.name
+                        val downloadLink = app.apk_file
+                        val playStoreLink = "kosong"
+                        var description : String? = ""
+                        if (app.description != null){
+                            description = app.description
+                        }
+                        val isEmbededApp = false
+                        var fileSize = 0
+                        if (app.file_size != null){
+                            fileSize = app.file_size!! / 1024 / 1024
+                        }
+                        val photoPath = app.app_icon
+
+                        val appModel = AppModel(
+                            categoryId!!.toInt(),
+                            photo,
+                            name!!,
+                            downloadLink!!,
+                            playStoreLink,
+                            description!!,
+                            isEmbededApp,
+                            fileSize,
+                            photoPath!!
+                        )
+
+                        list.add(appModel)
+                    }
+                    cardViewAdapter.notifyDataSetChanged()
+//                    rv_list_apps.adapter = cardViewAdapter
+
+                }
+            }
+
+        })
+
+//        list.add(AppModel(7,R.drawable.icon_wawa,"Wawa Adventure Games","test-apps.apk","https://play.google.com/store/apps/details?id=games.wawa",getString(R.string.desc_wawa),false,63,""))
     }
 
     private fun addList2(){

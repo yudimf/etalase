@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.squareup.picasso.Picasso
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.adapter.CardViewAdapter
 import id.mjs.etalaseapp.adapter.ReviewAdapter
@@ -24,7 +25,9 @@ import id.mjs.etalaseapp.model.Review
 import id.mjs.etalaseapp.services.DownloadService
 import id.mjs.etalaseapp.ui.detail.DetailActivity
 import id.mjs.etalaseapp.ui.review.ReviewActivity
+import id.mjs.etalaseapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_download.*
+import kotlinx.android.synthetic.main.item_app_cardview.view.*
 import java.io.File
 import java.io.InputStream
 
@@ -81,19 +84,23 @@ class DownloadActivity : AppCompatActivity() {
         initReviewLayout()
         initDownloadButton()
 
-        image_view_download_1.setImageResource(appModelSelected.photo)
+//        image_view_download_1.setImageResource(appModelSelected.photo)
+        val picasso = Picasso.get()
+        picasso.load(Utils.baseUrl+"apps/"+appModelSelected.photoPath)
+            .into(image_view_download_1)
         app_name_download_1.text = appModelSelected.name
         val fileSize = appModelSelected.file_size.toString() + "  MB"
         file_size_download_1.text = fileSize
 
-        image_view_download_1.setOnClickListener{
-            val openURL = Intent(Intent.ACTION_VIEW)
-            openURL.data = Uri.parse(appModelSelected.playStoreLink)
-            startActivity(openURL)
-        }
+//        image_view_download_1.setOnClickListener{
+//            val openURL = Intent(Intent.ACTION_VIEW)
+//            openURL.data = Uri.parse(appModelSelected.playStoreLink)
+//            startActivity(openURL)
+//        }
 
         detail_app_btn.setOnClickListener {
             val intent = Intent(applicationContext, DetailActivity::class.java)
+            intent.putExtra(DetailActivity.EXTRA_APP_MODEL,appModelSelected)
             startActivity(intent)
         }
 
@@ -102,6 +109,9 @@ class DownloadActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        btn_back_download.setOnClickListener {
+            finish()
+        }
     }
 
     private fun checkPermission(): Boolean {

@@ -12,6 +12,35 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/layout_head_download"
+            android:orientation="horizontal"
+            android:layout_margin="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/btn_back_download"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_baseline_arrow_back_24"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/btn_search_download"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_baseline_search_24"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,7 +50,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/layout_head_download">
 
             <ImageView
                 android:id="@+id/image_view_download_1"
@@ -354,6 +383,7 @@
             app:layout_constraintTop_toBottomOf="@+id/all_review_btn"/>
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/header_aplikasi_serupa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -369,6 +399,7 @@
             app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/lihat_aplikasi_serupa"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -385,6 +416,7 @@
             app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:visibility="gone"
             android:id="@+id/rv_list_apps_sejenis"
             android:layout_marginTop="8dp"
             android:layout_marginStart="18dp"

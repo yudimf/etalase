@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.profile.ProfileFragment">
 
+
     <LinearLayout
         android:layout_margin="12dp"
         android:layout_width="match_parent"
@@ -12,6 +13,35 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:layout_margin="12dp"
+            android:id="@+id/layout_head_detail"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/btn_back_profile"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_baseline_arrow_back_24"/>
+
+            <TextView
+                android:layout_marginStart="10dp"
+                android:id="@+id/app_name_detail"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Profile"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
             android:id="@+id/btn_my_profile"
             android:padding="10dp"
             android:layout_width="match_parent"

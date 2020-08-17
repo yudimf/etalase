@@ -2,6 +2,7 @@ package id.mjs.etalaseapp.retrofit
 
 import android.app.Application
 import id.mjs.etalaseapp.BuildConfig
+import id.mjs.etalaseapp.utils.Utils
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -19,7 +20,8 @@ class ApiMain : Application() {
             .build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://api-etalase-app.bagustech.id/")
+//        .baseUrl("https://api-etalase-app.bagustech.id/")
+        .baseUrl(Utils.baseUrl)
         .client(client)
         .addConverterFactory(GsonConverterFactory.create())
         .build()

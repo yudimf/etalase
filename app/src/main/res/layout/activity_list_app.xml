@@ -7,15 +7,41 @@
     tools:context=".ui.listapp.ListAppActivity"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/btn_back_list_app"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_baseline_arrow_back_24"/>
+
+        <TextView
+            android:id="@+id/category_name"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Semua"/>
+
+    </LinearLayout>
+
     <TextView
-        android:id="@+id/category_name"
-        android:textSize="18sp"
-        android:layout_margin="16dp"
+        android:layout_marginStart="20dp"
+        android:textSize="16sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Semua"/>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
         android:id="@+id/recycle_view_list_app"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

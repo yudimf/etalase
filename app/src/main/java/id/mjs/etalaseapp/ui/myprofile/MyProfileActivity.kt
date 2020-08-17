@@ -9,6 +9,7 @@ import com.squareup.picasso.Picasso
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.model.response.UserInfoResponse
 import id.mjs.etalaseapp.retrofit.ApiMain
+import id.mjs.etalaseapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_my_profile.*
 import kotlinx.android.synthetic.main.item_category.view.*
 import retrofit2.Call
@@ -35,7 +36,7 @@ class MyProfileActivity : AppCompatActivity() {
             override fun onResponse(call: Call<UserInfoResponse>, response: Response<UserInfoResponse>) {
                 val data = response.body()?.data
                 val picasso = Picasso.get()
-                picasso.load("https://api-etalase-app.bagustech.id/"+data?.picture.toString())
+                picasso.load(Utils.baseUrl+data?.picture.toString())
                     .placeholder(R.drawable.upload_image)
                     .into(my_profile_logo)
                 userInfoName.setText(data?.name.toString())

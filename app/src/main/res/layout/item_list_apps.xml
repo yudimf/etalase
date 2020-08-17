@@ -2,8 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
     android:orientation="horizontal">
 
     <TextView
@@ -31,16 +29,20 @@
 
         <TextView
             android:textSize="12sp"
+            android:textStyle="bold"
+            android:maxLines="1"
             android:id="@+id/txt_list_app_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Arti App-mobile art"/>
         <TextView
+            android:id="@+id/txt_list_size_item"
             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="21 MB"/>
         <TextView
+            android:id="@+id/txt_list_rating_item"
             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
