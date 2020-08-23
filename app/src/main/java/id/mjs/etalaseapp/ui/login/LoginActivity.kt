@@ -102,6 +102,5 @@ class LoginActivity : AppCompatActivity() {
             startActivity(openURL)
         }
 
-
     }
 }

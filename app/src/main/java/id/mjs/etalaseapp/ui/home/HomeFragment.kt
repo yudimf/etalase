@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -106,7 +107,7 @@ class HomeFragment : Fragment() {
 
         ApiMain().services.getAllApp(jwt).enqueue(object :Callback<ListAppDataResponse>{
             override fun onFailure(call: Call<ListAppDataResponse>, t: Throwable) {
-                TODO("Not yet implemented")
+                Log.d("error","connection")
             }
 
             override fun onResponse(call: Call<ListAppDataResponse>, response: Response<ListAppDataResponse>) {

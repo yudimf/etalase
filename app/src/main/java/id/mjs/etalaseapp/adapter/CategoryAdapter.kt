@@ -38,7 +38,7 @@ class CategoryAdapter(private val listCategory: ArrayList<Category>) : RecyclerV
         fun bind(category: Category){
             with(itemView) {
                 txt_category_item.text = category.categoryName
-//                Log.d("path","https://api-etalase-app.bagustech.id/"+category.categoryImage)
+                Log.d("pathIconCategory",Utils.baseUrl+category.categoryImage)
                 val picasso = Picasso.get()
                 picasso.load(Utils.baseUrl+category.categoryImage)
                     .into(img_category_item)

@@ -92,6 +92,7 @@ class CreateAccountActivity : AppCompatActivity(), SupportedDatePickerDialog.OnD
                 ApiMain().services.registerUser(email,password,name,sdkVersion,birthday,bodyPhoto).enqueue(object:Callback<LoginResponse>{
                     override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                         Toast.makeText(applicationContext,"Error",Toast.LENGTH_LONG).show()
+                        Log.d("error",t.message)
                     }
 
                     override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
