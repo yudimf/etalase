@@ -17,7 +17,7 @@
             android:layout_width="170dp"
             android:layout_height="170dp"
             android:layout_marginTop="40dp"
-            android:src="@drawable/upload_image"
+            android:src="@drawable/ic_upload_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -37,6 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nama"
+                android:textSize="14sp"
                 android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -57,6 +58,7 @@
                 android:layout_height="wrap_content"
                 android:focusable="false"
                 android:hint="Tanggal Lahir"
+                android:textSize="14sp"
                 android:inputType="date" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -75,6 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Alamat Email Anda"
+                android:textSize="14sp"
                 android:inputType="textEmailAddress" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -94,13 +97,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Kata Sandi"
+                android:textSize="14sp"
                 android:inputType="textPassword" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/length_confirmation"
-
+            android:layout_marginTop="5dp"
             android:textSize="12sp"
             android:layout_width="match_parent"
             android:textColor="@color/colorDisable"
@@ -124,6 +128,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Konfirmasi Kata Sandi"
+                android:textSize="14sp"
                 android:inputType="textPassword" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -154,7 +159,7 @@
         <TextView
             android:id="@+id/have_account"
             android:gravity="center_horizontal"
-            android:text="Sudah Punya Akun?"
+            android:text="Sudah Punya Akun ?"
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

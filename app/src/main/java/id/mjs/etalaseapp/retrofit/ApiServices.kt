@@ -38,7 +38,7 @@ interface ApiServices {
                      @Part("name") name : RequestBody,
                      @Part("sdk_version") sdk_version : RequestBody,
                      @Part("birthday") birthday : RequestBody,
-                     @Part photo : MultipartBody.Part) : Call<LoginResponse>
+                     @Part photo : MultipartBody.Part?) : Call<LoginResponse>
 
     @GET("api/v1/apps/list-category")
     fun getCategories(@Header("jwt") jwt : String?) : Call<CategoryResponse>

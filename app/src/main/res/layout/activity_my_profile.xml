@@ -1,122 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.myprofile.MyProfileActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
+        android:id="@+id/nav_profile"
+        android:orientation="horizontal"
+        android:layout_margin="18dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/my_profile_logo"
-            android:layout_width="170dp"
-            android:layout_height="170dp"
-            android:layout_marginTop="40dp"
-            android:src="@drawable/upload_image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="Apps Logo" />
+        <ImageView
+            android:id="@+id/btn_back_my_profile"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_baseline_arrow_back_24"/>
 
-        <TextView
-            android:layout_margin="12dp"
-            android:id="@+id/tv_change_profile_picture"
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/category_name"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_margin="18dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Profile Saya"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/my_profile_logo"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/ic_upload_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nav_profile"
+        android:contentDescription="Apps Logo" />
+
+    <TextView
+        android:layout_margin="12dp"
+        android:id="@+id/tv_change_profile_picture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Ganti Profile Picture"
+        android:textSize="12sp"
+        android:textColor="@color/colorActive"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/my_profile_logo"
+        />
+
+    <LinearLayout
+        android:layout_margin="18dp"
+        android:orientation="horizontal"
+        android:id="@+id/layout_name_my_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_change_profile_picture">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/person_24px"
+            android:layout_gravity="center_vertical"/>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:text="Ganti Profile Picture"
-            android:textSize="12sp"
-            android:textColor="@color/colorActive"
-            android:gravity="center_horizontal"
-            app:layout_constraintTop_toBottomOf="@id/my_profile_logo"
-            />
-
-        <LinearLayout
-            android:layout_margin="18dp"
-            android:orientation="horizontal"
-            android:id="@+id/layout_name_my_profile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_change_profile_picture">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/person_24px"
-                android:layout_gravity="center_vertical"/>
-
-            <com.google.android.material.textfield.TextInputLayout
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/userInfoName"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/userInfoName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Nama"
-                    android:textSize="14sp"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content"
+                android:hint="Nama"
+                android:textSize="14sp"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        </LinearLayout>
+    </LinearLayout>
 
-        <LinearLayout
-            android:layout_margin="18dp"
-            android:orientation="horizontal"
-            android:id="@+id/layout_birthday_my_profile"
+    <LinearLayout
+        android:layout_margin="18dp"
+        android:orientation="horizontal"
+        android:id="@+id/layout_birthday_my_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_name_my_profile">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_baseline_date_range_24"
+            android:layout_gravity="center_vertical"/>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_name_my_profile">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_baseline_date_range_24"
-                android:layout_gravity="center_vertical"/>
-
-            <com.google.android.material.textfield.TextInputLayout
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/userInfoBirthday"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/userInfoBirthday"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Tanggal Lahir"
-                    android:textSize="14sp"/>
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:hint="Tanggal Lahir"
+                android:textSize="14sp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
 
-        <LinearLayout
-            android:layout_margin="18dp"
-            android:orientation="horizontal"
-            android:id="@+id/layout_email_my_profile"
+    <LinearLayout
+        android:layout_margin="18dp"
+        android:orientation="horizontal"
+        android:id="@+id/layout_email_my_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_birthday_my_profile">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_baseline_email_24"
+            android:layout_gravity="center_vertical"/>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_birthday_my_profile">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_baseline_email_24"
-                android:layout_gravity="center_vertical"/>
-
-            <com.google.android.material.textfield.TextInputLayout
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/userInfoEmail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/userInfoEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Email"
-                    android:textSize="14sp"/>
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:textSize="14sp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/profile_powered_by"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/powered_by_artek"
+        android:textSize="12dp"
+        android:textColor="#3F88C5"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/beta_version_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-</ScrollView>
+    <TextView
+        android:id="@+id/beta_version_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="beta version 1.0"
+        android:textSize="12dp"
+        android:textColor="#3F88C5"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

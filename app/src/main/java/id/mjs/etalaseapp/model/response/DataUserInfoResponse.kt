@@ -10,6 +10,9 @@ data class DataUserInfoResponse (
     var email: String? = null,
 
     @SerializedName("picture")
-    var picture: String? = null
+    var picture: String? = null,
+
+    @SerializedName("eu_birthday")
+    var birthDate: String? = null
 
 )

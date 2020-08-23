@@ -18,6 +18,7 @@
         <LinearLayout
             android:orientation="horizontal"
             android:id="@+id/linear_layout_email"
+            android:layout_marginTop="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -94,7 +95,7 @@
             android:id="@+id/tv_forgot_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:text="Lupa Password?"
             android:textColor="#3F88C5"
             app:layout_constraintEnd_toEndOf="parent"
@@ -107,7 +108,7 @@
             android:id="@+id/tv_new_in_apps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:text="Baru di Etalase"
             android:textColor="#757575"
             app:layout_constraintEnd_toEndOf="parent"
@@ -137,11 +138,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Powered by Artek"
+        android:textSize="12dp"
         android:textColor="#3F88C5"
         android:gravity="center_horizontal"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/beta_version"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/beta_version"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="beta version 1.0"
+        android:textSize="12dp"
+        android:textColor="#3F88C5"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
