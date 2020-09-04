@@ -1,14 +1,23 @@
 package id.mjs.etalaseapp.ui.login
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.telephony.TelephonyManager
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
@@ -27,11 +36,16 @@ import retrofit2.Response
 class LoginActivity : AppCompatActivity() {
 
     lateinit var sharedPreferences : SharedPreferences
+    lateinit var manager: TelephonyManager
+    lateinit var stringImei1 : String
+    lateinit var stringImei2 : String
+    private lateinit var viewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         sharedPreferences = getSharedPreferences("UserPref", Context.MODE_PRIVATE)
 
         if (sharedPreferences.getString("token","")!!.isNotEmpty()){
@@ -39,7 +53,27 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+        manager =
+            getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        stringImei1 = manager.getDeviceId(0)
+        stringImei2 = manager.getDeviceId(1)
 
+        checkPhoneStatePermission()
+
+        buttonListener()
+    }
+
+    private fun checkPhoneStatePermission(){
+        val permission = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.READ_PHONE_STATE)
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            Log.d("permission","fail")
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE), 1)
+        }
+    }
+
+    private fun btnLoginListener(){
 
         bindProgressButton(btn_login)
         btn_login.setOnClickListener {
@@ -49,42 +83,58 @@ class LoginActivity : AppCompatActivity() {
             val data = LoginRequest(
                 email,
                 password,
-                sdkVersion
+                sdkVersion,
+                stringImei1,
+                stringImei1,
+                Build.MANUFACTURER,
+                Build.MODEL
             )
-            btn_login.setBackgroundColor(resources.getColor(R.color.colorDisable))
-            btn_login.isClickable = false
-            btn_login.showProgress {
-                progressColor = Color.WHITE
-            }
-            ApiMain().services.login(data).enqueue(object : Callback<LoginResponse>{
-                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                    Toast.makeText(applicationContext,"Connection Fail",Toast.LENGTH_SHORT).show()
-                    btn_login.setBackgroundColor(resources.getColor(R.color.colorActive))
-                    btn_login.isClickable = true
-                    btn_login.hideProgress("Login")
-                }
+            btnLoginActive(false)
 
-                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                    if (response.body()?.code == "201"){
-                        Toast.makeText(applicationContext,"Login Berhasil",Toast.LENGTH_SHORT).show()
-                        sharedPreferences.edit().putString("name",response.body()?.data?.name).apply()
-                        sharedPreferences.edit().putString("email",response.body()?.data?.email).apply()
-                        sharedPreferences.edit().putString("token",response.body()?.data?.token).apply()
+            viewModel.login(data).observe(this, Observer {
+                if (it != null){
+                    if (it.code == "201"){
+                        Toast.makeText(applicationContext,it.message,Toast.LENGTH_SHORT).show()
+
+                        sharedPreferences.edit().putString("name",it.data?.name).apply()
+                        sharedPreferences.edit().putString("email",it.data?.email).apply()
+                        sharedPreferences.edit().putString("token",it.data?.token).apply()
+
                         val intent = Intent(applicationContext, MainActivity::class.java)
                         startActivity(intent)
                         finish()
                     }
                     else{
-                        Toast.makeText(applicationContext,"Username / Password Salah",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext,it.message,Toast.LENGTH_SHORT).show()
                     }
-                    btn_login.setBackgroundColor(resources.getColor(R.color.colorActive))
-                    btn_login.isClickable = true
-                    btn_login.hideProgress(R.string.login)
+                    btnLoginActive(true)
                 }
-
+                else{
+                    Toast.makeText(applicationContext,"Connection Fail",Toast.LENGTH_SHORT).show()
+                    btnLoginActive(true)
+                }
             })
-
         }
+    }
+
+    private fun btnLoginActive(status : Boolean){
+        if(status){
+            btn_login.setBackgroundColor(resources.getColor(R.color.colorActive))
+            btn_login.isClickable = true
+            btn_login.hideProgress(R.string.login)
+        }
+        else{
+            btn_login.setBackgroundColor(resources.getColor(R.color.colorDisable))
+            btn_login.isClickable = false
+            btn_login.showProgress {
+                progressColor = Color.WHITE
+            }
+        }
+    }
+
+    private fun buttonListener(){
+
+        btnLoginListener()
 
         btn_create_account.setOnClickListener {
             val intent = Intent(this, CreateAccountActivity::class.java)
@@ -101,6 +151,6 @@ class LoginActivity : AppCompatActivity() {
             openURL.data = Uri.parse("https://ar-tek.co.id/")
             startActivity(openURL)
         }
-
     }
+
 }
