@@ -22,7 +22,7 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        appModelSelected = intent.getParcelableExtra(EXTRA_APP_MODEL) as AppModel
+        appModelSelected = intent.getParcelableExtra<AppModel>(EXTRA_APP_MODEL) as AppModel
 
         btn_back_detail.setOnClickListener {
             finish()

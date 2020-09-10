@@ -14,8 +14,12 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import android.util.Patterns
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -30,6 +34,7 @@ import id.mjs.etalaseapp.utils.DatePickerHelper
 import kotlinx.android.synthetic.main.activity_create_account.*
 import kotlinx.android.synthetic.main.activity_create_account.create_account_image
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.verification_dialog.view.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -86,8 +91,6 @@ class CreateAccountActivity : AppCompatActivity(), SupportedDatePickerDialog.OnD
     private fun btnRegistrationListener(){
         bindProgressButton(btn_resgitration)
         btn_resgitration.setOnClickListener {
-            showLoadingBtnRegistration(true)
-
             val email = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),et_email_register.text.toString())
             val password = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),et_password_register.text.toString())
             val name = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),et_name_register.text.toString())
@@ -99,6 +102,7 @@ class CreateAccountActivity : AppCompatActivity(), SupportedDatePickerDialog.OnD
             val model = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),Build.MODEL)
 
             if (validateInput()){
+                showLoadingBtnRegistration(true)
                 val requestFile : RequestBody?
                 var bodyPhoto : MultipartBody.Part? = null
                 if (isFileAssign){
@@ -113,7 +117,7 @@ class CreateAccountActivity : AppCompatActivity(), SupportedDatePickerDialog.OnD
                     else{
                         if (it.code == "500"){
                             Toast.makeText(applicationContext,it.message,Toast.LENGTH_LONG).show()
-                            finish()
+                            showDialog()
                         }
                         else if(it.code == "505"){
                             Toast.makeText(applicationContext,it.message,Toast.LENGTH_LONG).show()
@@ -126,6 +130,20 @@ class CreateAccountActivity : AppCompatActivity(), SupportedDatePickerDialog.OnD
                 Toast.makeText(applicationContext,"Silahkan Lengkapi Data",Toast.LENGTH_LONG).show()
             }
 
+        }
+    }
+
+    private fun showDialog(){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        val viewGroup = findViewById<ViewGroup>(R.id.content)
+        val dialogView: View = LayoutInflater.from(this)
+            .inflate(R.layout.verification_dialog, viewGroup, false)
+        builder.setView(dialogView)
+        val alertDialog = builder.create()
+        alertDialog.show()
+        dialogView.btn_back_verification_dialog.setOnClickListener {
+            alertDialog.dismiss()
+            finish()
         }
     }
 

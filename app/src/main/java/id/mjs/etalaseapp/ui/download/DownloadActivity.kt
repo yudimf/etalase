@@ -40,7 +40,7 @@ class DownloadActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_download)
-        appModelSelected = intent.getParcelableExtra(EXTRA_APP_MODEL) as AppModel
+        appModelSelected = intent.getParcelableExtra<AppModel>(EXTRA_APP_MODEL) as AppModel
         initLayout()
         registerReceiver()
     }
@@ -151,7 +151,7 @@ class DownloadActivity : AppCompatActivity() {
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action == MESSAGE_PROGRESS) {
-                val download: Download = intent.getParcelableExtra("download")
+                val download: Download = intent.getParcelableExtra("download")!!
                 progress_bar_download!!.progress = download.progress
                 if (download.progress == 100) {
                     progress_text_download!!.text = "File Download Complete"

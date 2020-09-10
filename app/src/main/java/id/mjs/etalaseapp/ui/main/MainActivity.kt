@@ -17,11 +17,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         sharedPreferences = getSharedPreferences("UserPref", Context.MODE_PRIVATE)
-        Log.d("test",sharedPreferences.getString("token","hah kosong"))
+        Log.d("test", sharedPreferences.getString("token","hah kosong").toString())
 
+        val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.

@@ -38,7 +38,7 @@ class DownloadService : IntentService("Download Service") {
     override fun onHandleIntent(p0: Intent?) {
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        appModelSelected = p0?.getParcelableExtra(DownloadActivity.EXTRA_APP_MODEL) as AppModel
+        appModelSelected = p0?.getParcelableExtra<AppModel>(DownloadActivity.EXTRA_APP_MODEL) as AppModel
 
         Log.d("appmodelselected",appModelSelected.name)
 
@@ -65,7 +65,7 @@ class DownloadService : IntentService("Download Service") {
 
     private fun initDownload(){
 //        val request = ApiMain().services.getSampleApps()
-        val request = ApiMain().services.getApps(appModelSelected.downloadLink)
+        val request = ApiMain().services.getAppsByCategory(appModelSelected.downloadLink)
         try {
             downloadFile(request.execute().body())
         }catch (e: IOException) {

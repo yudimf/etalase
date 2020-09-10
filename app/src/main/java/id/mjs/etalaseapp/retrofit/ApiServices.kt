@@ -18,7 +18,7 @@ interface ApiServices {
 
     @POST("apk/{path}/")
     @Streaming
-    fun getApps(@Path("path") path : String): Call<ResponseBody>
+    fun getAppsByCategory(@Path("path") path : String): Call<ResponseBody>
 
     @Headers("Content-Type: application/json")
     @POST("api/v1/login")
@@ -44,11 +44,22 @@ interface ApiServices {
                      @Part("device_brand") deviceBrand : RequestBody,
                      @Part("device_model") deviceModel : RequestBody) : Call<LoginResponse>
 
+    @Multipart
+    @POST("api/v1/user-info/update-profile")
+    fun updateProfile(@Header("jwt") jwt : String?,
+                      @Part("email") email : RequestBody,
+                      @Part("name") name : RequestBody,
+                      @Part("birthday") birthday : RequestBody,
+                      @Part photo : MultipartBody.Part?) : Call<LoginResponse>
+
     @GET("api/v1/apps/list-category")
     fun getCategories(@Header("jwt") jwt : String?) : Call<CategoryResponse>
 
     @GET("api/v1/apps")
-    fun getApps(@Header("jwt") jwt : String?, @Query("category_id") category_id : Int) : Call<ListAppDataResponse>
+    fun getAppsByCategory(@Header("jwt") jwt : String?, @Query("category_id") category_id : Int) : Call<ListAppDataResponse>
+
+    @GET("api/v1/apps")
+    fun getAppsByName(@Header("jwt") jwt : String?, @Query("search") appName : String) : Call<ListAppDataResponse>
 
     @GET("api/v1/apps")
     fun getAllApp(@Header("jwt") jwt : String?) : Call<ListAppDataResponse>
