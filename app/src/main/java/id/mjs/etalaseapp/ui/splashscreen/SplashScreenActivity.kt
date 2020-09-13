@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.ui.login.LoginActivity
+import id.mjs.etalaseapp.ui.main.MainActivity
 
 
 class SplashScreenActivity : AppCompatActivity() {
@@ -19,7 +20,8 @@ class SplashScreenActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash_screen)
 
         Handler().postDelayed({
-            startActivity(Intent(this, LoginActivity::class.java))
+//            startActivity(Intent(this, LoginActivity::class.java))
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
         }, splashTimeOut)
 

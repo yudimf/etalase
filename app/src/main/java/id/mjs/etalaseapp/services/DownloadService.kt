@@ -15,6 +15,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.model.AppModel
 import id.mjs.etalaseapp.model.Download
+import id.mjs.etalaseapp.model.response.AppDataResponse
 import id.mjs.etalaseapp.retrofit.ApiMain
 import id.mjs.etalaseapp.ui.download.DownloadActivity
 import okhttp3.ResponseBody
@@ -29,7 +30,7 @@ class DownloadService : IntentService("Download Service") {
     private lateinit var updatedApk : File
     private var totalFileSize = 0
 
-    lateinit var appModelSelected : AppModel
+    lateinit var appModelSelected : AppDataResponse
 
     companion object {
         const val EXTRA_APP_MODEL = "extra_app_model"
@@ -38,9 +39,9 @@ class DownloadService : IntentService("Download Service") {
     override fun onHandleIntent(p0: Intent?) {
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        appModelSelected = p0?.getParcelableExtra<AppModel>(DownloadActivity.EXTRA_APP_MODEL) as AppModel
+        appModelSelected = p0?.getParcelableExtra<AppDataResponse>(DownloadActivity.EXTRA_APP_MODEL) as AppDataResponse
 
-        Log.d("appmodelselected",appModelSelected.name)
+        Log.d("appmodelselected",appModelSelected.name.toString())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "my_channel_01"
@@ -65,7 +66,7 @@ class DownloadService : IntentService("Download Service") {
 
     private fun initDownload(){
 //        val request = ApiMain().services.getSampleApps()
-        val request = ApiMain().services.getAppsByCategory(appModelSelected.downloadLink)
+        val request = ApiMain().services.getAppsByCategory(appModelSelected.link.toString())
         try {
             downloadFile(request.execute().body())
         }catch (e: IOException) {

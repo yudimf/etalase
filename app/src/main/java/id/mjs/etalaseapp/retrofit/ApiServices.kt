@@ -27,6 +27,12 @@ interface ApiServices {
     @POST("api/v1/forgot-password")
     fun forgotPassword(@Query("email") email:String) : Call<ForgotPasswordResponse>
 
+    @POST("api/v1/user-info/change-password")
+    fun changePassword(@Header("jwt") jwt : String?,
+                       @Query("email") email : String,
+                       @Query("old_password") oldPassword : String,
+                       @Query("new_password") newPassword : String) : Call<ForgotPasswordResponse>
+
     @Headers("Content-Type: application/json")
     @POST("api/v1/register")
     fun register(@Body data : RegisterRequest) : Call<LoginResponse>
@@ -55,16 +61,34 @@ interface ApiServices {
     @GET("api/v1/apps/list-category")
     fun getCategories(@Header("jwt") jwt : String?) : Call<CategoryResponse>
 
+    @GET("api/v1/apps/list-category")
+    fun getCategoriesAnonymous(@Header("signature") signature : String?) : Call<CategoryResponse>
+
     @GET("api/v1/apps")
     fun getAppsByCategory(@Header("jwt") jwt : String?, @Query("category_id") category_id : Int) : Call<ListAppDataResponse>
+
+    @GET("api/v1/apps")
+    fun getAppsByCategoryAnonymous(@Header("signature") signature : String?, @Query("category_id") category_id : Int) : Call<ListAppDataResponse>
 
     @GET("api/v1/apps")
     fun getAppsByName(@Header("jwt") jwt : String?, @Query("search") appName : String) : Call<ListAppDataResponse>
 
     @GET("api/v1/apps")
+    fun getAppsByNameAnonymous(@Header("signature") signature: String?, @Query("search") appName : String) : Call<ListAppDataResponse>
+
+    @GET("api/v1/apps")
     fun getAllApp(@Header("jwt") jwt : String?) : Call<ListAppDataResponse>
+
+    @GET("api/v1/apps")
+    fun getAllAppAnonymous(@Header("signature") signature: String?) : Call<ListAppDataResponse>
 
     @GET("api/v1/user-info")
     fun getUserInfo(@Header("jwt") jwt : String?) : Call<UserInfoResponse>
+
+    @GET("api/v1/ads")
+    fun getAds(@Header("signature") signature : String?) : Call<AdsResponse>
+
+    @GET("api/v1/apps/{appId}/review-feedback")
+    fun getReview(@Header("jwt") jwt : String?, @Path("appId") appId : Int?) : Call<ReviewResponse>
 
 }

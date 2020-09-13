@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -11,10 +12,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mancj.materialsearchbar.MaterialSearchBar
 import com.squareup.picasso.Picasso
@@ -22,11 +24,15 @@ import com.synnapps.carouselview.CarouselView
 import com.synnapps.carouselview.ImageListener
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.adapter.CardViewAdapter
+import id.mjs.etalaseapp.adapter.HomeCardViewAdapter
 import id.mjs.etalaseapp.model.AppModel
+import id.mjs.etalaseapp.model.response.AdsDataResponse
+import id.mjs.etalaseapp.model.response.AppDataResponse
 import id.mjs.etalaseapp.model.response.ListAppDataResponse
 import id.mjs.etalaseapp.retrofit.ApiMain
 import id.mjs.etalaseapp.ui.download.DownloadActivity
 import id.mjs.etalaseapp.ui.searchapp.SearchAppActivity
+import id.mjs.etalaseapp.utils.Utils
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,31 +42,58 @@ import java.lang.reflect.Field
 
 class HomeFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
-    private var list = ArrayList<AppModel>()
+    private lateinit var viewModel: HomeViewModel
 
-    private val cardViewAdapter = CardViewAdapter(list)
+    private var listAppDataResponse = ArrayList<AppDataResponse>()
+    private val homeCardViewAdapter = HomeCardViewAdapter(listAppDataResponse)
+
+    private lateinit var carouselView :  CarouselView
 
     lateinit var sharedPreferences : SharedPreferences
 
     lateinit var searchBar : MaterialSearchBar
 
-    private var sampleImages = arrayOf(
-        "https://raw.githubusercontent.com/yudimf/sample_image/master/black_ic.jpeg",
-        "https://raw.githubusercontent.com/yudimf/sample_image/master/black_ic.jpeg",
-        "https://raw.githubusercontent.com/yudimf/sample_image/master/black_ic.jpeg"
-    )
+//    private var sampleImages = arrayOf(
+//        "https://raw.githubusercontent.com/yudimf/sample_image/master/black_ic.jpeg",
+//        "https://raw.githubusercontent.com/yudimf/sample_image/master/black_ic.jpeg",
+//        "https://raw.githubusercontent.com/yudimf/sample_image/master/black_ic.jpeg"
+//    )
+
+    private var sampleImages = ArrayList<String>()
+
+    private var adsImage = ArrayList<AdsDataResponse>()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val root = inflater.inflate(R.layout.fragment_home, container, false)
+        carouselView = root.findViewById(R.id.carouselView) as CarouselView
+
+        searchBar = root.findViewById(R.id.searchBarApp)
+
+        sharedPreferences = context?.getSharedPreferences("UserPref", Context.MODE_PRIVATE)!!
+        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+
+        getAds()
+        carouselView.pageCount = sampleImages.size
+        carouselView.setImageListener(imageListener)
+        showLoading(true)
+
+        return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setSearchBar()
+        setRecycleView()
+    }
 
     private fun showLoading(status : Boolean){
         val progressBarHome = view?.findViewById<ProgressBar>(R.id.progressBarHome)
         val scrollViewHome = view?.findViewById<ScrollView>(R.id.scroll_view_home)
         if (status){
-            Log.d("asup","asup")
             progressBarHome?.visibility = View.VISIBLE
             scrollViewHome?.visibility = View.GONE
         }
         else{
-            Log.d("asup22","asup")
             progressBarHome?.visibility = View.GONE
             scrollViewHome?.visibility = View.VISIBLE
         }
@@ -111,101 +144,79 @@ class HomeFragment : Fragment() {
         searchBar.closeSearch()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val carouselView = root.findViewById(R.id.carouselView) as CarouselView
+    private fun getAds(){
 
-        searchBar = root.findViewById(R.id.searchBarApp)
+        carouselView.setImageClickListener {
+            val openURL = Intent(Intent.ACTION_VIEW)
+            openURL.data = Uri.parse("http://" + adsImage[it].link)
+            startActivity(openURL)
+        }
 
-        setSearchBar()
+        viewModel.getAds(Utils.signature).observe(viewLifecycleOwner, Observer {
+            if (it.code == 100){
+                for (data in it.data!!){
+                    sampleImages.add(Utils.baseUrl + data.picture.toString())
+                    adsImage.add(data)
+                    Log.d("adsvm",Utils.baseUrl + data.picture.toString())
+                }
+                carouselView.pageCount = sampleImages.size
+                carouselView.setImageListener(imageListener)
+            }
+        })
 
-        sharedPreferences = context?.getSharedPreferences("UserPref", Context.MODE_PRIVATE)!!
-
-        carouselView.pageCount = sampleImages.size
-        carouselView.setImageListener(imageListener)
-
-        showLoading(true)
-
-        return root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        addList()
+    private fun setRecycleView(){
+        addAppList()
 
         rv_list_apps.setHasFixedSize(true)
         rv_list_apps.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
-        rv_list_apps.adapter = cardViewAdapter
+        rv_list_apps.adapter = homeCardViewAdapter
 
         rv_list_apps2.setHasFixedSize(true)
         rv_list_apps2.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
-        rv_list_apps2.adapter = cardViewAdapter
+        rv_list_apps2.adapter = homeCardViewAdapter
 
         rv_list_apps3.setHasFixedSize(true)
         rv_list_apps3.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
-        rv_list_apps3.adapter = cardViewAdapter
+        rv_list_apps3.adapter = homeCardViewAdapter
 
-
-
-        cardViewAdapter.setOnItemClickCallback(object : CardViewAdapter.OnItemClickCallback{
-            override fun onItemClicked(data: AppModel) {
+        homeCardViewAdapter.setOnItemClickCallback(object : HomeCardViewAdapter.OnItemClickCallback{
+            override fun onItemClicked(data: AppDataResponse) {
                 val intent = Intent(context, DownloadActivity::class.java)
                 intent.putExtra(DownloadActivity.EXTRA_APP_MODEL,data)
                 startActivity(intent)
             }
         })
-
     }
 
-    private fun addList(){
+    private fun addAppList(){
         val jwt = sharedPreferences.getString("token", "")
 
-        ApiMain().services.getAllApp(jwt).enqueue(object :Callback<ListAppDataResponse>{
-
-            override fun onFailure(call: Call<ListAppDataResponse>, t: Throwable) {
-                Log.d("error","connection")
-            }
-
-            override fun onResponse(call: Call<ListAppDataResponse>, response: Response<ListAppDataResponse>) {
-                val data = response.body()?.data
-                if (data != null){
-                    for (app in data){
-                        val categoryId = app.category_id
-                        val photo = 0
-                        val name = app.name
-                        val downloadLink = app.apk_file
-                        val playStoreLink = "kosong"
-                        var description : String? = ""
-                        if (app.description != null){
-                            description = app.description
-                        }
-                        val isEmbededApp = false
-                        var fileSize = 0
-                        if (app.file_size != null){
-                            fileSize = app.file_size!! / 1024 / 1024
-                        }
-                        val photoPath = app.app_icon
-
-                        val appModel = AppModel(
-                            categoryId!!.toInt(),
-                            photo,
-                            name!!,
-                            downloadLink!!,
-                            playStoreLink,
-                            description!!,
-                            isEmbededApp,
-                            fileSize,
-                            photoPath!!
-                        )
-                        list.add(appModel)
+        if (jwt?.length != 0){
+            viewModel.getAllApp(jwt.toString()).observe(viewLifecycleOwner, Observer {
+                if (it != null){
+                    val data = it.data
+                    if (data != null) {
+                        listAppDataResponse.addAll(data)
                     }
-                    cardViewAdapter.notifyDataSetChanged()
+                    homeCardViewAdapter.notifyDataSetChanged()
                     showLoading(false)
                 }
-            }
-
-        })
-
+            })
+        }
+        else{
+            viewModel.getAllAppAnonymous(Utils.signature).observe(viewLifecycleOwner, Observer {
+                if (it != null){
+                    val data = it.data
+                    if (data != null) {
+                        listAppDataResponse.addAll(data)
+                    }
+                    homeCardViewAdapter.notifyDataSetChanged()
+                    showLoading(false)
+                }
+            })
+        }
     }
 
     private var imageListener: ImageListener = ImageListener { position, imageView -> // You can use Glide or Picasso here

@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.adapter.ReviewAdapter
-import id.mjs.etalaseapp.model.Review
+import id.mjs.etalaseapp.model.response.Review
 import kotlinx.android.synthetic.main.activity_review.*
 
 class ReviewActivity : AppCompatActivity() {
@@ -27,8 +27,8 @@ class ReviewActivity : AppCompatActivity() {
     }
 
     private fun addList(){
-        for (i in 1..10){
-            listReview.add(Review(1,"1",1,"1","1"))
-        }
+//        for (i in 1..10){
+//            listReview.add(Review(1,"1",1,"1","1"))
+//        }
     }
 }

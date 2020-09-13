@@ -4,19 +4,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import id.mjs.etalaseapp.R
-import id.mjs.etalaseapp.model.Review
+import id.mjs.etalaseapp.model.response.Review
+import id.mjs.etalaseapp.utils.Utils
+import kotlinx.android.synthetic.main.item_list_apps.view.*
 import kotlinx.android.synthetic.main.item_review.view.*
 
 class ReviewAdapter(private val list : ArrayList<Review>) : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
 
-    inner class ViewHolder(listItemView: View) : RecyclerView.ViewHolder(listItemView){
+    private var onItemClickCallback : AppsAdapter.OnItemClickCallback? = null
+
+    fun setOnItemClickCallback(onItemClickCallback: AppsAdapter.OnItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback
+    }
+
+    inner class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         fun bind(review: Review){
             with(itemView){
-//                reviewImageView.setImageResource(review.reviewImage)
-//                reviewerName.text = review.reviewName
-//                reviewDate.text = review.reviewDate
-//                reviewDetail.text = review.reviewDetail
+                val picasso = Picasso.get()
+                picasso.load(Utils.baseUrl+review.endusers?.picture)
+                    .into(review_image_view)
+                reviewer_name.text = review.endusers?.name
+                review_rating_bar.rating = review.ratings?.toFloat()!!
+                review_date.text = review.comment_at
+                review_detail.text = review.comment
             }
         }
     }

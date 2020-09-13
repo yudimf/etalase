@@ -136,4 +136,23 @@ class UserRepository {
         return userInfoResponse
     }
 
+    fun changePassword(jwt : String?, email : String, oldPassword : String, newPassword : String) : MutableLiveData<ForgotPasswordResponse>{
+        val changePasswordResponse = MutableLiveData<ForgotPasswordResponse>()
+
+        ApiMain().services.changePassword(jwt,email,oldPassword,newPassword).enqueue(object : Callback<ForgotPasswordResponse>{
+            override fun onFailure(call: Call<ForgotPasswordResponse>, t: Throwable) {
+                changePasswordResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<ForgotPasswordResponse>, response: Response<ForgotPasswordResponse>) {
+                if (response.isSuccessful){
+                    changePasswordResponse.postValue(response.body())
+                }
+            }
+
+        })
+
+        return changePasswordResponse
+    }
+
 }

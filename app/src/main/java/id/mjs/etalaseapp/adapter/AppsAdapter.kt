@@ -7,12 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.model.AppModel
+import id.mjs.etalaseapp.model.response.AppDataResponse
 import id.mjs.etalaseapp.utils.Utils
-import kotlinx.android.synthetic.main.item_app_cardview.view.*
-import kotlinx.android.synthetic.main.item_category.view.*
 import kotlinx.android.synthetic.main.item_list_apps.view.*
 
-class ListAppsAdapter (private val listAppsModel : ArrayList<AppModel>) : RecyclerView.Adapter<ListAppsAdapter.ViewHolder>(){
+class AppsAdapter(private val listAppsModel : ArrayList<AppDataResponse>) : RecyclerView.Adapter<AppsAdapter.ViewHolder>() {
 
     private var onItemClickCallback : OnItemClickCallback? = null
 
@@ -21,13 +20,17 @@ class ListAppsAdapter (private val listAppsModel : ArrayList<AppModel>) : Recycl
     }
 
     inner class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
-        fun bind(appModel: AppModel){
+        fun bind(appModel: AppDataResponse){
             with(itemView) {
                 val picasso = Picasso.get()
-                picasso.load(Utils.baseUrl+"apps/"+appModel.photoPath)
+                picasso.load(Utils.baseUrl+"apps/"+appModel.app_icon)
                     .into(img_list_app_item)
                 txt_list_app_item.text = appModel.name
-                txt_list_size_item.text = (appModel.file_size).toString() + " MB"
+                if (appModel.file_size != null){
+                    val fileSize = Utils.convertBiteToMB(appModel.file_size!!)
+                    val textFileSize = "$fileSize MB"
+                    txt_list_size_item.text = textFileSize
+                }
                 itemView.setOnClickListener {
                     onItemClickCallback?.onItemClicked(appModel)
                 }
@@ -36,7 +39,7 @@ class ListAppsAdapter (private val listAppsModel : ArrayList<AppModel>) : Recycl
     }
 
     interface OnItemClickCallback {
-        fun onItemClicked(data: AppModel)
+        fun onItemClicked(data: AppDataResponse)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

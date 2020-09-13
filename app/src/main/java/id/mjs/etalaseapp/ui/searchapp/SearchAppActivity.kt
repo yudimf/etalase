@@ -17,12 +17,15 @@ import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mancj.materialsearchbar.MaterialSearchBar
 import id.mjs.etalaseapp.R
+import id.mjs.etalaseapp.adapter.AppsAdapter
 import id.mjs.etalaseapp.adapter.ListAppsAdapter
 import id.mjs.etalaseapp.model.AppModel
+import id.mjs.etalaseapp.model.response.AppDataResponse
 import id.mjs.etalaseapp.model.response.ListAppDataResponse
 import id.mjs.etalaseapp.ui.download.DownloadActivity
 import id.mjs.etalaseapp.ui.login.LoginViewModel
 import id.mjs.etalaseapp.ui.main.MainActivity
+import id.mjs.etalaseapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_list_app.*
 import kotlinx.android.synthetic.main.activity_search_app.*
 import java.lang.reflect.Field
@@ -30,24 +33,53 @@ import java.lang.reflect.Field
 
 class SearchAppActivity : AppCompatActivity() {
 
-    lateinit var stringSearch : String
+    private lateinit var stringSearch : String
+    private lateinit var jwt : String
+
+    private lateinit var viewModel: SearchAppViewModel
+    private lateinit var sharedPreferences : SharedPreferences
+
+    private lateinit var searchBar : MaterialSearchBar
+
+    private var listAppDataResponse = ArrayList<AppDataResponse>()
+    private lateinit var appsAdapter : AppsAdapter
 
     companion object {
         const val EXTRA_STRING_SEARCH = "extra_string_search"
     }
 
-    private lateinit var jwt : String
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_search_app)
 
-    private lateinit var viewModel: SearchAppViewModel
+        sharedPreferences = getSharedPreferences("UserPref", Context.MODE_PRIVATE)!!
+        stringSearch = intent.getStringExtra(EXTRA_STRING_SEARCH) as String
+        viewModel = ViewModelProvider(this).get(SearchAppViewModel::class.java)
+        jwt = sharedPreferences.getString("token", "").toString()
 
-    private lateinit var sharedPreferences : SharedPreferences
+        setSearchBar()
+        setView()
 
-    private lateinit var searchBar : MaterialSearchBar
+        if (stringSearch != ""){
+            searchData(stringSearch)
+        }
 
-    private lateinit var listAppsAdapter : ListAppsAdapter
+    }
 
-    private var list = ArrayList<AppModel>()
-    private var listfiltered = ArrayList<AppModel>()
+    private fun setView(){
+        appsAdapter = AppsAdapter(listAppDataResponse)
+        recycle_view_list_search_app.setHasFixedSize(true)
+        recycle_view_list_search_app.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recycle_view_list_search_app.adapter = appsAdapter
+
+        appsAdapter.setOnItemClickCallback(object : AppsAdapter.OnItemClickCallback{
+            override fun onItemClicked(data: AppDataResponse) {
+                val intent = Intent(applicationContext, DownloadActivity::class.java)
+                intent.putExtra(DownloadActivity.EXTRA_APP_MODEL,data)
+                startActivity(intent)
+            }
+        })
+    }
 
     private fun setSearchBar(){
 
@@ -82,70 +114,42 @@ class SearchAppActivity : AppCompatActivity() {
                     }
                 }
             }
-
             override fun onSearchStateChanged(enabled: Boolean) {
                 Log.d("onSearchStateChanged",enabled.toString())
-
             }
-
             override fun onSearchConfirmed(text: CharSequence?) {
                 Log.d("onSearchConfirmed",text.toString())
                 val appName = text.toString()
                 searchData(appName)
             }
-
         })
     }
 
     private fun searchData(appName : String){
         showLoading(true)
-        viewModel.searchAppByName(jwt.toString(),appName).observe( this@SearchAppActivity, Observer {
-            populateData(it)
-        })
+        if (jwt.isNotEmpty()){
+            viewModel.searchAppByName(jwt.toString(),appName).observe( this@SearchAppActivity, Observer {
+                populateData(it)
+            })
+        }
+        else{
+            viewModel.searchAppByNameAnonymous(Utils.signature,appName).observe(this@SearchAppActivity, Observer {
+                populateData(it)
+            })
+        }
     }
 
     private fun populateData(data : ListAppDataResponse){
-        listfiltered.clear()
+        listAppDataResponse.clear()
         if (data.data != null) {
             if (data.data!!.size == 0){
                 showNotFoundStatus()
                 Log.d("ASup","kadieu")
             }
             else{
-                for (app in data.data!!){
-                    val categoryId = app.category_id
-                    val photo = 0
-                    val name = app.name
-                    val downloadLink = app.apk_file
-                    val playStoreLink = "kosong"
-                    var description : String? = ""
-                    if (app.description != null){
-                        description = app.description
-                    }
-                    val isEmbeddedApp = false
-                    var fileSize = 0
-                    if (app.file_size != null){
-                        fileSize = app.file_size!! / 1024 / 1024
-                    }
-                    val photoPath = app.app_icon
-
-                    val appModel = AppModel(
-                        categoryId!!.toInt(),
-                        photo,
-                        name!!,
-                        downloadLink!!,
-                        playStoreLink,
-                        description!!,
-                        isEmbeddedApp,
-                        fileSize,
-                        photoPath!!
-                    )
-
-                    listfiltered.add(appModel)
-                }
-                listAppsAdapter.notifyDataSetChanged()
+                listAppDataResponse.addAll(data.data!!)
+                appsAdapter.notifyDataSetChanged()
                 showLoading(false)
-                recycle_view_list_search_app.adapter = listAppsAdapter
             }
         }
         else{
@@ -169,37 +173,5 @@ class SearchAppActivity : AppCompatActivity() {
             progress_bar_search_app.visibility = View.GONE
             recycle_view_list_search_app.visibility = View.VISIBLE
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search_app)
-
-        sharedPreferences = getSharedPreferences("UserPref", Context.MODE_PRIVATE)!!
-
-        stringSearch = intent.getStringExtra(EXTRA_STRING_SEARCH) as String
-
-        viewModel = ViewModelProvider(this).get(SearchAppViewModel::class.java)
-
-        Log.d("stringSearch",stringSearch)
-
-        setSearchBar()
-
-        listAppsAdapter = ListAppsAdapter(listfiltered)
-        recycle_view_list_search_app.setHasFixedSize(true)
-        recycle_view_list_search_app.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recycle_view_list_search_app.adapter = listAppsAdapter
-
-        listAppsAdapter.setOnItemClickCallback(object : ListAppsAdapter.OnItemClickCallback{
-            override fun onItemClicked(data: AppModel) {
-                val intent = Intent(applicationContext, DownloadActivity::class.java)
-                intent.putExtra(DownloadActivity.EXTRA_APP_MODEL,data)
-                startActivity(intent)
-            }
-        })
-
-        jwt = sharedPreferences.getString("token", "").toString()
-
-        searchData(stringSearch)
     }
 }

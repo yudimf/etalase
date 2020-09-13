@@ -15,4 +15,8 @@ class SearchAppViewModel(application: Application) : AndroidViewModel(applicatio
         return appRepository.getAppByName(jwt,appName)
     }
 
+    fun searchAppByNameAnonymous(signature : String, appName : String) : MutableLiveData<ListAppDataResponse> {
+        return appRepository.getAppByNameAnonymous(signature,appName)
+    }
+
 }

@@ -101,6 +101,7 @@ class LoginActivity : AppCompatActivity() {
                         sharedPreferences.edit().putString("token",it.data?.token).apply()
 
                         val intent = Intent(applicationContext, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
                         finish()
                     }

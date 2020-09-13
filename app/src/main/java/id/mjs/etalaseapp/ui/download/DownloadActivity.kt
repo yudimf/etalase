@@ -1,18 +1,17 @@
 package id.mjs.etalaseapp.ui.download
 
 import android.Manifest
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.content.pm.PackageManager
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.squareup.picasso.Picasso
@@ -21,26 +20,40 @@ import id.mjs.etalaseapp.adapter.CardViewAdapter
 import id.mjs.etalaseapp.adapter.ReviewAdapter
 import id.mjs.etalaseapp.model.AppModel
 import id.mjs.etalaseapp.model.Download
-import id.mjs.etalaseapp.model.Review
+import id.mjs.etalaseapp.model.response.AppDataResponse
+import id.mjs.etalaseapp.model.response.Review
 import id.mjs.etalaseapp.services.DownloadService
 import id.mjs.etalaseapp.ui.detail.DetailActivity
+import id.mjs.etalaseapp.ui.forgotpassword.ForgotPasswordActivity
+import id.mjs.etalaseapp.ui.login.LoginActivity
 import id.mjs.etalaseapp.ui.review.ReviewActivity
+import id.mjs.etalaseapp.ui.searchapp.SearchAppActivity
 import id.mjs.etalaseapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_download.*
-import kotlinx.android.synthetic.main.item_app_cardview.view.*
 import java.io.File
 import java.io.InputStream
 
 class DownloadActivity : AppCompatActivity() {
 
-    lateinit var appModelSelected : AppModel
+    private lateinit var appModelSelected : AppDataResponse
+
+    private lateinit var viewModel : DownloadViewModel
+    lateinit var sharedPreferences : SharedPreferences
 
     private var list = ArrayList<AppModel>()
     private var listReview = ArrayList<Review>()
+    private lateinit var reviewAdapter : ReviewAdapter
+
+    private lateinit var jwt : String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_download)
-        appModelSelected = intent.getParcelableExtra<AppModel>(EXTRA_APP_MODEL) as AppModel
+        appModelSelected = intent.getParcelableExtra<AppDataResponse>(EXTRA_APP_MODEL) as AppDataResponse
+        viewModel = ViewModelProvider(this).get(DownloadViewModel::class.java)
+        sharedPreferences = getSharedPreferences("UserPref", Context.MODE_PRIVATE)!!
+        jwt = sharedPreferences.getString("token", "").toString()
+
         initLayout()
         registerReceiver()
     }
@@ -54,20 +67,49 @@ class DownloadActivity : AppCompatActivity() {
     }
 
     private fun initReviewLayout(){
-        listReview.add(Review(1,"1",1,"1","1"))
-        listReview.add(Review(1,"1",1,"1","1"))
-        val reviewAdapter = ReviewAdapter(listReview)
+        getReview()
+        reviewAdapter = ReviewAdapter(listReview)
         rv_review.setHasFixedSize(true)
         rv_review.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv_review.adapter = reviewAdapter
     }
 
+    private fun getReview(){
+        if (jwt.isNotEmpty()){
+            viewModel.getReview(jwt.toString(), appModelSelected.idApps!!).observe(this, Observer {
+                if (it != null){
+                    val response = it.reviewDataResponse
+                    val data  = response?.review
+                    if (data != null){
+                        if (data.size<=2){
+                            listReview.add(data[0])
+                        }
+                        if (data.size == 2){
+                            listReview.add(data[1])
+                        }
+                    }
+                    reviewAdapter.notifyDataSetChanged()
+                }
+            })
+        }
+    }
+
     private fun initDownloadButton(){
         btn_download_1.setOnClickListener {
-            if (appModelSelected.is_embeded_app){
-                val openURL = Intent(Intent.ACTION_VIEW)
-                openURL.data = Uri.parse(appModelSelected.playStoreLink)
-                startActivity(openURL)
+            if (jwt.isEmpty()){
+                val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
+                alertDialogBuilder.setMessage("Login untuk melanjutkan ?")
+                alertDialogBuilder.setPositiveButton("Oke") { _, _ ->
+                    val intent = Intent(this, LoginActivity::class.java)
+                    startActivity(intent)
+                }
+                alertDialogBuilder.setNegativeButton("Cancel") { _, _ ->
+//                    Toast.makeText(this@DownloadActivity,"No Clicked",Toast.LENGTH_SHORT).show()
+                }
+
+                val alertDialog = alertDialogBuilder.create()
+                alertDialog.show()
+
             }
             else{
                 if (checkPermission()) {
@@ -84,19 +126,22 @@ class DownloadActivity : AppCompatActivity() {
         initReviewLayout()
         initDownloadButton()
 
-//        image_view_download_1.setImageResource(appModelSelected.photo)
         val picasso = Picasso.get()
-        picasso.load(Utils.baseUrl+"apps/"+appModelSelected.photoPath)
+        picasso.load(Utils.baseUrl+"apps/"+appModelSelected.app_icon)
             .into(image_view_download_1)
         app_name_download_1.text = appModelSelected.name
-        val fileSize = appModelSelected.file_size.toString() + "  MB"
+        val size = Utils.convertBiteToMB(appModelSelected.file_size!!)
+        val fileSize = "$size  MB"
         file_size_download_1.text = fileSize
+        review_rating_bar.rating = appModelSelected.rate!!.toFloat()
 
-//        image_view_download_1.setOnClickListener{
-//            val openURL = Intent(Intent.ACTION_VIEW)
-//            openURL.data = Uri.parse(appModelSelected.playStoreLink)
-//            startActivity(openURL)
-//        }
+        if (appModelSelected.rate!!.toInt() > 5){
+            textView9.text = "5,0"
+        }
+        else{
+            textView9.text = appModelSelected.rate + ",0"
+        }
+
 
         detail_app_btn.setOnClickListener {
             val intent = Intent(applicationContext, DetailActivity::class.java)
@@ -106,6 +151,12 @@ class DownloadActivity : AppCompatActivity() {
 
         all_review_btn.setOnClickListener {
             val intent = Intent(applicationContext, ReviewActivity::class.java)
+            startActivity(intent)
+        }
+
+        btn_search_download.setOnClickListener {
+            val intent = Intent(this, SearchAppActivity::class.java)
+            intent.putExtra(SearchAppActivity.EXTRA_STRING_SEARCH,"")
             startActivity(intent)
         }
 

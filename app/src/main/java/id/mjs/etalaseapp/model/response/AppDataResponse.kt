@@ -1,7 +1,10 @@
 package id.mjs.etalaseapp.model.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class AppDataResponse (
 
     @SerializedName("id")
@@ -61,4 +64,4 @@ data class AppDataResponse (
     @SerializedName("is_partnership")
     var is_partnership: String? = null
 
-)
+) : Parcelable
