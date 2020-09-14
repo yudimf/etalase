@@ -49,9 +49,9 @@ class HomeFragment : Fragment() {
 
     private lateinit var carouselView :  CarouselView
 
-    lateinit var sharedPreferences : SharedPreferences
+    private lateinit var sharedPreferences : SharedPreferences
 
-    lateinit var searchBar : MaterialSearchBar
+    private lateinit var searchBar : MaterialSearchBar
 
 //    private var sampleImages = arrayOf(
 //        "https://raw.githubusercontent.com/yudimf/sample_image/master/black_ic.jpeg",

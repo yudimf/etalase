@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="18dp">
+
+    <TextView
+        android:paddingTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Beri rating aplikasi ini"
+        android:textSize="18dp"
+        android:textAlignment="center"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_margin="10dp"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ulasan bersifat publik dan dapat diedit"/>
+
+    <RatingBar
+        android:id="@+id/input_rating_review"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="1"
+        android:theme="@style/RatingBar"/>
+
+    <EditText
+        android:id="@+id/input_review_desc"
+        android:layout_margin="12dp"
+        android:textSize="12dp"
+        android:background="@drawable/border_side"
+        android:layout_width="match_parent"
+        android:lines="5"
+        android:maxLines="10"
+        android:maxLength="500"
+        android:padding="10dp"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btn_send_review"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kirim"
+        android:background="@color/colorAccent"
+        android:textColor="@color/white"/>
+
+</LinearLayout>

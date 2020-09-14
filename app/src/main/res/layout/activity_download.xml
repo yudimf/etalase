@@ -160,6 +160,21 @@
             app:layout_constraintTop_toBottomOf="@+id/btn_download_1" />
 
         <TextView
+            android:visibility="gone"
+            android:id="@+id/update_review_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="18dp"
+            android:text="Beri Ulasan"
+            android:textColor="#2C98F0"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_download_1" />
+
+        <TextView
             android:id="@+id/detail_app_btn"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -383,7 +398,7 @@
             app:layout_constraintTop_toBottomOf="@+id/all_review_btn"/>
 
         <TextView
-            android:visibility="gone"
+            android:visibility="visible"
             android:id="@+id/header_aplikasi_serupa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -399,7 +414,7 @@
             app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <TextView
-            android:visibility="gone"
+            android:visibility="visible"
             android:id="@+id/lihat_aplikasi_serupa"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -416,7 +431,7 @@
             app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:visibility="gone"
+            android:visibility="visible"
             android:id="@+id/rv_list_apps_sejenis"
             android:layout_marginTop="8dp"
             android:layout_marginStart="18dp"

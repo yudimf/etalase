@@ -88,7 +88,7 @@ class AppsCategoryFragment : Fragment() {
         val jwt = sharedPreferences.getString("token", "")
 
         if (jwt?.length != 0){
-            viewModel.getCategoriesAnonymous(Utils.signature).observe(viewLifecycleOwner, Observer {
+            viewModel.getCategories(jwt.toString()).observe(viewLifecycleOwner, Observer {
                 if (it != null){
                     val data = it.listCategory
                     if (data != null){

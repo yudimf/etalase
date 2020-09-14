@@ -15,7 +15,7 @@ import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import id.mjs.etalaseapp.R
 import kotlinx.android.synthetic.main.activity_forgot_password.*
-import kotlinx.android.synthetic.main.verification_dialog.view.*
+import kotlinx.android.synthetic.main.forgot_password_dialog.view.*
 
 
 class ForgotPasswordActivity : AppCompatActivity() {
@@ -60,7 +60,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
         builder.setView(dialogView)
         val alertDialog = builder.create()
         alertDialog.show()
-        dialogView.btn_back_verification_dialog.setOnClickListener {
+        dialogView.btn_back_forgot_password_dialog.setOnClickListener {
             alertDialog.dismiss()
         }
     }

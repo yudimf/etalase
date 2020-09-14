@@ -1,10 +1,17 @@
 package id.mjs.etalaseapp.ui.download
 
 import android.Manifest
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.RatingBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -16,33 +23,43 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.squareup.picasso.Picasso
 import id.mjs.etalaseapp.R
-import id.mjs.etalaseapp.adapter.CardViewAdapter
+import id.mjs.etalaseapp.adapter.HomeCardViewAdapter
 import id.mjs.etalaseapp.adapter.ReviewAdapter
-import id.mjs.etalaseapp.model.AppModel
 import id.mjs.etalaseapp.model.Download
 import id.mjs.etalaseapp.model.response.AppDataResponse
 import id.mjs.etalaseapp.model.response.Review
+import id.mjs.etalaseapp.receiver.DownloadReceiver
 import id.mjs.etalaseapp.services.DownloadService
 import id.mjs.etalaseapp.ui.detail.DetailActivity
-import id.mjs.etalaseapp.ui.forgotpassword.ForgotPasswordActivity
 import id.mjs.etalaseapp.ui.login.LoginActivity
 import id.mjs.etalaseapp.ui.review.ReviewActivity
 import id.mjs.etalaseapp.ui.searchapp.SearchAppActivity
 import id.mjs.etalaseapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_download.*
+import kotlinx.android.synthetic.main.input_review_dialog.view.*
 import java.io.File
 import java.io.InputStream
 
 class DownloadActivity : AppCompatActivity() {
+
+    companion object {
+        const val MESSAGE_PROGRESS = "message_progress"
+        private const val PERMISSION_REQUEST_CODE = 1
+        const val EXTRA_APP_MODEL = "extra_app_model"
+    }
+
+    private var mAlarmManager : AlarmManager? = null
 
     private lateinit var appModelSelected : AppDataResponse
 
     private lateinit var viewModel : DownloadViewModel
     lateinit var sharedPreferences : SharedPreferences
 
-    private var list = ArrayList<AppModel>()
     private var listReview = ArrayList<Review>()
     private lateinit var reviewAdapter : ReviewAdapter
+
+    private var listAppDataResponse = ArrayList<AppDataResponse>()
+    private val homeCardViewAdapter = HomeCardViewAdapter(listAppDataResponse)
 
     private lateinit var jwt : String
 
@@ -56,19 +73,34 @@ class DownloadActivity : AppCompatActivity() {
 
         initLayout()
         registerReceiver()
+
+        setAlarmManager(appModelSelected.idApps!!,5000)
+    }
+
+    fun setAlarmManager(requestCode : Int, time : Int){
+        val mIntent = Intent(this, DownloadReceiver::class.java)
+        mIntent.putExtra(DownloadReceiver.EXTRA_REQUEST_CODE, requestCode)
+        mIntent.putExtra(EXTRA_APP_MODEL,appModelSelected.package_name)
+        val mPendingIntent = PendingIntent.getBroadcast(this, requestCode, mIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        mAlarmManager = this
+            .getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        mAlarmManager!!.set(
+            AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + time, mPendingIntent
+        )
     }
 
     private fun initSimilarAppsLayout(){
-        addList()
-        val cardViewAdapter = CardViewAdapter(list)
+        addAppList()
+
         rv_list_apps_sejenis.setHasFixedSize(true)
         rv_list_apps_sejenis.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        rv_list_apps_sejenis.adapter = cardViewAdapter
+        rv_list_apps_sejenis.adapter = homeCardViewAdapter
     }
 
     private fun initReviewLayout(){
         getReview()
-        reviewAdapter = ReviewAdapter(listReview)
+        reviewAdapter = ReviewAdapter(listReview, this)
         rv_review.setHasFixedSize(true)
         rv_review.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv_review.adapter = reviewAdapter
@@ -79,9 +111,9 @@ class DownloadActivity : AppCompatActivity() {
             viewModel.getReview(jwt.toString(), appModelSelected.idApps!!).observe(this, Observer {
                 if (it != null){
                     val response = it.reviewDataResponse
-                    val data  = response?.review
-                    if (data != null){
-                        if (data.size<=2){
+                    val data= response?.review
+                    if (data?.isNotEmpty()!!){
+                        if (data.size <= 2){
                             listReview.add(data[0])
                         }
                         if (data.size == 2){
@@ -97,19 +129,9 @@ class DownloadActivity : AppCompatActivity() {
     private fun initDownloadButton(){
         btn_download_1.setOnClickListener {
             if (jwt.isEmpty()){
-                val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
-                alertDialogBuilder.setMessage("Login untuk melanjutkan ?")
-                alertDialogBuilder.setPositiveButton("Oke") { _, _ ->
-                    val intent = Intent(this, LoginActivity::class.java)
-                    startActivity(intent)
-                }
-                alertDialogBuilder.setNegativeButton("Cancel") { _, _ ->
-//                    Toast.makeText(this@DownloadActivity,"No Clicked",Toast.LENGTH_SHORT).show()
-                }
-
-                val alertDialog = alertDialogBuilder.create()
-                alertDialog.show()
-
+//                showAlertLogin()
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
             }
             else{
                 if (checkPermission()) {
@@ -121,6 +143,20 @@ class DownloadActivity : AppCompatActivity() {
         }
     }
 
+    private fun showAlertLogin(){
+        val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
+        alertDialogBuilder.setMessage("Login untuk melanjutkan ?")
+        alertDialogBuilder.setPositiveButton("Oke") { _, _ ->
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
+        alertDialogBuilder.setNegativeButton("Cancel") { _, _ ->
+//                    Toast.makeText(this@DownloadActivity,"No Clicked",Toast.LENGTH_SHORT).show()
+        }
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
     private fun initLayout(){
         initSimilarAppsLayout()
         initReviewLayout()
@@ -130,9 +166,11 @@ class DownloadActivity : AppCompatActivity() {
         picasso.load(Utils.baseUrl+"apps/"+appModelSelected.app_icon)
             .into(image_view_download_1)
         app_name_download_1.text = appModelSelected.name
-        val size = Utils.convertBiteToMB(appModelSelected.file_size!!)
-        val fileSize = "$size  MB"
-        file_size_download_1.text = fileSize
+        if (appModelSelected.file_size != null){
+            val size = Utils.convertBiteToMB(appModelSelected.file_size!!)
+            val fileSize = "$size  MB"
+            file_size_download_1.text = fileSize
+        }
         review_rating_bar.rating = appModelSelected.rate!!.toFloat()
 
         if (appModelSelected.rate!!.toInt() > 5){
@@ -142,15 +180,35 @@ class DownloadActivity : AppCompatActivity() {
             textView9.text = appModelSelected.rate + ",0"
         }
 
+        review_btn.setOnClickListener {
+            if (jwt.isEmpty()){
+//                showAlertLogin()
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+                Log.d("jwt.isEmpty()","asup")
+            }
+            else{
+                showInputReviewDialog()
+            }
+        }
+
+        all_review_btn.setOnClickListener {
+            if (jwt.isEmpty()){
+//                showAlertLogin()
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+                Log.d("jwt.isEmpty()","asup")
+            }
+            else{
+                val intent = Intent(applicationContext, ReviewActivity::class.java)
+                intent.putExtra(ReviewActivity.EXTRA_APP_MODEL,appModelSelected)
+                startActivity(intent)
+            }
+        }
 
         detail_app_btn.setOnClickListener {
             val intent = Intent(applicationContext, DetailActivity::class.java)
             intent.putExtra(DetailActivity.EXTRA_APP_MODEL,appModelSelected)
-            startActivity(intent)
-        }
-
-        all_review_btn.setOnClickListener {
-            val intent = Intent(applicationContext, ReviewActivity::class.java)
             startActivity(intent)
         }
 
@@ -162,6 +220,27 @@ class DownloadActivity : AppCompatActivity() {
 
         btn_back_download.setOnClickListener {
             finish()
+        }
+    }
+
+    private fun showInputReviewDialog(){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        val viewGroup = findViewById<ViewGroup>(R.id.content)
+        val dialogView: View = LayoutInflater.from(this)
+            .inflate(R.layout.input_review_dialog, viewGroup, false)
+        builder.setView(dialogView)
+        val alertDialog = builder.create()
+        alertDialog.show()
+        dialogView.btn_send_review.setOnClickListener {
+            val rating = dialogView.findViewById<RatingBar>(R.id.input_rating_review)
+            val desc = dialogView.findViewById<EditText>(R.id.input_review_desc)
+            viewModel.postReview(jwt, appModelSelected.idApps!!,rating.rating.toInt(),desc.text.toString())
+                .observe(this, Observer {
+                    if (it != null){
+                        Toast.makeText(this, it.message,Toast.LENGTH_SHORT).show()
+                    }
+            })
+            alertDialog.dismiss()
         }
     }
 
@@ -184,6 +263,35 @@ class DownloadActivity : AppCompatActivity() {
         progress_text_download.visibility = View.VISIBLE
         progress_bar_download.isIndeterminate = true
         Toast.makeText(this,"Downloading..",Toast.LENGTH_LONG).show()
+    }
+
+    private fun addAppList(){
+        val jwt = sharedPreferences.getString("token", "")
+
+        if (jwt?.length != 0){
+            viewModel.getAllApp(jwt.toString()).observe(this, Observer {
+                if (it != null){
+                    val data = it.data
+                    if (data != null) {
+                        listAppDataResponse.addAll(data)
+                    }
+                    homeCardViewAdapter.notifyDataSetChanged()
+//                    showLoading(false)
+                }
+            })
+        }
+        else{
+            viewModel.getAllAppAnonymous(Utils.signature).observe(this, Observer {
+                if (it != null){
+                    val data = it.data
+                    if (data != null) {
+                        listAppDataResponse.addAll(data)
+                    }
+                    homeCardViewAdapter.notifyDataSetChanged()
+//                    showLoading(false)
+                }
+            })
+        }
     }
 
     private fun InputStream.saveToFile(file: String) = use { input ->
@@ -214,24 +322,6 @@ class DownloadActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
-        const val MESSAGE_PROGRESS = "message_progress"
-        private const val PERMISSION_REQUEST_CODE = 1
-        const val EXTRA_APP_MODEL = "extra_app_model"
-    }
 
-    private fun addList(){
-        list.add(AppModel(1,R.drawable.ic_tokped,"Tokopedia","","https://play.google.com/store/apps/details?id=com.tokopedia.tkpd",getString(R.string.desc_tokopedia),true,44,""))
-        list.add(AppModel(1,R.drawable.ic_alfacart,"Alfacart","","https://play.google.com/store/apps/details?id=com.alfacart.apps",getString(R.string.desc_alfacart),true,17,""))
-        list.add(AppModel(1,R.drawable.ic_alfagift,"Alfagift","","https://play.google.com/store/apps/details?id=com.alfamart.alfagift",getString(R.string.desc_alfagift),true,18,""))
-        list.add(AppModel(1,R.drawable.ic_blibli,"Blibli","","https://play.google.com/store/apps/details?id=blibli.mobile.commerce",getString(R.string.desc_blibli),true,26,""))
-        list.add(AppModel(1,R.drawable.ic_mataharimall,"Matahari Mall","","https://play.google.com/store/apps/details?id=app.ndtv.matahari",getString(R.string.desc_matahari_dept),true,21,""))
-        list.add(AppModel(2,R.drawable.ic_babe,"Babe - Baca Berita","","https://play.google.com/store/apps/details?id=id.co.babe",getString(R.string.desc_babe),true,34,""))
-        list.add(AppModel(2,R.drawable.ic_baca,"Baca Berita, Video, Komunitas Game & Nama Keren","","https://play.google.com/store/apps/details?id=com.jakarta.baca",getString(R.string.desc_baca),true,20,""))
-        list.add(AppModel(2,R.drawable.ic_detik,"Detik","","https://play.google.com/store/apps/details?id=org.detikcom.rss",getString(R.string.desc_detik),true,18,""))
-        list.add(AppModel(2,R.drawable.ic_cnn,"CNN","","https://play.google.com/store/apps/details?id=com.cnn.mobile.android.phone",getString(R.string.desc_cnn),true,14,""))
-        list.add(AppModel(9,R.drawable.ic_catfiz,"Catfiz","","https://play.google.com/store/apps/details?id=com.catfiz",getString(R.string.desc_catfiz),true,14,""))
-        list.add(AppModel(8,R.drawable.ic_vidio,"Vidio.com","","https://play.google.com/store/apps/details?id=com.vidio.android",getString(R.string.desc_vidio),true,13,""))
-        list.add(AppModel(7,R.drawable.icon_wawa,"Wawa Adventure Games","","https://play.google.com/store/apps/details?id=games.wawa",getString(R.string.desc_wawa),false,63,""))
-    }
+
 }

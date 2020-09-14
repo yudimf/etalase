@@ -7,5 +7,8 @@ data class BaseResponse(
     var code: String? = null,
 
     @SerializedName("message")
-    var message: String? = null
+    var message: String? = null,
+
+    @SerializedName("data")
+    var data: String? = null
 )

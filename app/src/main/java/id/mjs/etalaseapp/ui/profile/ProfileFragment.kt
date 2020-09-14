@@ -45,7 +45,9 @@ class ProfileFragment : Fragment() {
 
         btn_my_profile.setOnClickListener {
             if (jwt.isEmpty()){
-                showAlertLogin()
+//                showAlertLogin()
+                val intent = Intent(context, LoginActivity::class.java)
+                startActivity(intent)
             }
             else{
                 val intent = Intent(context, MyProfileActivity::class.java)
@@ -54,7 +56,9 @@ class ProfileFragment : Fragment() {
         }
         btn_change_password.setOnClickListener {
             if (jwt.isEmpty()){
-                showAlertLogin()
+//                showAlertLogin()
+                val intent = Intent(context, LoginActivity::class.java)
+                startActivity(intent)
             }
             else{
                 val intent = Intent(context, ChangePasswordActivity::class.java)
@@ -71,7 +75,7 @@ class ProfileFragment : Fragment() {
         }
         btn_logout.setOnClickListener {
             val alertDialogBuilder = AlertDialog.Builder(requireContext())
-            alertDialogBuilder.setMessage("Log out dari Aplikasi ?")
+            alertDialogBuilder.setMessage("Log out ?")
             alertDialogBuilder.setPositiveButton("Oke") { _, _ ->
                 val editor : SharedPreferences.Editor = sharedPreferences.edit()
                 editor.clear()

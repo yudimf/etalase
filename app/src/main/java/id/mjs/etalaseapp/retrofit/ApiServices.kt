@@ -91,4 +91,10 @@ interface ApiServices {
     @GET("api/v1/apps/{appId}/review-feedback")
     fun getReview(@Header("jwt") jwt : String?, @Path("appId") appId : Int?) : Call<ReviewResponse>
 
+    @POST("/api/v1/apps/review")
+    fun postReview(@Header("jwt") jwt : String?,
+                   @Query("app_id") appId : Int?,
+                   @Query("ratings") ratings : Int?,
+                   @Query("comment") comment : String?) : Call<BaseResponse>
+
 }

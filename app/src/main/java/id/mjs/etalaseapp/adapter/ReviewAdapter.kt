@@ -1,8 +1,11 @@
 package id.mjs.etalaseapp.adapter
 
+import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import id.mjs.etalaseapp.R
@@ -11,9 +14,11 @@ import id.mjs.etalaseapp.utils.Utils
 import kotlinx.android.synthetic.main.item_list_apps.view.*
 import kotlinx.android.synthetic.main.item_review.view.*
 
-class ReviewAdapter(private val list : ArrayList<Review>) : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
+class ReviewAdapter(private val list : ArrayList<Review>, context : Context) : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
 
     private var onItemClickCallback : AppsAdapter.OnItemClickCallback? = null
+
+    var ctx = context
 
     fun setOnItemClickCallback(onItemClickCallback: AppsAdapter.OnItemClickCallback) {
         this.onItemClickCallback = onItemClickCallback
@@ -29,6 +34,12 @@ class ReviewAdapter(private val list : ArrayList<Review>) : RecyclerView.Adapter
                 review_rating_bar.rating = review.ratings?.toFloat()!!
                 review_date.text = review.comment_at
                 review_detail.text = review.comment
+
+                titik_tiga.setOnClickListener {
+                    Log.d("titik_tiga","asup")
+
+                }
+
             }
         }
     }

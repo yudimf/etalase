@@ -1,14 +1,13 @@
 package id.mjs.etalaseapp.repository
 
 import androidx.lifecycle.MutableLiveData
-import id.mjs.etalaseapp.model.response.CategoryResponse
-import id.mjs.etalaseapp.model.response.ListAppDataResponse
-import id.mjs.etalaseapp.model.response.LoginResponse
-import id.mjs.etalaseapp.model.response.ReviewResponse
+import id.mjs.etalaseapp.model.response.*
 import id.mjs.etalaseapp.retrofit.ApiMain
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.http.Header
+import retrofit2.http.Query
 
 class AppRepository {
 
@@ -166,7 +165,23 @@ class AppRepository {
                     reviewResponse.postValue(response.body())
                 }
             }
+        })
+        return reviewResponse
+    }
 
+    fun postReview(jwt : String, appId : Int, ratings : Int, comment : String) : MutableLiveData<BaseResponse>{
+        val reviewResponse = MutableLiveData<BaseResponse>()
+
+        ApiMain().services.postReview(jwt,appId,ratings,comment).enqueue(object : Callback<BaseResponse>{
+            override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
+                reviewResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
+                if (response.isSuccessful){
+                    reviewResponse.postValue(response.body())
+                }
+            }
         })
 
         return reviewResponse
