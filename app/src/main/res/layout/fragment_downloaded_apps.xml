@@ -5,9 +5,30 @@
     android:layout_height="match_parent"
     tools:context=".ui.myapps.DownloadedAppsFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_grid_apps"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_check_for_update"
+                android:layout_margin="10dp"
+                android:layout_height="24dp"
+                android:background="@drawable/rounded_button"
+                android:layout_width="wrap_content"
+                android:layout_gravity="right"
+                android:text="Cek Pembaharuan"
+                android:padding="5dp"
+                android:textSize="10sp"
+                android:textAllCaps="false"
+                android:textColor="@color/colorActive"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_grid_apps"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
+
 
 </FrameLayout>

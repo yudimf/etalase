@@ -2,9 +2,7 @@ package id.mjs.etalaseapp.repository
 
 import androidx.lifecycle.MutableLiveData
 import id.mjs.etalaseapp.model.response.AdsResponse
-import id.mjs.etalaseapp.model.response.ListAppDataResponse
 import id.mjs.etalaseapp.retrofit.ApiMain
-import id.mjs.etalaseapp.retrofit.ApiServices
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

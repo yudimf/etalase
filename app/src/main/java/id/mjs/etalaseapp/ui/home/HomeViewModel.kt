@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import id.mjs.etalaseapp.model.response.AdsResponse
-import id.mjs.etalaseapp.model.response.ListAppDataResponse
+import id.mjs.etalaseapp.model.response.AppResponse
 import id.mjs.etalaseapp.repository.AdsRepository
 import id.mjs.etalaseapp.repository.AppRepository
 
@@ -17,11 +17,11 @@ class HomeViewModel (application: Application) : AndroidViewModel(application) {
         return adsRepository.getAds(signature)
     }
 
-    fun getAllAppAnonymous(signature: String) : MutableLiveData<ListAppDataResponse>{
+    fun getAllAppAnonymous(signature: String) : MutableLiveData<AppResponse>{
         return appRepository.getAllAppAnonymous(signature)
     }
 
-    fun getAllApp(jwt : String) : MutableLiveData<ListAppDataResponse>{
+    fun getAllApp(jwt : String) : MutableLiveData<AppResponse>{
         return appRepository.getAllApp(jwt)
     }
 

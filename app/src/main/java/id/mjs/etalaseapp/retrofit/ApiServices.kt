@@ -2,6 +2,7 @@ package id.mjs.etalaseapp.retrofit
 
 import id.mjs.etalaseapp.model.request.LoginRequest
 import id.mjs.etalaseapp.model.request.RegisterRequest
+import id.mjs.etalaseapp.model.request.UpdateRequest
 import id.mjs.etalaseapp.model.response.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -65,22 +66,22 @@ interface ApiServices {
     fun getCategoriesAnonymous(@Header("signature") signature : String?) : Call<CategoryResponse>
 
     @GET("api/v1/apps")
-    fun getAppsByCategory(@Header("jwt") jwt : String?, @Query("category_id") category_id : Int) : Call<ListAppDataResponse>
+    fun getAppsByCategory(@Header("jwt") jwt : String?, @Query("category_id") category_id : Int) : Call<AppResponse>
 
     @GET("api/v1/apps")
-    fun getAppsByCategoryAnonymous(@Header("signature") signature : String?, @Query("category_id") category_id : Int) : Call<ListAppDataResponse>
+    fun getAppsByCategoryAnonymous(@Header("signature") signature : String?, @Query("category_id") category_id : Int) : Call<AppResponse>
 
     @GET("api/v1/apps")
-    fun getAppsByName(@Header("jwt") jwt : String?, @Query("search") appName : String) : Call<ListAppDataResponse>
+    fun getAppsByName(@Header("jwt") jwt : String?, @Query("search") appName : String) : Call<AppResponse>
 
     @GET("api/v1/apps")
-    fun getAppsByNameAnonymous(@Header("signature") signature: String?, @Query("search") appName : String) : Call<ListAppDataResponse>
+    fun getAppsByNameAnonymous(@Header("signature") signature: String?, @Query("search") appName : String) : Call<AppResponse>
 
     @GET("api/v1/apps")
-    fun getAllApp(@Header("jwt") jwt : String?) : Call<ListAppDataResponse>
+    fun getAllApp(@Header("jwt") jwt : String?) : Call<AppResponse>
 
     @GET("api/v1/apps")
-    fun getAllAppAnonymous(@Header("signature") signature: String?) : Call<ListAppDataResponse>
+    fun getAllAppAnonymous(@Header("signature") signature: String?) : Call<AppResponse>
 
     @GET("api/v1/user-info")
     fun getUserInfo(@Header("jwt") jwt : String?) : Call<UserInfoResponse>
@@ -96,5 +97,11 @@ interface ApiServices {
                    @Query("app_id") appId : Int?,
                    @Query("ratings") ratings : Int?,
                    @Query("comment") comment : String?) : Call<BaseResponse>
+
+    @POST("/api/v1/apps/downloaded")
+    fun postStatusDownload(@Header("jwt") jwt : String?, @Query("apps_id") appsId : Int?) : Call<StatusDownloadedResponse>
+
+    @POST("api/v1/apps/installed")
+    fun checkForUpdate(@Header("jwt") jwt : String?, @Body data : UpdateRequest) : Call<AppResponse>
 
 }

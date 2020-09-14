@@ -24,10 +24,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ui.checkforupdate.CheckForUpdateActivity"></activity>
+
         <receiver
             android:name=".receiver.DownloadReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
 
         <activity
             android:name=".ui.searchapp.SearchAppActivity"

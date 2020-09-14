@@ -7,26 +7,19 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
-import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mancj.materialsearchbar.MaterialSearchBar
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.adapter.AppsAdapter
-import id.mjs.etalaseapp.adapter.ListAppsAdapter
-import id.mjs.etalaseapp.model.AppModel
 import id.mjs.etalaseapp.model.response.AppDataResponse
-import id.mjs.etalaseapp.model.response.ListAppDataResponse
+import id.mjs.etalaseapp.model.response.AppResponse
 import id.mjs.etalaseapp.ui.download.DownloadActivity
-import id.mjs.etalaseapp.ui.login.LoginViewModel
-import id.mjs.etalaseapp.ui.main.MainActivity
 import id.mjs.etalaseapp.utils.Utils
-import kotlinx.android.synthetic.main.activity_list_app.*
 import kotlinx.android.synthetic.main.activity_search_app.*
 import java.lang.reflect.Field
 
@@ -139,7 +132,7 @@ class SearchAppActivity : AppCompatActivity() {
         }
     }
 
-    private fun populateData(data : ListAppDataResponse){
+    private fun populateData(data : AppResponse){
         listAppDataResponse.clear()
         if (data.data != null) {
             if (data.data!!.size == 0){

@@ -1,5 +1,8 @@
 package id.mjs.etalaseapp.ui.myapps
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.os.Bundle
@@ -13,6 +16,9 @@ import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.adapter.GridAppsAdapter
 import id.mjs.etalaseapp.model.AppInfo
 import id.mjs.etalaseapp.model.AppModel
+import id.mjs.etalaseapp.ui.checkforupdate.CheckForUpdateActivity
+import id.mjs.etalaseapp.ui.createaccount.CreateAccountActivity
+import id.mjs.etalaseapp.ui.login.LoginActivity
 import kotlinx.android.synthetic.main.fragment_downloaded_apps.*
 
 
@@ -30,6 +36,9 @@ class DownloadedAppsFragment : Fragment() {
 
     private var list = ArrayList<AppInfo>()
 
+    lateinit var sharedPreferences : SharedPreferences
+    lateinit var jwt : String
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_downloaded_apps, container, false)
@@ -37,12 +46,25 @@ class DownloadedAppsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sharedPreferences = context?.getSharedPreferences("UserPref", Context.MODE_PRIVATE)!!
+        jwt = sharedPreferences.getString("token", "").toString()
 
         addList()
 
         rv_grid_apps.layoutManager = GridLayoutManager(context, 3)
         val gridHeroAdapter = GridAppsAdapter(list)
         rv_grid_apps.adapter = gridHeroAdapter
+
+        btn_check_for_update.setOnClickListener {
+            if (jwt.isEmpty()){
+                val intent = Intent(context, LoginActivity::class.java)
+                startActivity(intent)
+            }
+            else{
+                val intent = Intent(context, CheckForUpdateActivity::class.java)
+                startActivity(intent)
+            }
+        }
     }
 
     private fun addList(){

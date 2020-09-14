@@ -73,14 +73,13 @@ class DownloadActivity : AppCompatActivity() {
 
         initLayout()
         registerReceiver()
-
-        setAlarmManager(appModelSelected.idApps!!,5000)
     }
 
     fun setAlarmManager(requestCode : Int, time : Int){
         val mIntent = Intent(this, DownloadReceiver::class.java)
         mIntent.putExtra(DownloadReceiver.EXTRA_REQUEST_CODE, requestCode)
         mIntent.putExtra(EXTRA_APP_MODEL,appModelSelected.package_name)
+        mIntent.putExtra(DownloadReceiver.EXTRA_JWT,jwt)
         val mPendingIntent = PendingIntent.getBroadcast(this, requestCode, mIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         mAlarmManager = this
@@ -314,6 +313,7 @@ class DownloadActivity : AppCompatActivity() {
                 progress_bar_download!!.progress = download.progress
                 if (download.progress == 100) {
                     progress_text_download!!.text = "File Download Complete"
+                    setAlarmManager(appModelSelected.idApps!!,60* 60 * 1000)
                 } else {
                     progress_bar_download.isIndeterminate = false
                     progress_text_download!!.text = String.format("Downloaded (%d/%d) MB", download.currentFileSize, download.totalFileSize)

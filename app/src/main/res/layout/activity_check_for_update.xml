@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.listapp.ListAppActivity"
+    tools:context=".ui.checkforupdate.CheckForUpdateActivity"
     android:orientation="vertical">
 
     <LinearLayout
@@ -17,14 +17,14 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/btn_back_list_app"
+            android:id="@+id/btn_back_update"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_baseline_arrow_back_24"/>
 
         <TextView
-            android:id="@+id/category_name_list_app"
+            android:id="@+id/category_name_update"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_width="match_parent"
@@ -42,12 +42,12 @@
         android:text="Semua"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_progress_list_app"
+        android:id="@+id/layout_progress_update"
         android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <ProgressBar
-            android:id="@+id/progress_bar_list_app"
+            android:id="@+id/progress_bar_update"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"
-        android:id="@+id/recycle_view_list_app"
+        android:id="@+id/recycle_view_update"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

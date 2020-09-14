@@ -24,16 +24,16 @@
         android:layout_height="wrap_content"/>
 
     <Button
-        android:layout_marginTop="4dp"
-        android:background="@drawable/rounded_button"
         android:id="@+id/btn_update_item_grid"
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
+        android:layout_height="20dp"
         android:layout_gravity="center"
-        android:text="Perbaharui"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/rounded_button"
+        android:text="Buka"
         android:textAllCaps="false"
-        android:textSize="10sp"
-        android:textColor="@color/colorActive"/>
+        android:textColor="@color/colorActive"
+        android:textSize="10sp" />
 
 
 

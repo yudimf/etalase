@@ -23,20 +23,13 @@ import com.squareup.picasso.Picasso
 import com.synnapps.carouselview.CarouselView
 import com.synnapps.carouselview.ImageListener
 import id.mjs.etalaseapp.R
-import id.mjs.etalaseapp.adapter.CardViewAdapter
 import id.mjs.etalaseapp.adapter.HomeCardViewAdapter
-import id.mjs.etalaseapp.model.AppModel
 import id.mjs.etalaseapp.model.response.AdsDataResponse
 import id.mjs.etalaseapp.model.response.AppDataResponse
-import id.mjs.etalaseapp.model.response.ListAppDataResponse
-import id.mjs.etalaseapp.retrofit.ApiMain
 import id.mjs.etalaseapp.ui.download.DownloadActivity
 import id.mjs.etalaseapp.ui.searchapp.SearchAppActivity
 import id.mjs.etalaseapp.utils.Utils
 import kotlinx.android.synthetic.main.fragment_home.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.lang.reflect.Field
 
 

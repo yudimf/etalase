@@ -7,26 +7,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ProgressBar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.adapter.AppsAdapter
-import id.mjs.etalaseapp.adapter.ListAppsAdapter
-import id.mjs.etalaseapp.model.AppModel
 import id.mjs.etalaseapp.model.Category
 import id.mjs.etalaseapp.model.response.AppDataResponse
-import id.mjs.etalaseapp.model.response.ListAppDataResponse
-import id.mjs.etalaseapp.retrofit.ApiMain
 import id.mjs.etalaseapp.ui.download.DownloadActivity
-import id.mjs.etalaseapp.ui.login.LoginViewModel
 import id.mjs.etalaseapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_list_app.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class ListAppActivity : AppCompatActivity() {
 
@@ -95,7 +85,7 @@ class ListAppActivity : AppCompatActivity() {
         recycle_view_list_app.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recycle_view_list_app.adapter = appsAdapter
 
-        category_name.text = categorySelected.categoryName
+        category_name_list_app.text = categorySelected.categoryName
 
         appsAdapter.setOnItemClickCallback(object : AppsAdapter.OnItemClickCallback{
             override fun onItemClicked(data: AppDataResponse) {

@@ -1,6 +1,8 @@
 package id.mjs.etalaseapp.repository
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import id.mjs.etalaseapp.model.request.UpdateRequest
 import id.mjs.etalaseapp.model.response.*
 import id.mjs.etalaseapp.retrofit.ApiMain
 import retrofit2.Call
@@ -11,15 +13,15 @@ import retrofit2.http.Query
 
 class AppRepository {
 
-    fun getAppByName(jwt : String, appName : String) : MutableLiveData<ListAppDataResponse> {
-        val listAppDataResponse = MutableLiveData<ListAppDataResponse>()
+    fun getAppByName(jwt : String, appName : String) : MutableLiveData<AppResponse> {
+        val listAppDataResponse = MutableLiveData<AppResponse>()
 
-        ApiMain().services.getAppsByName(jwt,appName).enqueue(object : Callback<ListAppDataResponse>{
-            override fun onFailure(call: Call<ListAppDataResponse>, t: Throwable) {
+        ApiMain().services.getAppsByName(jwt,appName).enqueue(object : Callback<AppResponse>{
+            override fun onFailure(call: Call<AppResponse>, t: Throwable) {
                 listAppDataResponse.postValue(null)
             }
 
-            override fun onResponse( call: Call<ListAppDataResponse>, response: Response<ListAppDataResponse>) {
+            override fun onResponse(call: Call<AppResponse>, response: Response<AppResponse>) {
                 if (response.isSuccessful){
                     listAppDataResponse.postValue(response.body())
                 }
@@ -29,15 +31,15 @@ class AppRepository {
         return listAppDataResponse
     }
 
-    fun getAppByNameAnonymous(signature : String, appName : String) : MutableLiveData<ListAppDataResponse> {
-        val listAppDataResponse = MutableLiveData<ListAppDataResponse>()
+    fun getAppByNameAnonymous(signature : String, appName : String) : MutableLiveData<AppResponse> {
+        val listAppDataResponse = MutableLiveData<AppResponse>()
 
-        ApiMain().services.getAppsByNameAnonymous(signature,appName).enqueue(object : Callback<ListAppDataResponse>{
-            override fun onFailure(call: Call<ListAppDataResponse>, t: Throwable) {
+        ApiMain().services.getAppsByNameAnonymous(signature,appName).enqueue(object : Callback<AppResponse>{
+            override fun onFailure(call: Call<AppResponse>, t: Throwable) {
                 listAppDataResponse.postValue(null)
             }
 
-            override fun onResponse( call: Call<ListAppDataResponse>, response: Response<ListAppDataResponse>) {
+            override fun onResponse(call: Call<AppResponse>, response: Response<AppResponse>) {
                 if (response.isSuccessful){
                     listAppDataResponse.postValue(response.body())
                 }
@@ -46,15 +48,15 @@ class AppRepository {
         return listAppDataResponse
     }
 
-    fun getAllAppAnonymous(signature : String) : MutableLiveData<ListAppDataResponse> {
-        val listAppDataResponse = MutableLiveData<ListAppDataResponse>()
+    fun getAllAppAnonymous(signature : String) : MutableLiveData<AppResponse> {
+        val listAppDataResponse = MutableLiveData<AppResponse>()
 
-        ApiMain().services.getAllAppAnonymous(signature).enqueue(object : Callback<ListAppDataResponse>{
-            override fun onFailure(call: Call<ListAppDataResponse>, t: Throwable) {
+        ApiMain().services.getAllAppAnonymous(signature).enqueue(object : Callback<AppResponse>{
+            override fun onFailure(call: Call<AppResponse>, t: Throwable) {
                 listAppDataResponse.postValue(null)
             }
 
-            override fun onResponse(call: Call<ListAppDataResponse>, response: Response<ListAppDataResponse>) {
+            override fun onResponse(call: Call<AppResponse>, response: Response<AppResponse>) {
                 if (response.isSuccessful){
                     listAppDataResponse.postValue(response.body())
                 }
@@ -63,15 +65,15 @@ class AppRepository {
         return listAppDataResponse
     }
 
-    fun getAllApp(jwt : String) : MutableLiveData<ListAppDataResponse>{
-        val listAppDataResponse = MutableLiveData<ListAppDataResponse>()
+    fun getAllApp(jwt : String) : MutableLiveData<AppResponse>{
+        val listAppDataResponse = MutableLiveData<AppResponse>()
 
-        ApiMain().services.getAllApp(jwt).enqueue(object : Callback<ListAppDataResponse>{
-            override fun onFailure(call: Call<ListAppDataResponse>, t: Throwable) {
+        ApiMain().services.getAllApp(jwt).enqueue(object : Callback<AppResponse>{
+            override fun onFailure(call: Call<AppResponse>, t: Throwable) {
                 listAppDataResponse.postValue(null)
             }
 
-            override fun onResponse(call: Call<ListAppDataResponse>, response: Response<ListAppDataResponse>) {
+            override fun onResponse(call: Call<AppResponse>, response: Response<AppResponse>) {
                 if (response.isSuccessful){
                     listAppDataResponse.postValue(response.body())
                 }
@@ -117,15 +119,15 @@ class AppRepository {
         return categoryResponse
     }
 
-    fun getAppsByCategory(jwt : String, categoryId : Int) : MutableLiveData<ListAppDataResponse>{
-        val categoryResponse = MutableLiveData<ListAppDataResponse>()
+    fun getAppsByCategory(jwt : String, categoryId : Int) : MutableLiveData<AppResponse>{
+        val categoryResponse = MutableLiveData<AppResponse>()
 
-        ApiMain().services.getAppsByCategory(jwt,categoryId).enqueue(object : Callback<ListAppDataResponse>{
-            override fun onFailure(call: Call<ListAppDataResponse>, t: Throwable) {
+        ApiMain().services.getAppsByCategory(jwt,categoryId).enqueue(object : Callback<AppResponse>{
+            override fun onFailure(call: Call<AppResponse>, t: Throwable) {
                 categoryResponse.postValue(null)
             }
 
-            override fun onResponse(call: Call<ListAppDataResponse>, response: Response<ListAppDataResponse>) {
+            override fun onResponse(call: Call<AppResponse>, response: Response<AppResponse>) {
                 if (response.isSuccessful){
                     categoryResponse.postValue(response.body())
                 }
@@ -134,15 +136,15 @@ class AppRepository {
         return categoryResponse
     }
 
-    fun getAppsByCategoryAnonymous(signature : String, categoryId : Int) : MutableLiveData<ListAppDataResponse>{
-        val categoryResponse = MutableLiveData<ListAppDataResponse>()
+    fun getAppsByCategoryAnonymous(signature : String, categoryId : Int) : MutableLiveData<AppResponse>{
+        val categoryResponse = MutableLiveData<AppResponse>()
 
-        ApiMain().services.getAppsByCategoryAnonymous(signature,categoryId).enqueue(object : Callback<ListAppDataResponse>{
-            override fun onFailure(call: Call<ListAppDataResponse>, t: Throwable) {
+        ApiMain().services.getAppsByCategoryAnonymous(signature,categoryId).enqueue(object : Callback<AppResponse>{
+            override fun onFailure(call: Call<AppResponse>, t: Throwable) {
                 categoryResponse.postValue(null)
             }
 
-            override fun onResponse(call: Call<ListAppDataResponse>, response: Response<ListAppDataResponse>) {
+            override fun onResponse(call: Call<AppResponse>, response: Response<AppResponse>) {
                 if (response.isSuccessful){
                     categoryResponse.postValue(response.body())
                 }
@@ -185,6 +187,26 @@ class AppRepository {
         })
 
         return reviewResponse
+    }
+
+    fun checkForUpdate(jwt : String?, data : UpdateRequest) : MutableLiveData<AppResponse>{
+        val appResponse = MutableLiveData<AppResponse>()
+
+        ApiMain().services.checkForUpdate(jwt,data).enqueue(object : Callback<AppResponse>{
+            override fun onFailure(call: Call<AppResponse>, t: Throwable) {
+                Log.d("onFailure",t.message.toString())
+                appResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<AppResponse>, response: Response<AppResponse>) {
+                if (response.isSuccessful){
+                    appResponse.postValue(response.body())
+                }
+            }
+
+        })
+
+        return appResponse
     }
 
 

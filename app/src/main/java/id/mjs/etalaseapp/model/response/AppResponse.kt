@@ -2,7 +2,7 @@ package id.mjs.etalaseapp.model.response
 
 import com.google.gson.annotations.SerializedName
 
-data class ListAppDataResponse (
+data class AppResponse (
     @SerializedName("code")
     var code: String? = null,
 
