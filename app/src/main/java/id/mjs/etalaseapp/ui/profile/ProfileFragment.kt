@@ -85,7 +85,7 @@ class ProfileFragment : Fragment() {
         }
         btn_logout.setOnClickListener {
             val alertDialogBuilder = AlertDialog.Builder(requireContext())
-            alertDialogBuilder.setMessage("Log out ?")
+            alertDialogBuilder.setMessage("Log out dari Aplikasi ?")
             alertDialogBuilder.setPositiveButton("Oke") { _, _ ->
                 val editor : SharedPreferences.Editor = sharedPreferences.edit()
                 editor.clear()

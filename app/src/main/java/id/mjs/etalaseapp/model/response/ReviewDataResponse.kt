@@ -1,6 +1,7 @@
 package id.mjs.etalaseapp.model.response
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.RawValue
 
 data class ReviewDataResponse(
     @SerializedName("avg_ratings") var avg_ratings : Float? = null,
@@ -29,5 +30,6 @@ data class ReviewDataResponse(
     @SerializedName("created_by") var created_by : Int? = null,
     @SerializedName("updated_at") var updated_at : String? = null,
     @SerializedName("updated_by") var updated_by : Int? = null,
-    @SerializedName("review") var review : List<Review>? = null
+    @SerializedName("review") var review : List<Review>? = null,
+    @SerializedName("rate_details") var rateDetails: @RawValue RateDetails? = null
 )

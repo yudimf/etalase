@@ -11,7 +11,7 @@
         style="@style/MaterialSearchBarLight"
         app:mt_placeholder="Telusuri Aplikasi dan Game"
         app:mt_roundedSearchBarEnabled="true"
-        app:mt_maxSuggestionsCount="10"
+        app:mt_maxSuggestionsCount="0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"

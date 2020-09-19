@@ -56,4 +56,5 @@ class AppsAdapter(private val listAppsModel : ArrayList<AppDataResponse>) : Recy
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(listAppsModel[position])
     }
+
 }

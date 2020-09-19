@@ -73,11 +73,35 @@ class CheckForUpdateActivity : AppCompatActivity() {
         viewModel.checkForUpdate(jwt,updateRequest).observe(this, Observer {
             val data = it.data
             if(data != null){
-                listAppDataResponse.addAll(data)
+                if (data.size == 0){
+                    showNoAppsFound()
+                }
+                else{
+                    var count = 0
+                    for (appData in data){
+                        Log.d("apps_status",appData.apps_status.toString())
+                        if (appData.apps_status == "UPDATE"){
+                            listAppDataResponse.add(appData)
+                            count++
+                        }
+                    }
+                    if (count == 0){
+                        showNoAppsFound()
+                    }
+                }
+            }
+            else{
+                Log.d("no_apps_check","asup")
+                showNoAppsFound()
             }
             appsAdapter.notifyDataSetChanged()
             showLoading(false)
         })
+    }
+
+    private fun showNoAppsFound(){
+        Log.d("asups","asups")
+        no_apps_check_for_update.visibility = View.VISIBLE
     }
 
     private fun showLoading(status : Boolean){

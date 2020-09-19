@@ -21,13 +21,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import id.mjs.etalaseapp.R
+import id.mjs.etalaseapp.adapter.AdapterRecyclerView
 import id.mjs.etalaseapp.adapter.HomeCardViewAdapter
 import id.mjs.etalaseapp.adapter.ReviewAdapter
 import id.mjs.etalaseapp.model.Download
 import id.mjs.etalaseapp.model.response.AppDataResponse
 import id.mjs.etalaseapp.model.response.Review
+import id.mjs.etalaseapp.model.response.ReviewDataResponse
 import id.mjs.etalaseapp.receiver.DownloadReceiver
 import id.mjs.etalaseapp.services.DownloadService
 import id.mjs.etalaseapp.ui.detail.DetailActivity
@@ -40,6 +43,7 @@ import kotlinx.android.synthetic.main.input_review_dialog.view.*
 import kotlinx.android.synthetic.main.update_review_dialog.view.*
 import java.io.File
 import java.io.InputStream
+import java.text.DecimalFormat
 
 class DownloadActivity : AppCompatActivity() {
 
@@ -66,6 +70,13 @@ class DownloadActivity : AppCompatActivity() {
     private lateinit var emailUser : String
     private var reviewUser = Review()
 
+    private var reviewDataResponse: ReviewDataResponse? = null
+
+    private lateinit var mediaRecyclerView: RecyclerView
+
+    private lateinit var listViewType : ArrayList<String>
+    private lateinit var adapterRecyclerView : AdapterRecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_download)
@@ -81,8 +92,39 @@ class DownloadActivity : AppCompatActivity() {
 
     }
 
+    private fun exoPlayerLayoutInit(){
+        mediaRecyclerView = findViewById(R.id.recycler_view_media)
+        mediaRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false)
+//        listViewType = mutableListOf(
+//            "https://html5demos.com/assets/dizzy.mp4",
+//            "https://raw.githubusercontent.com/yudimf/sample_image/master/1.jpeg",
+//            "https://raw.githubusercontent.com/yudimf/sample_image/master/1.jpeg",
+//            "https://html5demos.com/assets/dizzy.mp4"
+//            AdapterRecyclerView.ITEM_A,
+//            AdapterRecyclerView.ITEM_B,
+//            AdapterRecyclerView.ITEM_B,
+//            AdapterRecyclerView.ITEM_B,
+//            AdapterRecyclerView.ITEM_B
+//        )
+
+        listViewType = ArrayList()
+
+        if (appModelSelected.media != null){
+            for (url in appModelSelected.media!!){
+                val data = "http://api-etalase-app.bagustech.id/$url"
+                listViewType.add(data)
+            }
+        }
+
+        Log.d("listViewType",listViewType.toString())
+
+        adapterRecyclerView = AdapterRecyclerView(listViewType)
+        mediaRecyclerView.adapter = adapterRecyclerView
+    }
+
     override fun onResume() {
         super.onResume()
+        exoPlayerLayoutInit()
         initLayout()
         setBtnDownload()
         registerReceiver()
@@ -138,7 +180,6 @@ class DownloadActivity : AppCompatActivity() {
         rv_review.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv_review.adapter = reviewAdapter
 
-        total_reviewer.text = listReview.size.toString()
     }
 
     private fun getReview(){
@@ -147,6 +188,7 @@ class DownloadActivity : AppCompatActivity() {
             viewModel.getReview(jwt, appModelSelected.idApps!!).observe(this, Observer {
                 if (it != null){
                     val response = it.reviewDataResponse
+                    reviewDataResponse = it.reviewDataResponse
                     val data= response?.review
                     if (data?.isNotEmpty()!!){
                         if (data.size <= 2){
@@ -177,6 +219,7 @@ class DownloadActivity : AppCompatActivity() {
                         }
 
                     }
+                    reloadRate(response)
                     reviewAdapter.notifyDataSetChanged()
 
                 }
@@ -220,6 +263,8 @@ class DownloadActivity : AppCompatActivity() {
         initReviewLayout()
         initDownloadButton()
 
+        apps_developer_download.text = appModelSelected.developers?.name.toString()
+
         val picasso = Picasso.get()
         picasso.load(Utils.baseUrl+"apps/"+appModelSelected.app_icon)
             .into(image_view_download_1)
@@ -229,15 +274,13 @@ class DownloadActivity : AppCompatActivity() {
             val fileSize = "$size  MB"
             file_size_download_1.text = fileSize
         }
-        review_rating_bar.rating = appModelSelected.rate!!.toFloat()
-        rating_bar_ulasan.rating = appModelSelected.rate!!.toFloat()
 
-        if (appModelSelected.rate!!.toInt() > 5){
-            textView9.text = "5,0"
-        }
-        else{
-            textView9.text = appModelSelected.rate + ",0"
-        }
+//        if (appModelSelected.rate!!.toInt() > 5){
+//            textView9.text = "5,0"
+//        }
+//        else{
+//            textView9.text = appModelSelected.rate + ",0"
+//        }
 
         review_btn.setOnClickListener {
             if (jwt.isEmpty()){
@@ -289,6 +332,32 @@ class DownloadActivity : AppCompatActivity() {
             val intent = packageManager.getLaunchIntentForPackage(appModelSelected.package_name.toString())
             startActivity(intent)
         }
+
+    }
+
+    private fun reloadRate(data : ReviewDataResponse){
+        var average : Double = 0.0
+        if (data.rateDetails != null){
+            progress_bar_5.progress = data.rateDetails?.five!!  * 100 / listReview.size
+            progress_bar_4.progress = data.rateDetails?.four!! * 100 / listReview.size
+            progress_bar_3.progress = data.rateDetails?.three!! * 100 / listReview.size
+            progress_bar_2.progress = data.rateDetails?.two!! * 100 / listReview.size
+            progress_bar_1.progress = data.rateDetails?.one!! * 100 / listReview.size
+
+            average = (((data.rateDetails?.five!! * 5) +
+                    (data.rateDetails?.four!! * 4) +
+                    (data.rateDetails?.three!! * 3) +
+                    (data.rateDetails?.two!! * 2) +
+                    (data.rateDetails?.one!! * 1))/listReview.size).toDouble()
+
+            Log.d("average",average.toString())
+        }
+
+        val formatAverage = DecimalFormat("#.0").format(average)
+        total_reviewer.text = listReview.size.toString()
+        review_rating_bar.rating = average.toFloat()
+        rating_bar_ulasan.rating = average.toFloat()
+        textView9.text = formatAverage
     }
 
     private fun showUpdateReviewDialog(){
@@ -311,6 +380,7 @@ class DownloadActivity : AppCompatActivity() {
                         Toast.makeText(this, it.message,Toast.LENGTH_SHORT).show()
                         getReview()
                         reviewAdapter.notifyDataSetChanged()
+//                        reloadRate()
                     }
                 })
             alertDialog.dismiss()
@@ -323,6 +393,10 @@ class DownloadActivity : AppCompatActivity() {
                         Toast.makeText(this, it.message,Toast.LENGTH_SHORT).show()
                         getReview()
                         reviewAdapter.notifyDataSetChanged()
+//                        reloadRate()
+
+                        review_btn.visibility = View.VISIBLE
+                        update_review_btn.visibility = View.INVISIBLE
                     }
                 })
             alertDialog.dismiss()
@@ -375,7 +449,7 @@ class DownloadActivity : AppCompatActivity() {
 
     private fun addAppList(){
         val jwt = sharedPreferences.getString("token", "")
-
+        listAppDataResponse.clear()
         if (jwt?.length != 0){
             viewModel.getAllApp(jwt.toString()).observe(this, Observer {
                 if (it != null){

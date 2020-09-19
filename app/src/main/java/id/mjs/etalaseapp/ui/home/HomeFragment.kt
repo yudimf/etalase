@@ -11,6 +11,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.TextView
@@ -215,7 +216,13 @@ class HomeFragment : Fragment() {
     }
 
     private var imageListener: ImageListener = ImageListener { position, imageView -> // You can use Glide or Picasso here
-        Picasso.get().load(sampleImages[position]).into(imageView)
+        Picasso.get()
+            .load(sampleImages[position])
+            .fit()
+            .centerInside()
+            .into(imageView)
+
+        imageView.scaleType = ImageView.ScaleType.FIT_CENTER
     }
 
 }

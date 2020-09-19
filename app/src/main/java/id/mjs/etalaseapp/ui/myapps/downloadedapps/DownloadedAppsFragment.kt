@@ -23,6 +23,7 @@ import id.mjs.etalaseapp.model.response.AppDataResponse
 import id.mjs.etalaseapp.ui.checkforupdate.CheckForUpdateActivity
 import id.mjs.etalaseapp.ui.checkforupdate.CheckForUpdateViewModel
 import id.mjs.etalaseapp.ui.login.LoginActivity
+import kotlinx.android.synthetic.main.activity_list_app.*
 import kotlinx.android.synthetic.main.fragment_downloaded_apps.*
 
 
@@ -58,8 +59,20 @@ class DownloadedAppsFragment : Fragment() {
         sharedPreferences = context?.getSharedPreferences("UserPref", Context.MODE_PRIVATE)!!
         jwt = sharedPreferences.getString("token", "").toString()
         updateRequest.data = ArrayList()
+        showLoading(true)
 
         return inflater.inflate(R.layout.fragment_downloaded_apps, container, false)
+    }
+
+    private fun showLoading(status : Boolean){
+        if (status){
+            progress_bar_downloaded_apps?.visibility = View.VISIBLE
+            rv_grid_apps?.visibility = View.GONE
+        }
+        else{
+            progress_bar_downloaded_apps?.visibility = View.GONE
+            rv_grid_apps?.visibility = View.VISIBLE
+        }
     }
 
     private fun getInstalledApps(){
@@ -73,6 +86,7 @@ class DownloadedAppsFragment : Fragment() {
                 Log.d("listAppDataResponse",listAppDataResponse.toString())
                 compare()
             }
+            showLoading(false)
         })
     }
 
@@ -106,6 +120,14 @@ class DownloadedAppsFragment : Fragment() {
         rv_grid_apps.layoutManager = GridLayoutManager(context, 3)
         gridAppsAdapter = GridAppsAdapter(list)
         rv_grid_apps.adapter = gridAppsAdapter
+
+        gridAppsAdapter.setOnItemClickCallback(object : GridAppsAdapter.OnItemClickCallback{
+            override fun onItemClicked(data: AppInfo) {
+                val intent = activity?.packageManager?.getLaunchIntentForPackage(data.packageName)
+                startActivity(intent)
+            }
+
+        })
 
         btn_check_for_update.setOnClickListener {
             if (jwt.isEmpty()){

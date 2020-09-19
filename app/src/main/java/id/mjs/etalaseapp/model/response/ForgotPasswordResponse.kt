@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class ForgotPasswordResponse (
     @SerializedName("code")
-    var code: String? = null,
+    var code: Int? = null,
 
     @SerializedName("message")
     var message: String? = null,

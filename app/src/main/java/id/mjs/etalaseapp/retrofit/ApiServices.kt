@@ -59,11 +59,17 @@ interface ApiServices {
                       @Part("birthday") birthday : RequestBody,
                       @Part photo : MultipartBody.Part?) : Call<LoginResponse>
 
-    @GET("api/v1/apps/list-category")
-    fun getCategories(@Header("jwt") jwt : String?) : Call<CategoryResponse>
+    @GET("api/v1/apps/list-category?type_apps=Application")
+    fun getCategoriesApp(@Header("jwt") jwt : String?) : Call<CategoryResponse>
 
-    @GET("api/v1/apps/list-category")
-    fun getCategoriesAnonymous(@Header("signature") signature : String?) : Call<CategoryResponse>
+    @GET("api/v1/apps/list-category?type_apps=Application")
+    fun getCategoriesAnonymousApp(@Header("signature") signature : String?) : Call<CategoryResponse>
+
+    @GET("api/v1/apps/list-category?type_apps=Games")
+    fun getCategoriesGames(@Header("jwt") jwt : String?) : Call<CategoryResponse>
+
+    @GET("api/v1/apps/list-category?type_apps=Games")
+    fun getCategoriesAnonymousGames(@Header("signature") signature : String?) : Call<CategoryResponse>
 
     @GET("api/v1/apps")
     fun getAppsByCategory(@Header("jwt") jwt : String?, @Query("category_id") category_id : Int) : Call<AppResponse>

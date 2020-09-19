@@ -35,8 +35,9 @@ class AppsCategoryFragment : Fragment() {
     lateinit var sharedPreferences : SharedPreferences
     private var listCategory = ArrayList<Category>()
     lateinit var adapter : CategoryAdapter
-    lateinit var recyclerView : RecyclerView
     lateinit var viewModel : AppCategoryViewModel
+
+    private lateinit var recyclerView : RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_apps_category, container, false)

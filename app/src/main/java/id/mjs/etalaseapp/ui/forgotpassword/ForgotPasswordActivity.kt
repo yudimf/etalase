@@ -36,7 +36,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
             val email = et_email_forgot_password.text.toString()
             viewModel.forgotPassword(email).observe(this, Observer {
                 if (it != null){
-                    if (it.code == "200"){
+                    if (it.code == 200){
                         Toast.makeText(applicationContext,it.message,Toast.LENGTH_LONG).show()
                         showDialog()
                     }

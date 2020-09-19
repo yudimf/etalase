@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.ui.myprofile.MyProfileViewModel
 import kotlinx.android.synthetic.main.activity_change_password.*
+import kotlinx.android.synthetic.main.activity_my_profile.*
 
 class ChangePasswordActivity : AppCompatActivity() {
 
@@ -48,8 +49,25 @@ class ChangePasswordActivity : AppCompatActivity() {
             val oldPassword = et_old_password_change.text.toString()
             viewModel.changePassword(jwt,email,oldPassword,newPassword).observe(this, Observer {
                 if (it != null){
-                    Toast.makeText(this,it.message, Toast.LENGTH_SHORT).show()
-                    text_change_password_alert.text = it.message
+                    if (it.code == 501){
+                        Toast.makeText(this,it.message, Toast.LENGTH_SHORT).show()
+                        text_change_password_alert.text = it.message
+                        text_change_password_alert.setTextColor(resources.getColor(R.color.colorSuccess))
+                    }
+                    else if (it.code == 156){
+                        Toast.makeText(this,it.message, Toast.LENGTH_SHORT).show()
+                        text_change_password_alert.text = it.message
+                        text_change_password_alert.setTextColor(resources.getColor(R.color.colorDanger))
+                    }
+                    else if(it.code == 157){
+                        Toast.makeText(this,it.message, Toast.LENGTH_SHORT).show()
+                        text_change_password_alert.text = it.message
+                        text_change_password_alert.setTextColor(resources.getColor(R.color.colorDanger))
+                    }
+                }
+                else{
+                    text_change_password_alert.text = "Connection Error"
+                    text_change_password_alert.setTextColor(resources.getColor(R.color.colorDanger))
                 }
             })
         }

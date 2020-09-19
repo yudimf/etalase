@@ -5,5 +5,6 @@
     <color name="colorAccent">#2C98F0</color>
     <color name="colorDisable">#555555</color>
     <color name="colorActive">#3F88C5</color>
-    <color name="colorDanger">#FF0000</color>
+    <color name="colorDanger">#f44336</color>
+    <color name="colorSuccess">#4CAF50</color>
 </resources>

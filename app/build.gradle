@@ -64,7 +64,7 @@ dependencies {
 
     implementation 'com.lapism:search:2.2.0@aar'
 
-    
+    implementation "com.google.android.exoplayer:exoplayer:2.12.0"
 
     implementation"com.synnapps:carouselview:0.1.5"
     implementation 'com.squareup.picasso:picasso:2.71828'

@@ -84,6 +84,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/apps_developer_download"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -158,6 +159,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/progress_bar_download"/>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_media"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_download_1"/>
+
         <TextView
             android:id="@+id/review_btn"
             android:layout_width="wrap_content"
@@ -167,10 +179,10 @@
             android:textColor="#2C98F0"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_download_1" />
+            app:layout_constraintTop_toBottomOf="@+id/recycler_view_media" />
 
         <TextView
             android:visibility="gone"
@@ -185,7 +197,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_download_1" />
+            app:layout_constraintTop_toBottomOf="@+id/recycler_view_media" />
 
         <TextView
             android:id="@+id/detail_app_btn"
@@ -199,7 +211,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_download_1" />
+            app:layout_constraintTop_toBottomOf="@+id/recycler_view_media" />
 
         <TextView
             android:id="@+id/rating_ulasan"
@@ -236,7 +248,7 @@
                     android:id="@+id/textView9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3,0"
+                    android:text="0.0"
                     android:textColor="#2C98F0"
                     android:textSize="80sp" />
                 <RatingBar

@@ -80,7 +80,6 @@ class CategoryFragment : Fragment() {
                 intent.putExtra(SearchAppActivity.EXTRA_STRING_SEARCH,text.toString())
                 startActivity(intent)
             }
-
         })
 
     }

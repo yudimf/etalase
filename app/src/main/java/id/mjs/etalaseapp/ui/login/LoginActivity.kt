@@ -1,6 +1,7 @@
 package id.mjs.etalaseapp.ui.login
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -31,8 +32,8 @@ class LoginActivity : AppCompatActivity() {
 
     lateinit var sharedPreferences : SharedPreferences
     lateinit var manager: TelephonyManager
-    private var stringImei1 : String = ""
-    private var stringImei2 : String = ""
+    private var stringImei1 : String = "12345678"
+    private var stringImei2 : String = "87654321"
     private lateinit var viewModel: LoginViewModel
 
     companion object {
@@ -41,6 +42,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -55,10 +57,17 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-        manager =
-            getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        stringImei1 = manager.getDeviceId(0)
-        stringImei2 = manager.getDeviceId(1)
+        try {
+            manager =
+                getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            stringImei1 = manager.getDeviceId(0)
+            stringImei2 = manager.getDeviceId(1)
+
+        }
+        catch (ex:Exception){
+            Log.e("ex.localizedMessage",ex.localizedMessage)
+//            Toast.makeText(this,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
 
         buttonListener()
     }

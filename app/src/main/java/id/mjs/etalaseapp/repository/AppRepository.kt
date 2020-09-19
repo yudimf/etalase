@@ -84,7 +84,7 @@ class AppRepository {
     fun getCategories(jwt: String) : MutableLiveData<CategoryResponse>{
         val categoryResponse = MutableLiveData<CategoryResponse>()
 
-        ApiMain().services.getCategories(jwt).enqueue(object : Callback<CategoryResponse>{
+        ApiMain().services.getCategoriesApp(jwt).enqueue(object : Callback<CategoryResponse>{
             override fun onFailure(call: Call<CategoryResponse>, t: Throwable) {
                 categoryResponse.postValue(null)
             }
@@ -102,7 +102,43 @@ class AppRepository {
     fun getCategoriesAnomymous(signature: String) : MutableLiveData<CategoryResponse>{
         val categoryResponse = MutableLiveData<CategoryResponse>()
 
-        ApiMain().services.getCategoriesAnonymous(signature).enqueue(object : Callback<CategoryResponse>{
+        ApiMain().services.getCategoriesAnonymousApp(signature).enqueue(object : Callback<CategoryResponse>{
+            override fun onFailure(call: Call<CategoryResponse>, t: Throwable) {
+                categoryResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<CategoryResponse>, response: Response<CategoryResponse>) {
+                if (response.isSuccessful){
+                    categoryResponse.postValue(response.body())
+                }
+            }
+        })
+
+        return categoryResponse
+    }
+
+    fun getCategoriesGames(jwt: String) : MutableLiveData<CategoryResponse>{
+        val categoryResponse = MutableLiveData<CategoryResponse>()
+
+        ApiMain().services.getCategoriesGames(jwt).enqueue(object : Callback<CategoryResponse>{
+            override fun onFailure(call: Call<CategoryResponse>, t: Throwable) {
+                categoryResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<CategoryResponse>, response: Response<CategoryResponse>) {
+                if (response.isSuccessful){
+                    categoryResponse.postValue(response.body())
+                }
+            }
+        })
+
+        return categoryResponse
+    }
+
+    fun getCategoriesAnomymousGames(signature: String) : MutableLiveData<CategoryResponse>{
+        val categoryResponse = MutableLiveData<CategoryResponse>()
+
+        ApiMain().services.getCategoriesAnonymousGames(signature).enqueue(object : Callback<CategoryResponse>{
             override fun onFailure(call: Call<CategoryResponse>, t: Throwable) {
                 categoryResponse.postValue(null)
             }

@@ -3,6 +3,7 @@ package id.mjs.etalaseapp.model.response
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
 
 @Parcelize
 data class AppDataResponse (
@@ -62,6 +63,15 @@ data class AppDataResponse (
     var is_active: String? = null,
 
     @SerializedName("is_partnership")
-    var is_partnership: String? = null
+    var is_partnership: String? = null,
+
+    @SerializedName("apps_status")
+    var apps_status: String? = null,
+
+    @SerializedName("developers")
+    var developers: @RawValue Developers? = null,
+
+    @SerializedName("rate_details")
+    var rateDetails: @RawValue RateDetails? = null
 
 ) : Parcelable
