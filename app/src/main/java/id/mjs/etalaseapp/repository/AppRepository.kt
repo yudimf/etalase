@@ -8,8 +8,6 @@ import id.mjs.etalaseapp.retrofit.ApiMain
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.http.Header
-import retrofit2.http.Query
 
 class AppRepository {
 
@@ -159,10 +157,12 @@ class AppRepository {
 
         ApiMain().services.getReview(jwt,appId).enqueue(object : Callback<ReviewResponse>{
             override fun onFailure(call: Call<ReviewResponse>, t: Throwable) {
+                Log.d("onFailure",t.message.toString())
                 reviewResponse.postValue(null)
             }
 
             override fun onResponse(call: Call<ReviewResponse>, response: Response<ReviewResponse>) {
+                Log.d("onResponse",response.toString())
                 if (response.isSuccessful){
                     reviewResponse.postValue(response.body())
                 }
@@ -189,10 +189,50 @@ class AppRepository {
         return reviewResponse
     }
 
-    fun checkForUpdate(jwt : String?, data : UpdateRequest) : MutableLiveData<AppResponse>{
+    fun putReview(jwt : String, appId : Int, ratings : Int, comment : String) : MutableLiveData<BaseResponse>{
+        val reviewResponse = MutableLiveData<BaseResponse>()
+
+        ApiMain().services.putReview(jwt,appId,ratings,comment).enqueue(object : Callback<BaseResponse>{
+            override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
+                reviewResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
+                if (response.isSuccessful){
+                    reviewResponse.postValue(response.body())
+                }
+                else{
+                    reviewResponse.postValue(null)
+                }
+            }
+        })
+        return reviewResponse
+    }
+
+    fun deleteReview(jwt : String, appId : Int) : MutableLiveData<BaseResponse>{
+        val reviewResponse = MutableLiveData<BaseResponse>()
+
+        ApiMain().services.deleteReview(jwt,appId).enqueue(object : Callback<BaseResponse>{
+            override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
+                reviewResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
+                if (response.isSuccessful){
+                    reviewResponse.postValue(response.body())
+                }
+                else{
+                    reviewResponse.postValue(null)
+                }
+            }
+        })
+        return reviewResponse
+    }
+
+    fun getInstalledApps(jwt : String?, data : UpdateRequest) : MutableLiveData<AppResponse>{
         val appResponse = MutableLiveData<AppResponse>()
 
-        ApiMain().services.checkForUpdate(jwt,data).enqueue(object : Callback<AppResponse>{
+        ApiMain().services.getInstalledApps(jwt,data).enqueue(object : Callback<AppResponse>{
             override fun onFailure(call: Call<AppResponse>, t: Throwable) {
                 Log.d("onFailure",t.message.toString())
                 appResponse.postValue(null)
@@ -202,6 +242,9 @@ class AppRepository {
                 if (response.isSuccessful){
                     appResponse.postValue(response.body())
                 }
+                else{
+                    appResponse.postValue(null)
+                }
             }
 
         })
@@ -209,5 +252,27 @@ class AppRepository {
         return appResponse
     }
 
+    fun postStatusDownload(jwt : String, appsId : Int) : MutableLiveData<StatusDownloadedResponse>{
+        val responseStatus = MutableLiveData<StatusDownloadedResponse>()
+
+        ApiMain().services.postStatusDownload(jwt,appsId).enqueue(object : Callback<StatusDownloadedResponse>{
+            override fun onFailure(call: Call<StatusDownloadedResponse>, t: Throwable) {
+                Log.d("onFailure",t.message.toString())
+                responseStatus.postValue(null)
+            }
+
+            override fun onResponse(call: Call<StatusDownloadedResponse>, response: Response<StatusDownloadedResponse>) {
+                if (response.isSuccessful){
+                    responseStatus.postValue(response.body())
+                }
+                else{
+                    responseStatus.postValue(null)
+                }
+            }
+
+        })
+
+        return responseStatus
+    }
 
 }

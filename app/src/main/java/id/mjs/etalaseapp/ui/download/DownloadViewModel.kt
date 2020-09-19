@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import id.mjs.etalaseapp.model.response.BaseResponse
 import id.mjs.etalaseapp.model.response.AppResponse
 import id.mjs.etalaseapp.model.response.ReviewResponse
+import id.mjs.etalaseapp.model.response.StatusDownloadedResponse
 import id.mjs.etalaseapp.repository.AppRepository
 
 class DownloadViewModel (application: Application) : AndroidViewModel(application) {
@@ -26,6 +27,18 @@ class DownloadViewModel (application: Application) : AndroidViewModel(applicatio
 
     fun postReview(jwt : String, appId : Int, ratings : Int, comment : String) : MutableLiveData<BaseResponse>{
         return appRepository.postReview(jwt,appId,ratings,comment)
+    }
+
+    fun updateReview(jwt : String, appId : Int, ratings : Int, comment : String) : MutableLiveData<BaseResponse>{
+        return appRepository.putReview(jwt,appId,ratings,comment)
+    }
+
+    fun deleteReview(jwt : String, appId : Int) : MutableLiveData<BaseResponse>{
+        return appRepository.deleteReview(jwt,appId)
+    }
+
+    fun postStatusDownload(jwt : String, appsId : Int) : MutableLiveData<StatusDownloadedResponse>{
+        return appRepository.postStatusDownload(jwt,appsId)
     }
 
 }

@@ -122,6 +122,7 @@ class UserRepository {
 
         ApiMain().services.getUserInfo(jwt).enqueue(object : Callback<UserInfoResponse>{
             override fun onFailure(call: Call<UserInfoResponse>, t: Throwable) {
+                Log.d("getUserInfo",t.message.toString())
                 userInfoResponse.postValue(null)
             }
 
@@ -129,10 +130,13 @@ class UserRepository {
                 if (response.isSuccessful){
                     userInfoResponse.postValue(response.body())
                 }
+                else{
+                    Log.d("getUserInfo",response.message())
+                    userInfoResponse.postValue(null)
+                }
             }
 
         })
-
         return userInfoResponse
     }
 

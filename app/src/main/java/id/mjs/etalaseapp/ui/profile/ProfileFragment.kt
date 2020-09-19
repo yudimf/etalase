@@ -34,14 +34,24 @@ class ProfileFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        sharedPreferences = context?.getSharedPreferences("UserPref", Context.MODE_PRIVATE)!!
+        jwt = sharedPreferences.getString("token", "").toString()
+        if (jwt.isEmpty()){
+            activity?.finish()
+//                showAlertLogin()
+            val intent = Intent(context, LoginActivity::class.java)
+            intent.putExtra(LoginActivity.STATUS_FROM_PROFILE,true)
+            startActivity(intent)
+            return null
+        }
+        else{
+            return inflater.inflate(R.layout.fragment_profile, container, false)
+        }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        sharedPreferences = context?.getSharedPreferences("UserPref", Context.MODE_PRIVATE)!!
-        jwt = sharedPreferences.getString("token", "").toString()
 
         btn_my_profile.setOnClickListener {
             if (jwt.isEmpty()){

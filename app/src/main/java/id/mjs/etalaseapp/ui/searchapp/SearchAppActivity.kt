@@ -104,11 +104,15 @@ class SearchAppActivity : AppCompatActivity() {
                 when (buttonCode) {
                     MaterialSearchBar.BUTTON_BACK -> {
                         Log.d("asup","backbutton")
+                        finish()
                     }
                 }
             }
             override fun onSearchStateChanged(enabled: Boolean) {
                 Log.d("onSearchStateChanged",enabled.toString())
+                if (!enabled){
+                    finish()
+                }
             }
             override fun onSearchConfirmed(text: CharSequence?) {
                 Log.d("onSearchConfirmed",text.toString())
@@ -116,6 +120,8 @@ class SearchAppActivity : AppCompatActivity() {
                 searchData(appName)
             }
         })
+
+
     }
 
     private fun searchData(appName : String){

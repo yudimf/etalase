@@ -38,24 +38,28 @@ class ListAppActivity : AppCompatActivity() {
         if (jwt?.length != 0){
             viewModel.getAppsByCategory(jwt.toString(),categorySelected.categoryId).observe(this,
                 Observer {
-                    val data = it.data
-                    if (data != null){
-                        Log.d("getAppsByCategory","jwt")
-                        listAppDataResponse.addAll(data)
+                    if(it != null){
+                        val data = it.data
+                        if (data != null){
+                            Log.d("getAppsByCategory","jwt")
+                            listAppDataResponse.addAll(data)
+                        }
+                        appsAdapter.notifyDataSetChanged()
                     }
-                    appsAdapter.notifyDataSetChanged()
                     showLoading(false)
                 })
         }
         else{
             viewModel.getAppsByCategoryAnonymous(Utils.signature,categorySelected.categoryId).observe(this,
                 Observer {
-                    val data = it.data
-                    if (data != null){
-                        Log.d("getAppsByCategory","signature")
-                        listAppDataResponse.addAll(data)
+                    if(it != null){
+                        val data = it.data
+                        if (data != null){
+                            Log.d("getAppsByCategory","signature")
+                            listAppDataResponse.addAll(data)
+                        }
+                        appsAdapter.notifyDataSetChanged()
                     }
-                    appsAdapter.notifyDataSetChanged()
                     showLoading(false)
                 })
         }

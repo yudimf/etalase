@@ -98,10 +98,20 @@ interface ApiServices {
                    @Query("ratings") ratings : Int?,
                    @Query("comment") comment : String?) : Call<BaseResponse>
 
+    @PUT("/api/v1/apps/review")
+    fun putReview(@Header("jwt") jwt : String?,
+                   @Query("app_id") appId : Int?,
+                   @Query("ratings") ratings : Int?,
+                   @Query("comment") comment : String?) : Call<BaseResponse>
+
+    @DELETE("/api/v1/apps/review")
+    fun deleteReview(@Header("jwt") jwt : String?,
+                  @Query("app_id") appId : Int?) : Call<BaseResponse>
+
     @POST("/api/v1/apps/downloaded")
     fun postStatusDownload(@Header("jwt") jwt : String?, @Query("apps_id") appsId : Int?) : Call<StatusDownloadedResponse>
 
     @POST("api/v1/apps/installed")
-    fun checkForUpdate(@Header("jwt") jwt : String?, @Body data : UpdateRequest) : Call<AppResponse>
+    fun getInstalledApps(@Header("jwt") jwt : String?, @Body data : UpdateRequest) : Call<AppResponse>
 
 }

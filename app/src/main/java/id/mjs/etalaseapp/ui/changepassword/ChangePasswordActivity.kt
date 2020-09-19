@@ -49,6 +49,7 @@ class ChangePasswordActivity : AppCompatActivity() {
             viewModel.changePassword(jwt,email,oldPassword,newPassword).observe(this, Observer {
                 if (it != null){
                     Toast.makeText(this,it.message, Toast.LENGTH_SHORT).show()
+                    text_change_password_alert.text = it.message
                 }
             })
         }

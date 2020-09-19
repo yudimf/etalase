@@ -66,7 +66,7 @@ class DownloadService : IntentService("Download Service") {
 
     private fun initDownload(){
 //        val request = ApiMain().services.getSampleApps()
-        val request = ApiMain().services.getAppsByCategory(appModelSelected.link.toString())
+        val request = ApiMain().services.getAppsByCategory(appModelSelected.apk_file.toString())
         try {
             downloadFile(request.execute().body())
         }catch (e: IOException) {

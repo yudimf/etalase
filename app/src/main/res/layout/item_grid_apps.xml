@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"/>
 
     <Button
+        android:visibility="gone"
         android:id="@+id/btn_update_item_grid"
         android:layout_width="wrap_content"
         android:layout_height="20dp"

@@ -22,7 +22,7 @@ class CategoryPagerAdapter (fm: FragmentManager) : FragmentPagerAdapter(fm) {
         return when (position) {
             0 -> "Aplikasi"
             else -> {
-                return "Games"
+                return "Permainan"
             }
         }
     }

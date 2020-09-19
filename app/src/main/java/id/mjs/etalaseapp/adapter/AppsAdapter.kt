@@ -26,10 +26,14 @@ class AppsAdapter(private val listAppsModel : ArrayList<AppDataResponse>) : Recy
                 picasso.load(Utils.baseUrl+"apps/"+appModel.app_icon)
                     .into(img_list_app_item)
                 txt_list_app_item.text = appModel.name
+                txt_list_rating_item.text = appModel.rate + " "
                 if (appModel.file_size != null){
                     val fileSize = Utils.convertBiteToMB(appModel.file_size!!)
                     val textFileSize = "$fileSize MB"
                     txt_list_size_item.text = textFileSize
+                }
+                else{
+                    txt_list_size_item.visibility = View.GONE
                 }
                 itemView.setOnClickListener {
                     onItemClickCallback?.onItemClicked(appModel)

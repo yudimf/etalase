@@ -79,7 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="21 MB"
+                    android:text=" "
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -112,6 +112,19 @@
             android:layout_margin="20dp"
             android:background="#2C98F0"
             android:text="Download"
+            android:textColor="#fff"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+        <Button
+            android:visibility="invisible"
+            android:id="@+id/btn_download_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="#2C98F0"
+            android:text="Buka Apliasi"
             android:textColor="#fff"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -165,7 +178,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="18dp"
-            android:text="Beri Ulasan"
+            android:text="Ubah Ulasan"
             android:textColor="#2C98F0"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -235,11 +248,13 @@
                     android:numStars="5"
                     android:rating="4.6"
                     android:theme="@style/RatingBar" />
+
                 <TextView
+                    android:id="@+id/total_reviewer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="128.23"
-                    android:layout_gravity="center_horizontal"/>
+                    android:layout_gravity="center_horizontal"
+                    android:text="128.23" />
 
             </LinearLayout>
 
@@ -264,12 +279,13 @@
                         android:text="5"/>
 
                     <ProgressBar
+                        android:id="@+id/progress_bar_5"
                         android:layout_marginStart="5dp"
                         android:layout_gravity="center_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                        android:progress="90"
+                        android:progress="0"
                         android:progressDrawable="@drawable/rounded_corners_progress_bar"/>
 
                 </LinearLayout>
@@ -285,12 +301,13 @@
                         android:text="4"/>
 
                     <ProgressBar
+                        android:id="@+id/progress_bar_4"
                         android:layout_marginStart="5dp"
                         android:layout_gravity="center_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                        android:progress="30"
+                        android:progress="0"
                         android:progressDrawable="@drawable/rounded_corners_progress_bar"/>
 
                 </LinearLayout>
@@ -307,12 +324,13 @@
                         android:text="3"/>
 
                     <ProgressBar
+                        android:id="@+id/progress_bar_3"
                         android:layout_marginStart="5dp"
                         android:layout_gravity="center_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                        android:progress="20"
+                        android:progress="0"
                         android:progressDrawable="@drawable/rounded_corners_progress_bar"/>
 
                 </LinearLayout>
@@ -328,12 +346,13 @@
                         android:text="2"/>
 
                     <ProgressBar
+                        android:id="@+id/progress_bar_2"
                         android:layout_marginStart="5dp"
                         android:layout_gravity="center_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                        android:progress="10"
+                        android:progress="0"
                         android:progressDrawable="@drawable/rounded_corners_progress_bar"/>
 
                 </LinearLayout>
@@ -348,12 +367,13 @@
                         android:text="1"/>
 
                     <ProgressBar
+                        android:id="@+id/progress_bar_1"
                         android:layout_marginStart="5dp"
                         android:layout_gravity="center_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                        android:progress="5"
+                        android:progress="0"
                         android:progressDrawable="@drawable/rounded_corners_progress_bar"/>
                 </LinearLayout>
             </LinearLayout>
@@ -414,7 +434,7 @@
             app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <TextView
-            android:visibility="visible"
+            android:visibility="invisible"
             android:id="@+id/lihat_aplikasi_serupa"
             android:textSize="16sp"
             android:textStyle="bold"

@@ -17,33 +17,35 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
-import id.mjs.etalaseapp.retrofit.ApiMain
-import id.mjs.etalaseapp.ui.main.MainActivity
 import id.mjs.etalaseapp.R
+import id.mjs.etalaseapp.model.request.LoginRequest
 import id.mjs.etalaseapp.ui.createaccount.CreateAccountActivity
 import id.mjs.etalaseapp.ui.forgotpassword.ForgotPasswordActivity
-import id.mjs.etalaseapp.model.request.LoginRequest
-import id.mjs.etalaseapp.model.response.LoginResponse
+import id.mjs.etalaseapp.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_login.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
 
     lateinit var sharedPreferences : SharedPreferences
     lateinit var manager: TelephonyManager
-    lateinit var stringImei1 : String
-    lateinit var stringImei2 : String
+    private var stringImei1 : String = ""
+    private var stringImei2 : String = ""
     private lateinit var viewModel: LoginViewModel
+
+    companion object {
+        const val REQUEST_PHONE_STATE = 8
+        const val STATUS_FROM_PROFILE = "status_from_profile"
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        checkPhoneStatePermission()
 
         viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         sharedPreferences = getSharedPreferences("UserPref", Context.MODE_PRIVATE)
@@ -58,9 +60,16 @@ class LoginActivity : AppCompatActivity() {
         stringImei1 = manager.getDeviceId(0)
         stringImei2 = manager.getDeviceId(1)
 
-        checkPhoneStatePermission()
-
         buttonListener()
+    }
+
+    override fun onStop() {
+        super.onStop()
+//        val status = intent.getBooleanExtra(STATUS_FROM_PROFILE, false)
+//        if (status){
+//            val intent = Intent(applicationContext, MainActivity::class.java)
+//            startActivity(intent)
+//        }
     }
 
     private fun checkPhoneStatePermission(){
@@ -69,7 +78,17 @@ class LoginActivity : AppCompatActivity() {
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
             Log.d("permission","fail")
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE), 1)
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE), REQUEST_PHONE_STATE)
+        }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val status = intent.getBooleanExtra(STATUS_FROM_PROFILE, false)
+        if (status){
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
@@ -106,7 +125,8 @@ class LoginActivity : AppCompatActivity() {
                         finish()
                     }
                     else{
-                        Toast.makeText(applicationContext,it.message,Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(applicationContext,it.message,Toast.LENGTH_SHORT).show()
+                        text_login_alert.text = it.message
                     }
                     btnLoginActive(true)
                 }

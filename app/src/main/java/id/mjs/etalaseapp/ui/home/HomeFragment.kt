@@ -146,14 +146,16 @@ class HomeFragment : Fragment() {
         }
 
         viewModel.getAds(Utils.signature).observe(viewLifecycleOwner, Observer {
-            if (it.code == 100){
-                for (data in it.data!!){
-                    sampleImages.add(Utils.baseUrl + data.picture.toString())
-                    adsImage.add(data)
-                    Log.d("adsvm",Utils.baseUrl + data.picture.toString())
+            if (it != null){
+                if (it.code == 100){
+                    for (data in it.data!!){
+                        sampleImages.add(Utils.baseUrl + data.picture.toString())
+                        adsImage.add(data)
+                        Log.d("adsvm",Utils.baseUrl + data.picture.toString())
+                    }
+                    carouselView.pageCount = sampleImages.size
+                    carouselView.setImageListener(imageListener)
                 }
-                carouselView.pageCount = sampleImages.size
-                carouselView.setImageListener(imageListener)
             }
         })
 
@@ -185,7 +187,7 @@ class HomeFragment : Fragment() {
 
     private fun addAppList(){
         val jwt = sharedPreferences.getString("token", "")
-
+        listAppDataResponse.clear()
         if (jwt?.length != 0){
             viewModel.getAllApp(jwt.toString()).observe(viewLifecycleOwner, Observer {
                 if (it != null){
@@ -194,8 +196,8 @@ class HomeFragment : Fragment() {
                         listAppDataResponse.addAll(data)
                     }
                     homeCardViewAdapter.notifyDataSetChanged()
-                    showLoading(false)
                 }
+                showLoading(false)
             })
         }
         else{
@@ -206,8 +208,8 @@ class HomeFragment : Fragment() {
                         listAppDataResponse.addAll(data)
                     }
                     homeCardViewAdapter.notifyDataSetChanged()
-                    showLoading(false)
                 }
+                showLoading(false)
             })
         }
     }

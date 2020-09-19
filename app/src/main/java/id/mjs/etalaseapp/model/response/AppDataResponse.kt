@@ -53,7 +53,7 @@ data class AppDataResponse (
     var expansion_file: String? = null,
 
     @SerializedName("media")
-    var media: String? = null,
+    var media: ArrayList<String>? = null,
 
     @SerializedName("developer_id")
     var developer_id: String? = null,

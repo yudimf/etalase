@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.myapps.DownloadedAppsFragment">
+    tools:context=".ui.myapps.downloadedapps.DownloadedAppsFragment">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -17,11 +17,11 @@
                 android:background="@drawable/rounded_button"
                 android:layout_width="wrap_content"
                 android:layout_gravity="right"
-                android:text="Cek Pembaharuan"
+                android:text=" Perbaharui Semua "
                 android:padding="5dp"
                 android:textSize="10sp"
                 android:textAllCaps="false"
-                android:textColor="@color/colorActive"/>
+                android:textColor="#fff"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_grid_apps"

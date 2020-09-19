@@ -46,6 +46,9 @@ class HomeCardViewAdapter (private val listAppModel: ArrayList<AppDataResponse>)
                     val textFileSize = "$fileSize MB"
                     info_app_card.text = textFileSize
                 }
+                else{
+                    info_app_card.visibility = View.INVISIBLE
+                }
                 itemView.setOnClickListener {
                     onItemClickCallback?.onItemClicked(appModel)
                 }

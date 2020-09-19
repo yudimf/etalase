@@ -1,4 +1,4 @@
-package id.mjs.etalaseapp.ui.checkforupdate
+package id.mjs.etalaseapp.ui.myapps.downloadedapps
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -7,11 +7,11 @@ import id.mjs.etalaseapp.model.request.UpdateRequest
 import id.mjs.etalaseapp.model.response.AppResponse
 import id.mjs.etalaseapp.repository.AppRepository
 
-class CheckForUpdateViewModel(application: Application) : AndroidViewModel(application) {
+class DownloadedAppsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val appRepository = AppRepository()
 
-    fun checkForUpdate(jwt : String?, data : UpdateRequest) : MutableLiveData<AppResponse> {
+    fun getInstalledApps(jwt : String?, data : UpdateRequest) : MutableLiveData<AppResponse> {
         return appRepository.getInstalledApps(jwt,data)
     }
 

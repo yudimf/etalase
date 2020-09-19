@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +21,7 @@ import id.mjs.etalaseapp.ui.searchapp.SearchAppViewModel
 import id.mjs.etalaseapp.utils.DatePickerHelper
 import id.mjs.etalaseapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_create_account.*
+import kotlinx.android.synthetic.main.activity_list_app.*
 import kotlinx.android.synthetic.main.activity_my_profile.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -50,6 +52,7 @@ class MyProfileActivity : AppCompatActivity(), SupportedDatePickerDialog.OnDateS
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_profile)
+        showLoading(true)
 
         sharedPreferences = getSharedPreferences("UserPref", Context.MODE_PRIVATE)!!
         viewModel = ViewModelProvider(this).get(MyProfileViewModel::class.java)
@@ -59,6 +62,17 @@ class MyProfileActivity : AppCompatActivity(), SupportedDatePickerDialog.OnDateS
 
         btnListener()
 
+    }
+
+    private fun showLoading(status : Boolean){
+        if (status){
+            progress_bar_my_profile?.visibility = View.VISIBLE
+            content_profile?.visibility = View.GONE
+        }
+        else{
+            progress_bar_my_profile?.visibility = View.GONE
+            content_profile?.visibility = View.VISIBLE
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -165,8 +179,10 @@ class MyProfileActivity : AppCompatActivity(), SupportedDatePickerDialog.OnDateS
                 Log.d("getUserInfo","getUserInfo")
                 val data = it?.data
                 val picasso = Picasso.get()
+                Log.d("potopet",Utils.baseUrl+data?.picture.toString())
                 picasso.load(Utils.baseUrl+data?.picture.toString())
-//                    .placeholder(R.drawable.upload_image)
+//                    .placeholder(R.drawable.ic_upload_image)
+                    .error(R.drawable.ic_upload_image)
                     .into(my_profile_logo)
                 userInfoName.setText(data?.name.toString())
                 userInfoEmail.setText(data?.email.toString())
@@ -181,6 +197,7 @@ class MyProfileActivity : AppCompatActivity(), SupportedDatePickerDialog.OnDateS
                 sdf2.format(cal.time)
                 userInfoBirthday.setText(sdf2.format(cal.time))
             }
+            showLoading(false)
         })
     }
 }

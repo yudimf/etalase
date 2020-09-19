@@ -15,6 +15,17 @@
             app:layout_constraintTop_toTopOf="parent"
             android:contentDescription="Apps Logo" />
 
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/text_login_alert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="#ff0000"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/create_account_image"/>
+
         <LinearLayout
             android:orientation="horizontal"
             android:id="@+id/linear_layout_email"
@@ -23,7 +34,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/create_account_image">
+            app:layout_constraintTop_toBottomOf="@+id/text_login_alert">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"

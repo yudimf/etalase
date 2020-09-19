@@ -3,9 +3,9 @@ package id.mjs.etalaseapp.model.response
 import com.google.gson.annotations.SerializedName
 
 data class ReviewDataResponse(
-    @SerializedName("avg_ratings") var avg_ratings : Int? = null,
+    @SerializedName("avg_ratings") var avg_ratings : Float? = null,
     @SerializedName("id") var id : Int? = null,
-    @SerializedName("name") var name : Int? = null,
+    @SerializedName("name") var name : String? = null,
     @SerializedName("type") var type : String? = null,
     @SerializedName("app_icon") var app_icon : String? = null,
     @SerializedName("category_id") var category_id : Int? = null,
