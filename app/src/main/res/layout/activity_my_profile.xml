@@ -218,7 +218,7 @@
                 android:id="@+id/beta_version_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="beta version 1.0"
+                android:text="beta version 2.0"
                 android:textSize="12dp"
                 android:textColor="#3F88C5"
                 android:gravity="center_horizontal"

@@ -2,6 +2,7 @@ package id.mjs.etalaseapp.repository
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import id.mjs.etalaseapp.model.request.UpdateDataRequest
 import id.mjs.etalaseapp.model.request.UpdateRequest
 import id.mjs.etalaseapp.model.response.*
 import id.mjs.etalaseapp.retrofit.ApiMain
@@ -156,7 +157,7 @@ class AppRepository {
     fun getAppsByCategory(jwt : String, categoryId : Int) : MutableLiveData<AppResponse>{
         val categoryResponse = MutableLiveData<AppResponse>()
 
-        ApiMain().services.getAppsByCategory(jwt,categoryId).enqueue(object : Callback<AppResponse>{
+        ApiMain().services.getApp(jwt,categoryId).enqueue(object : Callback<AppResponse>{
             override fun onFailure(call: Call<AppResponse>, t: Throwable) {
                 categoryResponse.postValue(null)
             }
@@ -205,6 +206,94 @@ class AppRepository {
             }
         })
         return reviewResponse
+    }
+
+    fun getDetailApp(jwt: String, appId : Int) : MutableLiveData<AppDetailResponse>{
+        val detailResponse = MutableLiveData<AppDetailResponse>()
+
+        ApiMain().services.getDetailApp(jwt,appId).enqueue(object : Callback<AppDetailResponse>{
+            override fun onFailure(call: Call<AppDetailResponse>, t: Throwable) {
+                detailResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<AppDetailResponse>, response: Response<AppDetailResponse>) {
+                if (response.isSuccessful){
+                    detailResponse.postValue(response.body())
+                }
+                else{
+                    detailResponse.postValue(null)
+                }
+            }
+
+        })
+
+        return detailResponse
+    }
+
+    fun getDetailApp2(jwt: String, appId : Int, data : UpdateDataRequest) : MutableLiveData<AppDetailResponse>{
+        val detailResponse = MutableLiveData<AppDetailResponse>()
+
+        ApiMain().services.getDetailApp(jwt,appId, data).enqueue(object : Callback<AppDetailResponse>{
+            override fun onFailure(call: Call<AppDetailResponse>, t: Throwable) {
+                detailResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<AppDetailResponse>, response: Response<AppDetailResponse>) {
+                if (response.isSuccessful){
+                    detailResponse.postValue(response.body())
+                }
+                else{
+                    detailResponse.postValue(null)
+                }
+            }
+
+        })
+
+        return detailResponse
+    }
+
+    fun getDetailAppAnonymous(signature: String, appId : Int) : MutableLiveData<AppDetailResponse>{
+        val detailResponse = MutableLiveData<AppDetailResponse>()
+
+        ApiMain().services.getDetailAppAnonymous(signature,appId).enqueue(object : Callback<AppDetailResponse>{
+            override fun onFailure(call: Call<AppDetailResponse>, t: Throwable) {
+                detailResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<AppDetailResponse>, response: Response<AppDetailResponse>) {
+                if (response.isSuccessful){
+                    detailResponse.postValue(response.body())
+                }
+                else{
+                    detailResponse.postValue(null)
+                }
+            }
+
+        })
+
+        return detailResponse
+    }
+
+    fun getDetailAppAnonymous2(signature: String, appId : Int, data : UpdateDataRequest) : MutableLiveData<AppDetailResponse>{
+        val detailResponse = MutableLiveData<AppDetailResponse>()
+
+        ApiMain().services.getDetailAppAnonymous(signature, appId, data).enqueue(object : Callback<AppDetailResponse>{
+            override fun onFailure(call: Call<AppDetailResponse>, t: Throwable) {
+                detailResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<AppDetailResponse>, response: Response<AppDetailResponse>) {
+                if (response.isSuccessful){
+                    detailResponse.postValue(response.body())
+                }
+                else{
+                    detailResponse.postValue(null)
+                }
+            }
+
+        })
+
+        return detailResponse
     }
 
     fun postReview(jwt : String, appId : Int, ratings : Int, comment : String) : MutableLiveData<BaseResponse>{
@@ -287,6 +376,8 @@ class AppRepository {
 
         return appResponse
     }
+
+
 
     fun postStatusDownload(jwt : String, appsId : Int) : MutableLiveData<StatusDownloadedResponse>{
         val responseStatus = MutableLiveData<StatusDownloadedResponse>()

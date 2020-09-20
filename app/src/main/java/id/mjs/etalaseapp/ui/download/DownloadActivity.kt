@@ -28,6 +28,7 @@ import id.mjs.etalaseapp.adapter.AdapterRecyclerView
 import id.mjs.etalaseapp.adapter.HomeCardViewAdapter
 import id.mjs.etalaseapp.adapter.ReviewAdapter
 import id.mjs.etalaseapp.model.Download
+import id.mjs.etalaseapp.model.request.UpdateDataRequest
 import id.mjs.etalaseapp.model.response.AppDataResponse
 import id.mjs.etalaseapp.model.response.Review
 import id.mjs.etalaseapp.model.response.ReviewDataResponse
@@ -51,6 +52,7 @@ class DownloadActivity : AppCompatActivity() {
         const val MESSAGE_PROGRESS = "message_progress"
         private const val PERMISSION_REQUEST_CODE = 1
         const val EXTRA_APP_MODEL = "extra_app_model"
+        const val EXTRA_STATUS_APP = "extra_status_app"
     }
 
     private var mAlarmManager : AlarmManager? = null
@@ -59,14 +61,13 @@ class DownloadActivity : AppCompatActivity() {
 
     private lateinit var viewModel : DownloadViewModel
     lateinit var sharedPreferences : SharedPreferences
+    private lateinit var jwt : String
 
     private var listReview = ArrayList<Review>()
     private lateinit var reviewAdapter : ReviewAdapter
-
     private var listAppDataResponse = ArrayList<AppDataResponse>()
-    private val homeCardViewAdapter = HomeCardViewAdapter(listAppDataResponse)
 
-    private lateinit var jwt : String
+    private val homeCardViewAdapter = HomeCardViewAdapter(listAppDataResponse)
     private lateinit var emailUser : String
     private var reviewUser = Review()
 
@@ -86,26 +87,11 @@ class DownloadActivity : AppCompatActivity() {
         jwt = sharedPreferences.getString("token", "").toString()
         emailUser = sharedPreferences.getString("email", "").toString()
 
-//        initLayout()
-//        setBtnDownload()
-//        registerReceiver()
-
     }
 
     private fun exoPlayerLayoutInit(){
         mediaRecyclerView = findViewById(R.id.recycler_view_media)
         mediaRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false)
-//        listViewType = mutableListOf(
-//            "https://html5demos.com/assets/dizzy.mp4",
-//            "https://raw.githubusercontent.com/yudimf/sample_image/master/1.jpeg",
-//            "https://raw.githubusercontent.com/yudimf/sample_image/master/1.jpeg",
-//            "https://html5demos.com/assets/dizzy.mp4"
-//            AdapterRecyclerView.ITEM_A,
-//            AdapterRecyclerView.ITEM_B,
-//            AdapterRecyclerView.ITEM_B,
-//            AdapterRecyclerView.ITEM_B,
-//            AdapterRecyclerView.ITEM_B
-//        )
 
         listViewType = ArrayList()
 
@@ -125,23 +111,85 @@ class DownloadActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         exoPlayerLayoutInit()
-        initLayout()
-        setBtnDownload()
-        registerReceiver()
+        showLoading(true)
+        getDataFromAPI()
+    }
+
+    private fun showLoading(status : Boolean){
+        if (status){
+            progress_bar_download_activity?.visibility = View.VISIBLE
+            layout_download_activity?.visibility = View.GONE
+        }
+        else{
+            progress_bar_download_activity?.visibility = View.GONE
+            layout_download_activity?.visibility = View.VISIBLE
+        }
+    }
+
+    private fun getDataFromAPI(){
+
+        var verCode : String = "0"
+        if (isAppInstalled(appModelSelected.package_name!!)){
+            var pinfo = packageManager.getPackageInfo(appModelSelected.package_name!!, 0)
+            verCode = pinfo.versionCode.toString()
+        }
+        val updateDataRequest = UpdateDataRequest(appModelSelected.package_name,verCode)
+
+        if (jwt.isNotEmpty()){
+            viewModel.getDetailApp2(jwt, appModelSelected.idApps!!,updateDataRequest).observe(this, Observer {
+                if (it != null){
+                    if (it.appDataResponse != null){
+                        appModelSelected = it.appDataResponse!!
+                        initLayout()
+                        setBtnDownload()
+                        registerReceiver()
+                    }
+                }
+                showLoading(false)
+            })
+        }
+        else{
+            viewModel.getDetailAppAnonymous2(Utils.signature, appModelSelected.idApps!!,updateDataRequest).observe(this, Observer {
+                if (it != null){
+                    if (it.appDataResponse != null){
+                        appModelSelected = it.appDataResponse!!
+                        initLayout()
+                        setBtnDownload()
+                        registerReceiver()
+                    }
+                }
+                showLoading(false)
+            })
+        }
     }
 
     private fun setBtnDownload(){
-        if (appInstalledOrNot(appModelSelected.package_name.toString())){
-            btn_download_1.visibility = View.INVISIBLE
-            btn_download_2.visibility = View.VISIBLE
+        if (isAppInstalled(appModelSelected.package_name.toString())){
+            Log.d("setBtnDownload","installed")
+            val status = appModelSelected.apps_status
+            if(status == "UPDATE"){
+                Log.d("setBtnDownload","update")
+                layout_btn_update.visibility = View.VISIBLE
+                btn_download_1.visibility = View.INVISIBLE
+                btn_download_2.visibility = View.INVISIBLE
+                btn_download_1.text = "Update"
+            }
+            else{
+                Log.d("setBtnDownload","no update")
+                btn_download_1.visibility = View.INVISIBLE
+                btn_download_2.visibility = View.VISIBLE
+                layout_btn_update.visibility = View.INVISIBLE
+            }
         }
         else{
+            Log.d("setBtnDownload","not installed")
             btn_download_1.visibility = View.VISIBLE
             btn_download_2.visibility = View.INVISIBLE
+            layout_btn_update.visibility = View.INVISIBLE
         }
     }
 
-    private fun appInstalledOrNot(uri: String): Boolean {
+    private fun isAppInstalled(uri: String): Boolean {
         val pm = packageManager
         try {
             pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES)
@@ -174,61 +222,71 @@ class DownloadActivity : AppCompatActivity() {
     }
 
     private fun initReviewLayout(){
-        getReview()
-        reviewAdapter = ReviewAdapter(listReview, this)
+        reviewAdapter = ReviewAdapter(listReview)
         rv_review.setHasFixedSize(true)
         rv_review.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv_review.adapter = reviewAdapter
 
+        getReview()
     }
 
     private fun getReview(){
         listReview.clear()
-        if (jwt.isNotEmpty()){
-            viewModel.getReview(jwt, appModelSelected.idApps!!).observe(this, Observer {
-                if (it != null){
-                    val response = it.reviewDataResponse
-                    reviewDataResponse = it.reviewDataResponse
-                    val data= response?.review
-                    if (data?.isNotEmpty()!!){
-                        if (data.size <= 2){
-                            listReview.add(data[0])
-                        }
-                        if (data.size == 2){
-                            listReview.add(data[1])
-                        }
 
-                        var status = false
-                        for (review in data){
-                            if (review.endusers?.email == emailUser){
-                                status = true
-                                reviewUser = review
-                                break
-                            }
-                        }
-
-                        if (status){
-//                            Toast.makeText(this,"udah komen",Toast.LENGTH_SHORT).show()
-                            review_btn.visibility = View.INVISIBLE
-                            update_review_btn.visibility = View.VISIBLE
-                        }
-                        else{
-//                            Toast.makeText(this,"belum komen",Toast.LENGTH_SHORT).show()
-                            review_btn.visibility = View.VISIBLE
-                            update_review_btn.visibility = View.INVISIBLE
-                        }
-
-                    }
-                    reloadRate(response)
-                    reviewAdapter.notifyDataSetChanged()
-
+        if (appModelSelected.review != null){
+            val data= appModelSelected.review
+            Log.d("dataReview",data.toString())
+            if (data?.isNotEmpty()!!){
+                Log.d("dataReview","asup")
+                listReview.add(appModelSelected.review!![0])
+                if (data.size > 1){
+                    Log.d("dataReview","asup 2")
+                    listReview.add(appModelSelected.review!![1])
                 }
-            })
+                Log.d("listReview",listReview.toString())
+                reviewAdapter.notifyDataSetChanged()
+                rv_review.adapter = reviewAdapter
+
+                var status = false
+                for (review in appModelSelected.review!!){
+                    if (review.endusers?.email == emailUser){
+                        status = true
+                        reviewUser = review
+                        break
+                    }
+                }
+
+                if (status){
+//                            Toast.makeText(this,"udah komen",Toast.LENGTH_SHORT).show()
+                    review_btn.visibility = View.INVISIBLE
+                    update_review_btn.visibility = View.VISIBLE
+                }
+                else{
+//                            Toast.makeText(this,"belum komen",Toast.LENGTH_SHORT).show()
+                    review_btn.visibility = View.VISIBLE
+                    update_review_btn.visibility = View.INVISIBLE
+                }
+            }
         }
     }
 
     private fun initDownloadButton(){
         btn_download_1.setOnClickListener {
+            if (jwt.isEmpty()){
+//                showAlertLogin()
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+            }
+            else{
+                if (checkPermission()) {
+                    startDownload()
+                } else {
+                    requestPermission()
+                }
+            }
+        }
+
+        btn_download_update.setOnClickListener {
             if (jwt.isEmpty()){
 //                showAlertLogin()
                 val intent = Intent(this, LoginActivity::class.java)
@@ -263,24 +321,30 @@ class DownloadActivity : AppCompatActivity() {
         initReviewLayout()
         initDownloadButton()
 
-        apps_developer_download.text = appModelSelected.developers?.name.toString()
-
         val picasso = Picasso.get()
         picasso.load(Utils.baseUrl+"apps/"+appModelSelected.app_icon)
             .into(image_view_download_1)
         app_name_download_1.text = appModelSelected.name
+        apps_developer_download.text = appModelSelected.developers?.name.toString()
+
+        val formatAverage = DecimalFormat("#.0").format(appModelSelected.avg_ratings!!.toFloat())
+        rating_viewers.text = formatAverage
+        total_reviewer.text = appModelSelected.review?.size.toString()
+        review_rating_bar.rating = appModelSelected.avg_ratings!!.toFloat()
+        rating_bar_ulasan.rating = appModelSelected.avg_ratings!!.toFloat()
         if (appModelSelected.file_size != null){
             val size = Utils.convertBiteToMB(appModelSelected.file_size!!)
             val fileSize = "$size  MB"
             file_size_download_1.text = fileSize
         }
+        if (appModelSelected.review?.size != 0){
+            progress_bar_5.progress = appModelSelected.rateDetails?.five!!  * 100 / appModelSelected.review?.size!!
+            progress_bar_4.progress = appModelSelected.rateDetails?.four!! * 100 / appModelSelected.review?.size!!
+            progress_bar_3.progress = appModelSelected.rateDetails?.three!! * 100 / appModelSelected.review?.size!!
+            progress_bar_2.progress = appModelSelected.rateDetails?.two!! * 100 / appModelSelected.review?.size!!
+            progress_bar_1.progress = appModelSelected.rateDetails?.one!! * 100 / appModelSelected.review?.size!!
+        }
 
-//        if (appModelSelected.rate!!.toInt() > 5){
-//            textView9.text = "5,0"
-//        }
-//        else{
-//            textView9.text = appModelSelected.rate + ",0"
-//        }
 
         review_btn.setOnClickListener {
             if (jwt.isEmpty()){
@@ -333,31 +397,15 @@ class DownloadActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        btn_download_open.setOnClickListener {
+            val intent = packageManager.getLaunchIntentForPackage(appModelSelected.package_name.toString())
+            startActivity(intent)
+        }
+
     }
 
     private fun reloadRate(data : ReviewDataResponse){
-        var average : Double = 0.0
-        if (data.rateDetails != null){
-            progress_bar_5.progress = data.rateDetails?.five!!  * 100 / listReview.size
-            progress_bar_4.progress = data.rateDetails?.four!! * 100 / listReview.size
-            progress_bar_3.progress = data.rateDetails?.three!! * 100 / listReview.size
-            progress_bar_2.progress = data.rateDetails?.two!! * 100 / listReview.size
-            progress_bar_1.progress = data.rateDetails?.one!! * 100 / listReview.size
 
-            average = (((data.rateDetails?.five!! * 5) +
-                    (data.rateDetails?.four!! * 4) +
-                    (data.rateDetails?.three!! * 3) +
-                    (data.rateDetails?.two!! * 2) +
-                    (data.rateDetails?.one!! * 1))/listReview.size).toDouble()
-
-            Log.d("average",average.toString())
-        }
-
-        val formatAverage = DecimalFormat("#.0").format(average)
-        total_reviewer.text = listReview.size.toString()
-        review_rating_bar.rating = average.toFloat()
-        rating_bar_ulasan.rating = average.toFloat()
-        textView9.text = formatAverage
     }
 
     private fun showUpdateReviewDialog(){
@@ -370,6 +418,7 @@ class DownloadActivity : AppCompatActivity() {
         alertDialog.show()
 
         dialogView.update_review_desc.setText(reviewUser.comment.toString())
+        dialogView.update_rating_review.rating = reviewUser.ratings!!.toFloat()
 
         dialogView.btn_update_review.setOnClickListener {
             val rating = dialogView.findViewById<RatingBar>(R.id.update_rating_review)
@@ -381,6 +430,7 @@ class DownloadActivity : AppCompatActivity() {
                         getReview()
                         reviewAdapter.notifyDataSetChanged()
 //                        reloadRate()
+                        onResume()
                     }
                 })
             alertDialog.dismiss()
@@ -394,7 +444,7 @@ class DownloadActivity : AppCompatActivity() {
                         getReview()
                         reviewAdapter.notifyDataSetChanged()
 //                        reloadRate()
-
+                        onResume()
                         review_btn.visibility = View.VISIBLE
                         update_review_btn.visibility = View.INVISIBLE
                     }
@@ -420,6 +470,7 @@ class DownloadActivity : AppCompatActivity() {
                         Toast.makeText(this, it.message,Toast.LENGTH_SHORT).show()
                         getReview()
                         reviewAdapter.notifyDataSetChanged()
+                        onResume()
                     }
             })
             alertDialog.dismiss()
@@ -441,6 +492,7 @@ class DownloadActivity : AppCompatActivity() {
         intent.putExtra(DownloadService.EXTRA_APP_MODEL,appModelSelected)
         startService(intent)
         btn_download_1.visibility = View.INVISIBLE
+        layout_btn_update.visibility = View.INVISIBLE
         progress_bar_download.visibility = View.VISIBLE
         progress_text_download.visibility = View.VISIBLE
         progress_bar_download.isIndeterminate = true
@@ -495,15 +547,10 @@ class DownloadActivity : AppCompatActivity() {
                 val download: Download = intent.getParcelableExtra("download")!!
                 progress_bar_download!!.progress = download.progress
                 if (download.progress == 100) {
-                    progress_text_download!!.text = "File Download Complete"
+                    progress_text_download.visibility = View.INVISIBLE
+                    progress_bar_download.visibility = View.INVISIBLE
+//                    progress_text_download!!.text = "File Download Complete"
 //                    setAlarmManager(appModelSelected.idApps!!,60* 60 * 1000)
-                    viewModel.postStatusDownload(jwt, appModelSelected.idApps!!).observe(this@DownloadActivity,
-                        Observer {
-                            if (it != null){
-                                Log.d("statusPostDownload",it.message.toString())
-                                Toast.makeText(this@DownloadActivity,it.message.toString(),Toast.LENGTH_SHORT).show()
-                            }
-                        })
                 } else {
                     progress_bar_download.isIndeterminate = false
                     progress_text_download!!.text = String.format("Downloaded (%d/%d) MB", download.currentFileSize, download.totalFileSize)

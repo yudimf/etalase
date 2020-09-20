@@ -2,6 +2,7 @@ package id.mjs.etalaseapp.retrofit
 
 import id.mjs.etalaseapp.model.request.LoginRequest
 import id.mjs.etalaseapp.model.request.RegisterRequest
+import id.mjs.etalaseapp.model.request.UpdateDataRequest
 import id.mjs.etalaseapp.model.request.UpdateRequest
 import id.mjs.etalaseapp.model.response.*
 import okhttp3.MultipartBody
@@ -19,7 +20,7 @@ interface ApiServices {
 
     @POST("apk/{path}/")
     @Streaming
-    fun getAppsByCategory(@Path("path") path : String): Call<ResponseBody>
+    fun getApp(@Path("path") path : String): Call<ResponseBody>
 
     @Headers("Content-Type: application/json")
     @POST("api/v1/login")
@@ -72,7 +73,7 @@ interface ApiServices {
     fun getCategoriesAnonymousGames(@Header("signature") signature : String?) : Call<CategoryResponse>
 
     @GET("api/v1/apps")
-    fun getAppsByCategory(@Header("jwt") jwt : String?, @Query("category_id") category_id : Int) : Call<AppResponse>
+    fun getApp(@Header("jwt") jwt : String?, @Query("category_id") category_id : Int) : Call<AppResponse>
 
     @GET("api/v1/apps")
     fun getAppsByCategoryAnonymous(@Header("signature") signature : String?, @Query("category_id") category_id : Int) : Call<AppResponse>
@@ -95,9 +96,6 @@ interface ApiServices {
     @GET("api/v1/ads")
     fun getAds(@Header("signature") signature : String?) : Call<AdsResponse>
 
-    @GET("api/v1/apps/{appId}/review-feedback")
-    fun getReview(@Header("jwt") jwt : String?, @Path("appId") appId : Int?) : Call<ReviewResponse>
-
     @POST("/api/v1/apps/review")
     fun postReview(@Header("jwt") jwt : String?,
                    @Query("app_id") appId : Int?,
@@ -119,5 +117,20 @@ interface ApiServices {
 
     @POST("api/v1/apps/installed")
     fun getInstalledApps(@Header("jwt") jwt : String?, @Body data : UpdateRequest) : Call<AppResponse>
+
+    @GET("api/v1/apps/{appId}/review-feedback")
+    fun getReview(@Header("jwt") jwt : String?, @Path("appId") appId : Int?) : Call<ReviewResponse>
+
+    @GET("api/v1/apps/{appId}/detail")
+    fun getDetailApp(@Header("jwt") jwt : String?, @Path("appId") appId : Int?) : Call<AppDetailResponse>
+
+    @GET("api/v1/apps/{appId}/detail")
+    fun getDetailAppAnonymous(@Header("signature") signature : String?, @Path("appId") appId : Int?) : Call<AppDetailResponse>
+
+    @POST("api/v1/apps/{appId}/detail")
+    fun getDetailApp(@Header("jwt") jwt : String?, @Path("appId") appId : Int?, @Body data : UpdateDataRequest) : Call<AppDetailResponse>
+
+    @POST("api/v1/apps/{appId}/detail")
+    fun getDetailAppAnonymous(@Header("signature") signature : String?, @Path("appId") appId : Int?, @Body data : UpdateDataRequest) : Call<AppDetailResponse>
 
 }

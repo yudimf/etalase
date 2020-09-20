@@ -48,7 +48,7 @@ class ReviewActivity : AppCompatActivity() {
     }
 
     private fun initReviewLayout(){
-        reviewAdapter = ReviewAdapter(listReview,this)
+        reviewAdapter = ReviewAdapter(listReview)
         rv_all_review.setHasFixedSize(true)
         rv_all_review.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv_all_review.adapter = reviewAdapter

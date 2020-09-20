@@ -1,7 +1,10 @@
 package id.mjs.etalaseapp.model.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Review (
     @SerializedName("id") var id : Int? = null,
     @SerializedName("apps_id") var apps_id : Int? = null,
@@ -16,4 +19,4 @@ data class Review (
     @SerializedName("created_at") var created_at : String? = null,
     @SerializedName("updated_at") var updated_at : String? = null,
     @SerializedName("endusers") var endusers : EndUsers? = null
-)
+) : Parcelable

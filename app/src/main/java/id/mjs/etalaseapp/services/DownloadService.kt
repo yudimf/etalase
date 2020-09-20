@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Environment
 import android.util.Log
@@ -13,12 +14,15 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.FileProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import id.mjs.etalaseapp.R
-import id.mjs.etalaseapp.model.AppModel
 import id.mjs.etalaseapp.model.Download
 import id.mjs.etalaseapp.model.response.AppDataResponse
+import id.mjs.etalaseapp.model.response.StatusDownloadedResponse
 import id.mjs.etalaseapp.retrofit.ApiMain
 import id.mjs.etalaseapp.ui.download.DownloadActivity
 import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.*
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -36,10 +40,16 @@ class DownloadService : IntentService("Download Service") {
         const val EXTRA_APP_MODEL = "extra_app_model"
     }
 
+    lateinit var sharedPreferences : SharedPreferences
+    private lateinit var jwt : String
+
     override fun onHandleIntent(p0: Intent?) {
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         appModelSelected = p0?.getParcelableExtra<AppDataResponse>(DownloadActivity.EXTRA_APP_MODEL) as AppDataResponse
+
+        sharedPreferences = getSharedPreferences("UserPref", Context.MODE_PRIVATE)!!
+        jwt = sharedPreferences.getString("token", "").toString()
 
         Log.d("appmodelselected",appModelSelected.name.toString())
 
@@ -66,7 +76,7 @@ class DownloadService : IntentService("Download Service") {
 
     private fun initDownload(){
 //        val request = ApiMain().services.getSampleApps()
-        val request = ApiMain().services.getAppsByCategory(appModelSelected.apk_file.toString())
+        val request = ApiMain().services.getApp(appModelSelected.apk_file.toString())
         try {
             downloadFile(request.execute().body())
         }catch (e: IOException) {
@@ -143,6 +153,25 @@ class DownloadService : IntentService("Download Service") {
 //        notificationManager!!.notify(0, notificationBuilder!!.build())
 
         Log.d("installing","masuk")
+
+        ApiMain().services.postStatusDownload(jwt,appModelSelected.idApps).enqueue(object :
+            Callback<StatusDownloadedResponse> {
+            override fun onFailure(call: Call<StatusDownloadedResponse>, t: Throwable) {
+                Log.d("failpostdownload","failpostdownload")
+            }
+
+            override fun onResponse(call: Call<StatusDownloadedResponse>, response: Response<StatusDownloadedResponse>) {
+                if (response.isSuccessful){
+                    val it = response.body()
+                    Log.d("statusPostDownload",it?.message.toString())
+                    Toast.makeText(application,it?.message.toString(),Toast.LENGTH_SHORT).show()
+                }
+                else{
+                    Log.d("failpostdownload","failpostdownload")
+                }
+            }
+
+        })
 
         val intent = Intent(Intent.ACTION_VIEW)
         intent.setDataAndType(

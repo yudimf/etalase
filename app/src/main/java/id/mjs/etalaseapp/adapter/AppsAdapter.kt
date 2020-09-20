@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import id.mjs.etalaseapp.R
-import id.mjs.etalaseapp.model.AppModel
 import id.mjs.etalaseapp.model.response.AppDataResponse
 import id.mjs.etalaseapp.utils.Utils
 import kotlinx.android.synthetic.main.item_list_apps.view.*
+import java.text.DecimalFormat
 
 class AppsAdapter(private val listAppsModel : ArrayList<AppDataResponse>) : RecyclerView.Adapter<AppsAdapter.ViewHolder>() {
 
@@ -26,7 +26,8 @@ class AppsAdapter(private val listAppsModel : ArrayList<AppDataResponse>) : Recy
                 picasso.load(Utils.baseUrl+"apps/"+appModel.app_icon)
                     .into(img_list_app_item)
                 txt_list_app_item.text = appModel.name
-                txt_list_rating_item.text = appModel.rate + " "
+                val formatAverage = DecimalFormat("#.0").format(appModel.avg_ratings!!.toFloat())
+                txt_list_rating_item.text = "$formatAverage "
                 if (appModel.file_size != null){
                     val fileSize = Utils.convertBiteToMB(appModel.file_size!!)
                     val textFileSize = "$fileSize MB"

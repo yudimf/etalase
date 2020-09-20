@@ -23,7 +23,8 @@
         android:roundIcon="@mipmap/ic_launcher_etalase"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        >
         <activity android:name=".ui.checkforupdate.CheckForUpdateActivity"></activity>
 
         <receiver

@@ -72,6 +72,12 @@ data class AppDataResponse (
     var developers: @RawValue Developers? = null,
 
     @SerializedName("rate_details")
-    var rateDetails: @RawValue RateDetails? = null
+    var rateDetails: @RawValue RateDetails? = null,
+
+    @SerializedName("avg_ratings")
+    var avg_ratings : Double? = null,
+
+    @SerializedName("review")
+    var review : ArrayList<Review>? = null
 
 ) : Parcelable

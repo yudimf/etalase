@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -26,23 +27,6 @@
             android:layout_height="wrap_content"
             tools:context=".ui.home.HomeFragment"
             android:paddingBottom="20dp">
-
-<!--            <EditText-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:id="@+id/searchBarApp"-->
-<!--                android:inputType="none"-->
-<!--                android:focusable="false"-->
-<!--                android:hint="Telusuri Aplikasi dan Game"-->
-<!--                android:singleLine="true"-->
-<!--                android:background="@null"-->
-<!--                android:layout_margin="10dp"-->
-<!--                android:padding="12dp"-->
-<!--                android:drawableLeft="@drawable/ic_baseline_search_24"-->
-<!--                android:drawablePadding="12dp"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"/>-->
 
             <com.mancj.materialsearchbar.MaterialSearchBar
                 style="@style/MaterialSearchBarLight"

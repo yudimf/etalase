@@ -115,7 +115,6 @@ class AdapterRecyclerView(private val listViewType: List<String>) : RecyclerView
 
                 })
 
-
                 val uri = Uri.parse(url)
                 val mediaSource = buildMediaSource(uri, "default")
                 simpleExoplayer.prepare(mediaSource)
@@ -128,7 +127,9 @@ class AdapterRecyclerView(private val listViewType: List<String>) : RecyclerView
         fun bind(url : String){
             with(itemView){
                 val picasso1 = Picasso.get()
-                picasso1.load(url)
+//                picasso1.load(url)
+//                picasso1.load("https://raw.githubusercontent.com/yudimf/sample_image/master/1.jpeg")
+                picasso1.load("http://api-etalase-app.bagustech.id/media/media_4_1.png")
                     .into(image_media)
             }
         }

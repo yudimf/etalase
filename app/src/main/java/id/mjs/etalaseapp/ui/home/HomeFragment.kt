@@ -20,6 +20,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mancj.materialsearchbar.MaterialSearchBar
+import com.mancj.materialsearchbar.adapter.SuggestionsAdapter
 import com.squareup.picasso.Picasso
 import com.synnapps.carouselview.CarouselView
 import com.synnapps.carouselview.ImageListener
@@ -126,6 +127,21 @@ class HomeFragment : Fragment() {
                 val intent = Intent(context, SearchAppActivity::class.java)
                 intent.putExtra(SearchAppActivity.EXTRA_STRING_SEARCH,text.toString())
                 startActivity(intent)
+            }
+
+        })
+
+        searchBar.setSuggestionsClickListener(object : SuggestionsAdapter.OnItemViewClickListener{
+            override fun OnItemDeleteListener(position: Int, v: View?) {
+                Log.d("OnItemDeleteListener","OnItemDeleteListener")
+                val newList = searchBar.lastSuggestions
+                newList.removeAt(position)
+                searchBar.updateLastSuggestions(newList)
+                searchBar.clearSuggestions()
+            }
+
+            override fun OnItemClickListener(position: Int, v: View?) {
+                Log.d("OnItemClickListener",position.toString())
             }
 
         })

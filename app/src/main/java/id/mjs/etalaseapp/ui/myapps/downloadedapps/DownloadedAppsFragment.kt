@@ -22,6 +22,7 @@ import id.mjs.etalaseapp.model.request.UpdateRequest
 import id.mjs.etalaseapp.model.response.AppDataResponse
 import id.mjs.etalaseapp.ui.checkforupdate.CheckForUpdateActivity
 import id.mjs.etalaseapp.ui.checkforupdate.CheckForUpdateViewModel
+import id.mjs.etalaseapp.ui.download.DownloadActivity
 import id.mjs.etalaseapp.ui.login.LoginActivity
 import kotlinx.android.synthetic.main.activity_list_app.*
 import kotlinx.android.synthetic.main.fragment_downloaded_apps.*
@@ -52,6 +53,8 @@ class DownloadedAppsFragment : Fragment() {
     private var listAppDataResponse = ArrayList<AppDataResponse>()
 
     private lateinit var gridAppsAdapter : GridAppsAdapter
+
+    lateinit var dataTemp : AppDataResponse
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -122,8 +125,16 @@ class DownloadedAppsFragment : Fragment() {
         rv_grid_apps.adapter = gridAppsAdapter
 
         gridAppsAdapter.setOnItemClickCallback(object : GridAppsAdapter.OnItemClickCallback{
-            override fun onItemClicked(data: AppInfo) {
-                val intent = activity?.packageManager?.getLaunchIntentForPackage(data.packageName)
+            override fun onItemClicked(dataApp: AppInfo) {
+                for (appDataResponse in listAppDataResponse){
+                    if (appDataResponse.package_name == dataApp.packageName){
+                        dataTemp = appDataResponse
+                    }
+                }
+
+                val intent = Intent(context, DownloadActivity::class.java)
+                intent.putExtra(DownloadActivity.EXTRA_STATUS_APP,dataTemp.apps_status)
+                intent.putExtra(DownloadActivity.EXTRA_APP_MODEL,dataTemp)
                 startActivity(intent)
             }
 
