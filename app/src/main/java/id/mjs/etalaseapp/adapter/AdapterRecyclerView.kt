@@ -127,9 +127,11 @@ class AdapterRecyclerView(private val listViewType: List<String>) : RecyclerView
         fun bind(url : String){
             with(itemView){
                 val picasso1 = Picasso.get()
-//                picasso1.load(url)
+                picasso1.load(url)
+                    .error(R.drawable.broken_image)
+                    .placeholder(R.drawable.progress_animation)
 //                picasso1.load("https://raw.githubusercontent.com/yudimf/sample_image/master/1.jpeg")
-                picasso1.load("http://api-etalase-app.bagustech.id/media/media_4_1.png")
+//                picasso1.load("http://api-etalase-app.bagustech.id/media/media_4_1.png")
                     .into(image_media)
             }
         }

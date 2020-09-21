@@ -97,7 +97,7 @@ class DownloadActivity : AppCompatActivity() {
 
         if (appModelSelected.media != null){
             for (url in appModelSelected.media!!){
-                val data = "http://api-etalase-app.bagustech.id/$url"
+                val data = Utils.baseUrl + url
                 listViewType.add(data)
             }
         }
