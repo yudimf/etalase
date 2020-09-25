@@ -27,6 +27,8 @@ import id.mjs.etalaseapp.ui.createaccount.CreateAccountActivity
 import id.mjs.etalaseapp.ui.forgotpassword.ForgotPasswordActivity
 import id.mjs.etalaseapp.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_login.*
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.android.gms.tasks.OnCompleteListener
 
 class LoginActivity : AppCompatActivity() {
 
@@ -34,6 +36,7 @@ class LoginActivity : AppCompatActivity() {
     lateinit var manager: TelephonyManager
     private var stringImei1 : String = "12345678"
     private var stringImei2 : String = "87654321"
+    private var firebaseID : String = ""
     private lateinit var viewModel: LoginViewModel
 
     companion object {
@@ -57,6 +60,20 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.d("Firebase Token ", "getInstanceId failed", task.exception)
+                    return@OnCompleteListener
+                }
+                val token = task.result?.token
+                if (token != null) {
+                    firebaseID = token
+                }
+                Log.d("Firebase Token ", token.toString())
+            })
+
         try {
             manager =
                 getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
@@ -115,7 +132,8 @@ class LoginActivity : AppCompatActivity() {
                 stringImei1,
                 stringImei1,
                 Build.MANUFACTURER,
-                Build.MODEL
+                Build.MODEL,
+                firebaseID
             )
             btnLoginActive(false)
 

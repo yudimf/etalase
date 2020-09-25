@@ -50,7 +50,8 @@ interface ApiServices {
                      @Part("imei_1") imei1 : RequestBody,
                      @Part("imei_2") imei2 : RequestBody,
                      @Part("device_brand") deviceBrand : RequestBody,
-                     @Part("device_model") deviceModel : RequestBody) : Call<LoginResponse>
+                     @Part("device_model") deviceModel : RequestBody,
+                     @Part("firebase_id") firebaseId : RequestBody) : Call<LoginResponse>
 
     @Multipart
     @POST("api/v1/user-info/update-profile")

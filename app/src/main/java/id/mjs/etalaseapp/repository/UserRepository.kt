@@ -80,11 +80,12 @@ class UserRepository {
                  imei1 : RequestBody,
                  imei2 : RequestBody,
                  deviceBrand : RequestBody,
-                 deviceModel : RequestBody) : MutableLiveData<LoginResponse>{
+                 deviceModel : RequestBody,
+                 firebaseId : RequestBody) : MutableLiveData<LoginResponse>{
 
         val registerResponse = MutableLiveData<LoginResponse>()
 
-        ApiMain().services.registerUser(email,password,name,sdkVersion,birthday,bodyPhoto,imei1,imei2,deviceBrand,deviceModel).enqueue(object:Callback<LoginResponse>{
+        ApiMain().services.registerUser(email,password,name,sdkVersion,birthday,bodyPhoto,imei1,imei2,deviceBrand,deviceModel,firebaseId).enqueue(object:Callback<LoginResponse>{
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 Log.d("error",t.message.toString())
                 registerResponse.postValue(null)
