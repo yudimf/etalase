@@ -219,6 +219,15 @@ class DownloadActivity : AppCompatActivity() {
         rv_list_apps_sejenis.setHasFixedSize(true)
         rv_list_apps_sejenis.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rv_list_apps_sejenis.adapter = homeCardViewAdapter
+
+        homeCardViewAdapter.setOnItemClickCallback(object : HomeCardViewAdapter.OnItemClickCallback{
+            override fun onItemClicked(data: AppDataResponse) {
+                val intent = Intent(applicationContext, DownloadActivity::class.java)
+                intent.putExtra(EXTRA_APP_MODEL,data)
+                startActivity(intent)
+            }
+
+        })
     }
 
     private fun initReviewLayout(){
@@ -327,7 +336,10 @@ class DownloadActivity : AppCompatActivity() {
         app_name_download_1.text = appModelSelected.name
         apps_developer_download.text = appModelSelected.developers?.name.toString()
 
-        val formatAverage = DecimalFormat("#.0").format(appModelSelected.avg_ratings!!.toFloat())
+        var formatAverage = DecimalFormat("#.0").format(appModelSelected.avg_ratings!!.toFloat())
+        if (formatAverage == ".0"){
+            formatAverage = "0.0"
+        }
         rating_viewers.text = formatAverage
         total_reviewer.text = appModelSelected.review?.size.toString()
         review_rating_bar.rating = appModelSelected.avg_ratings!!.toFloat()
@@ -503,11 +515,16 @@ class DownloadActivity : AppCompatActivity() {
         val jwt = sharedPreferences.getString("token", "")
         listAppDataResponse.clear()
         if (jwt?.length != 0){
-            viewModel.getAllApp(jwt.toString()).observe(this, Observer {
+            viewModel.getAppsByCategory(jwt.toString(), appModelSelected.category_id!!.toInt()).observe(this, Observer {
                 if (it != null){
                     val data = it.data
                     if (data != null) {
-                        listAppDataResponse.addAll(data)
+                        for(appData in data){
+                            if (appData.idApps != appModelSelected.idApps){
+                                listAppDataResponse.add(appData)
+                            }
+                        }
+//                        listAppDataResponse.addAll(data)
                     }
                     homeCardViewAdapter.notifyDataSetChanged()
 //                    showLoading(false)
@@ -515,11 +532,16 @@ class DownloadActivity : AppCompatActivity() {
             })
         }
         else{
-            viewModel.getAllAppAnonymous(Utils.signature).observe(this, Observer {
+            viewModel.getAppsByCategoryAnonymous(Utils.signature, appModelSelected.category_id!!.toInt()).observe(this, Observer {
                 if (it != null){
                     val data = it.data
                     if (data != null) {
-                        listAppDataResponse.addAll(data)
+                        for(appData in data){
+                            if (appData.idApps != appModelSelected.idApps){
+                                listAppDataResponse.add(appData)
+                            }
+                        }
+//                        listAppDataResponse.addAll(data)
                     }
                     homeCardViewAdapter.notifyDataSetChanged()
 //                    showLoading(false)

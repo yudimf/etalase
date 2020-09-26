@@ -55,4 +55,12 @@ class DownloadViewModel (application: Application) : AndroidViewModel(applicatio
         return appRepository.getDetailAppAnonymous2(signature,appId,data)
     }
 
+    fun getAppsByCategory(jwt : String, categoryId : Int) : MutableLiveData<AppResponse>{
+        return appRepository.getAppsByCategory(jwt,categoryId)
+    }
+
+    fun getAppsByCategoryAnonymous(signature : String, categoryId : Int) : MutableLiveData<AppResponse>{
+        return appRepository.getAppsByCategoryAnonymous(signature,categoryId)
+    }
+
 }
