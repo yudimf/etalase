@@ -21,7 +21,8 @@ class CreateAccountViewModel(application: Application) : AndroidViewModel(applic
                  imei1 : RequestBody,
                  imei2 : RequestBody,
                  deviceBrand : RequestBody,
-                 deviceModel : RequestBody) : MutableLiveData<LoginResponse> {
-        return userRepository.register(email, password, name, sdkVersion, birthday, bodyPhoto,imei1,imei2,deviceBrand,deviceModel)
+                 deviceModel : RequestBody,
+                 firebaseId : RequestBody) : MutableLiveData<LoginResponse> {
+        return userRepository.register(email, password, name, sdkVersion, birthday, bodyPhoto,imei1,imei2,deviceBrand,deviceModel,firebaseId)
     }
 }

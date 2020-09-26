@@ -28,6 +28,8 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.android.gms.tasks.OnCompleteListener
 import com.ibotta.android.support.pickerdialogs.SupportedDatePickerDialog
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.utils.DatePickerHelper
@@ -56,6 +58,7 @@ class CreateAccountActivity : AppCompatActivity(), SupportedDatePickerDialog.OnD
     private var validatePasswordConfirmation : Boolean = false
     private var stringBirthDate : String = "1996-01-01"
     lateinit var datePicker: DatePickerHelper
+    private var firebaseID : String = ""
 
     private lateinit var viewModel : CreateAccountViewModel
 
@@ -82,6 +85,19 @@ class CreateAccountActivity : AppCompatActivity(), SupportedDatePickerDialog.OnD
         stringImei1 = manager.getDeviceId(0)
         stringImei2 = manager.getDeviceId(1)
 
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.d("Firebase Token ", "getInstanceId failed", task.exception)
+                    return@OnCompleteListener
+                }
+                val token = task.result?.token
+                if (token != null) {
+                    firebaseID = token
+                }
+                Log.d("Firebase Token ", token.toString())
+            })
+
         passwordListener()
         btnListener()
         btnRegistrationListener()
@@ -100,6 +116,7 @@ class CreateAccountActivity : AppCompatActivity(), SupportedDatePickerDialog.OnD
             val imei2 = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),stringImei2)
             val brand = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),Build.MANUFACTURER)
             val model = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),Build.MODEL)
+            val firebaseId = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),firebaseID)
 
             if (validateInput()){
                 showLoadingBtnRegistration(true)
@@ -110,7 +127,7 @@ class CreateAccountActivity : AppCompatActivity(), SupportedDatePickerDialog.OnD
                     bodyPhoto = MultipartBody.Part.createFormData("photo",photoFile.name,requestFile)
                 }
 
-                viewModel.register(email,password,name,sdkVersion,birthday,bodyPhoto,imei1,imei2,brand,model).observe(this, androidx.lifecycle.Observer {
+                viewModel.register(email,password,name,sdkVersion,birthday,bodyPhoto,imei1,imei2,brand,model,firebaseId).observe(this, androidx.lifecycle.Observer {
                     if (it==null){
                         Toast.makeText(applicationContext,"Connection Fail",Toast.LENGTH_LONG).show()
                     }

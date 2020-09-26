@@ -25,6 +25,9 @@ data class LoginRequest (
     var deviceBrand: String? = null,
 
     @SerializedName("device_model")
-    var deviceModel: String? = null
+    var deviceModel: String? = null,
+
+    @SerializedName("firebase_id")
+    var firebaseId: String? = null
 
 ): Parcelable

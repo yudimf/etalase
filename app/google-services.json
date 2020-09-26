@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "725219477970",
+    "firebase_url": "https://etalase-app-2adcb.firebaseio.com",
+    "project_id": "etalase-app-2adcb",
+    "storage_bucket": "etalase-app-2adcb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:725219477970:android:6d537c221ef5cfbda5600b",
+        "android_client_info": {
+          "package_name": "id.mjs.etalaseapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "725219477970-q9qsdqkgojhvus7tnqg695ee8cm5l5af.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGD4LaMXPI9Yr_bjjRunGMrYoF9G5tTRs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "725219477970-q9qsdqkgojhvus7tnqg695ee8cm5l5af.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
