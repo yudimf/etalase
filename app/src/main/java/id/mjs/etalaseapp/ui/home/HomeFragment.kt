@@ -42,6 +42,12 @@ class HomeFragment : Fragment() {
     private var listAppDataResponse = ArrayList<AppDataResponse>()
     private val homeCardViewAdapter = HomeCardViewAdapter(listAppDataResponse)
 
+    private var listAppDataResponse2 = ArrayList<AppDataResponse>()
+    private val homeCardViewAdapter2 = HomeCardViewAdapter(listAppDataResponse2)
+
+    private var listAppDataResponse3 = ArrayList<AppDataResponse>()
+    private val homeCardViewAdapter3 = HomeCardViewAdapter(listAppDataResponse3)
+
     private lateinit var carouselView :  CarouselView
 
     private lateinit var sharedPreferences : SharedPreferences
@@ -187,13 +193,29 @@ class HomeFragment : Fragment() {
 
         rv_list_apps2.setHasFixedSize(true)
         rv_list_apps2.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
-        rv_list_apps2.adapter = homeCardViewAdapter
+        rv_list_apps2.adapter = homeCardViewAdapter2
 
         rv_list_apps3.setHasFixedSize(true)
         rv_list_apps3.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
-        rv_list_apps3.adapter = homeCardViewAdapter
+        rv_list_apps3.adapter = homeCardViewAdapter3
 
         homeCardViewAdapter.setOnItemClickCallback(object : HomeCardViewAdapter.OnItemClickCallback{
+            override fun onItemClicked(data: AppDataResponse) {
+                val intent = Intent(context, DownloadActivity::class.java)
+                intent.putExtra(DownloadActivity.EXTRA_APP_MODEL,data)
+                startActivity(intent)
+            }
+        })
+
+        homeCardViewAdapter2.setOnItemClickCallback(object : HomeCardViewAdapter.OnItemClickCallback{
+            override fun onItemClicked(data: AppDataResponse) {
+                val intent = Intent(context, DownloadActivity::class.java)
+                intent.putExtra(DownloadActivity.EXTRA_APP_MODEL,data)
+                startActivity(intent)
+            }
+        })
+
+        homeCardViewAdapter3.setOnItemClickCallback(object : HomeCardViewAdapter.OnItemClickCallback{
             override fun onItemClicked(data: AppDataResponse) {
                 val intent = Intent(context, DownloadActivity::class.java)
                 intent.putExtra(DownloadActivity.EXTRA_APP_MODEL,data)
@@ -210,9 +232,20 @@ class HomeFragment : Fragment() {
                 if (it != null){
                     val data = it.data
                     if (data != null) {
-                        listAppDataResponse.addAll(data)
+                        for (appData in data){
+//                            listAppDataResponse.addAll(data)
+                            if (appData.type == "Games"){
+                                listAppDataResponse.add(appData)
+                            }
+                            else{
+                                listAppDataResponse2.add(appData)
+                                listAppDataResponse3.add(appData)
+                            }
+                        }
                     }
                     homeCardViewAdapter.notifyDataSetChanged()
+                    homeCardViewAdapter2.notifyDataSetChanged()
+                    homeCardViewAdapter3.notifyDataSetChanged()
                 }
                 showLoading(false)
             })
@@ -222,9 +255,20 @@ class HomeFragment : Fragment() {
                 if (it != null){
                     val data = it.data
                     if (data != null) {
-                        listAppDataResponse.addAll(data)
+                        for (appData in data){
+//                            listAppDataResponse.addAll(data)
+                            if (appData.type == "Games"){
+                                listAppDataResponse.add(appData)
+                            }
+                            else{
+                                listAppDataResponse2.add(appData)
+                                listAppDataResponse3.add(appData)
+                            }
+                        }
                     }
                     homeCardViewAdapter.notifyDataSetChanged()
+                    homeCardViewAdapter2.notifyDataSetChanged()
+                    homeCardViewAdapter3.notifyDataSetChanged()
                 }
                 showLoading(false)
             })

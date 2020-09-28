@@ -133,13 +133,13 @@ class MyProfileActivity : AppCompatActivity(), SupportedDatePickerDialog.OnDateS
                     when (it.code) {
                         "501" -> {
                             alert_my_profile.text = it.message
-                            Toast.makeText(applicationContext,it.message, Toast.LENGTH_LONG).show()
+//                            Toast.makeText(applicationContext,it.message, Toast.LENGTH_LONG).show()
                             alert_my_profile.setTextColor(resources.getColor(R.color.colorSuccess))
                         }
                         else -> {
                             alert_my_profile.text = it.message
                             alert_my_profile.setTextColor(resources.getColor(R.color.colorDanger))
-                            Toast.makeText(applicationContext,it.message, Toast.LENGTH_LONG).show()
+//                            Toast.makeText(applicationContext,it.message, Toast.LENGTH_LONG).show()
                         }
                     }
                 }

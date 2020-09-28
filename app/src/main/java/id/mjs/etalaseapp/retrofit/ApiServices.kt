@@ -22,6 +22,10 @@ interface ApiServices {
     @Streaming
     fun getApp(@Path("path") path : String): Call<ResponseBody>
 
+    @POST("exp_file/{path}/")
+    @Streaming
+    fun getExtensionFile(@Path("path") path : String): Call<ResponseBody>
+
     @Headers("Content-Type: application/json")
     @POST("api/v1/login")
     fun login(@Body data : LoginRequest) : Call<LoginResponse>

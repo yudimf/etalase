@@ -2,7 +2,6 @@ package id.mjs.etalaseapp.adapter
 
 import android.content.Context
 import android.net.Uri
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,10 +16,12 @@ import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.squareup.picasso.Picasso
 import id.mjs.etalaseapp.R
+import id.mjs.etalaseapp.model.response.AppDataResponse
+import kotlinx.android.synthetic.main.exo_playback_control_view.view.*
 import kotlinx.android.synthetic.main.layout_media_image.view.*
 import kotlinx.android.synthetic.main.layout_media_video.view.*
 
-class AdapterRecyclerView(private val listViewType: List<String>) : RecyclerView.Adapter<AdapterRecyclerView.ViewHolder>() {
+class MediaAdapter(private val listViewType: List<String>) : RecyclerView.Adapter<MediaAdapter.ViewHolder>() {
 
     private lateinit var mContext : Context
 
@@ -31,13 +32,23 @@ class AdapterRecyclerView(private val listViewType: List<String>) : RecyclerView
 
     private lateinit var vhProgressBar : ProgressBar
 
+    private var onItemClickCallback : OnItemClickCallback? = null
+
+    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback
+    }
+
+    interface OnItemClickCallback {
+        fun onItemClicked(position: Int)
+    }
+
     private val dataSourceFactory: DataSource.Factory by lazy {
         DefaultDataSourceFactory(mContext, "exoplayer-sample")
     }
 
     companion object {
-        const val ITEM_A = 1
-        const val ITEM_B = 2
+        const val ITEM_VIDEO = 1
+        const val ITEM_IMAGE = 2
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -45,7 +56,7 @@ class AdapterRecyclerView(private val listViewType: List<String>) : RecyclerView
 
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            ITEM_A -> ViewHolderItemA(inflater.inflate(R.layout.layout_media_video, null))
+            ITEM_VIDEO -> ViewHolderItemA(inflater.inflate(R.layout.layout_media_video, null))
             else -> ViewHolderItemB(inflater.inflate(R.layout.layout_media_image, null))
         }
 
@@ -53,15 +64,16 @@ class AdapterRecyclerView(private val listViewType: List<String>) : RecyclerView
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         when (getItemType(listViewType[position])) {
-            ITEM_A -> {
+            ITEM_VIDEO -> {
                 val viewHolderA = holder as ViewHolderItemA
-                viewHolderA.bind(listViewType[position])
+                viewHolderA.bind(listViewType[position], position)
             }
             else -> {
                 val viewHolderB = holder as ViewHolderItemB
-                viewHolderB.bind(listViewType[position])
+                viewHolderB.bind(listViewType[position], position)
             }
         }
+
     }
 
     private fun getExtension(url: String) : String{
@@ -86,16 +98,16 @@ class AdapterRecyclerView(private val listViewType: List<String>) : RecyclerView
 
     private fun getItemType(url: String) : Int{
         return if (getExtension(url) == "mp4"){
-            ITEM_A
+            ITEM_VIDEO
         } else{
-            ITEM_B
+            ITEM_IMAGE
         }
     }
 
     open inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     inner class ViewHolderItemA(itemView: View) : ViewHolder(itemView) {
-        fun bind(url : String){
+        fun bind(url : String, position: Int){
             with(itemView){
                 vhProgressBar = findViewById(R.id.progressBar)
 
@@ -105,26 +117,33 @@ class AdapterRecyclerView(private val listViewType: List<String>) : RecyclerView
                 simpleExoplayer.playWhenReady = false
 
                 simpleExoplayer.addListener(object : Player.EventListener{
-
                     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                         if (playbackState == Player.STATE_BUFFERING)
                             vhProgressBar.visibility = View.VISIBLE
                         else if (playbackState == Player.STATE_READY || playbackState == Player.STATE_ENDED)
                             vhProgressBar.visibility = View.INVISIBLE
                     }
-
                 })
 
                 val uri = Uri.parse(url)
                 val mediaSource = buildMediaSource(uri, "default")
                 simpleExoplayer.prepare(mediaSource)
 
+//                itemView.setOnClickListener {
+//                    onItemClickCallback?.onItemClicked(position)
+//                }
+
+                exo_fullscreen_icon.setOnClickListener {
+                    onItemClickCallback?.onItemClicked(position)
+                    simpleExoplayer.pause()
+                }
+
             }
         }
     }
 
     inner class ViewHolderItemB(itemView: View) : ViewHolder(itemView){
-        fun bind(url : String){
+        fun bind(url : String, position: Int){
             with(itemView){
                 val picasso1 = Picasso.get()
                 picasso1.load(url)
@@ -133,6 +152,10 @@ class AdapterRecyclerView(private val listViewType: List<String>) : RecyclerView
 //                picasso1.load("https://raw.githubusercontent.com/yudimf/sample_image/master/1.jpeg")
 //                picasso1.load("http://api-etalase-app.bagustech.id/media/media_4_1.png")
                     .into(image_media)
+
+                itemView.setOnClickListener {
+                    onItemClickCallback?.onItemClicked(position)
+                }
             }
         }
     }

@@ -82,6 +82,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
 
             <View
+                android:visibility="invisible"
                 android:id="@+id/divider1"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="16dp"
@@ -119,6 +120,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
             <View
+                android:visibility="invisible"
                 android:id="@+id/divider2"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="16dp"

@@ -31,13 +31,19 @@ import kotlin.math.roundToInt
 class DownloadService : IntentService("Download Service") {
     private var notificationBuilder: NotificationCompat.Builder? = null
     private var notificationManager: NotificationManager? = null
-    private lateinit var updatedApk : File
+    private lateinit var fileDownloaded : File
+    private lateinit var expansionFileDownloaded : File
     private var totalFileSize = 0
+    private var totalExpansionFileSize = 0
 
     lateinit var appModelSelected : AppDataResponse
 
+    private var isExpansionFileDownloaded = false
+
     companion object {
         const val EXTRA_APP_MODEL = "extra_app_model"
+        const val APK_TYPE = 11
+        const val OBB_TYPE = 12
     }
 
     lateinit var sharedPreferences : SharedPreferences
@@ -71,12 +77,13 @@ class DownloadService : IntentService("Download Service") {
 
 //        notificationManager?.notify(0, notificationBuilder?.build())
 
-        initDownload()
+        initDownload(appModelSelected.apk_file.toString())
     }
 
-    private fun initDownload(){
+    private fun initDownload(url : String){
 //        val request = ApiMain().services.getSampleApps()
-        val request = ApiMain().services.getApp(appModelSelected.apk_file.toString())
+        val request : Call<ResponseBody> = ApiMain().services.getApp(url)
+
         try {
             downloadFile(request.execute().body())
         }catch (e: IOException) {
@@ -85,15 +92,32 @@ class DownloadService : IntentService("Download Service") {
         }
     }
 
-    private fun downloadFile(body: ResponseBody?){
+    private fun initDownloadExpansion(url : String){
+        val request : Call<ResponseBody> = ApiMain().services.getExtensionFile(url)
 
-        val fileName = """${System.currentTimeMillis()}.apk"""
-        var destination = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/"
+        try {
+            downloadExpansionFile(request.execute().body())
+        }catch (e: IOException) {
+            e.printStackTrace()
+            Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun downloadExpansionFile(body: ResponseBody?){
+        var fileName : String = ""
+        var destination : String = ""
+
+        fileName = appModelSelected.expansion_file.toString()
+        destination = Environment.getExternalStorageDirectory().absolutePath+"/Android/obb/"+appModelSelected.package_name+"/"
+        val dir = File(destination)
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
         destination += fileName
 
         val path = destination
 
-        updatedApk = File(
+        expansionFileDownloaded = File(
             path
         )
 
@@ -101,7 +125,55 @@ class DownloadService : IntentService("Download Service") {
         val data = ByteArray(1024 * 4)
         val fileSize = body!!.contentLength()
         val bis: InputStream = BufferedInputStream(body.byteStream(), 1024 * 8)
-        val output: OutputStream = FileOutputStream(updatedApk)
+        val output: OutputStream = FileOutputStream(expansionFileDownloaded)
+        var total: Long = 0
+        val startTime = System.currentTimeMillis()
+        var timeCount = 1
+        while (bis.read(data).also { count = it } != -1) {
+            Log.d("asupdieulah","ya")
+            total += count.toLong()
+            totalExpansionFileSize = (fileSize / 1024.0.pow(2.0)).toInt()
+            val current = (total / 1024.0.pow(2.0)).roundToInt().toDouble()
+            val progress = (total * 100 / fileSize).toInt()
+            val currentTime = System.currentTimeMillis() - startTime
+            val download = Download()
+            download.totalFileSize = totalExpansionFileSize
+//            if (currentTime > 1000 * timeCount) {
+            Log.d("currentSize",current.toString())
+            download.currentFileSize = current.toInt()
+            download.progress = progress
+            sendNotification(download)
+            timeCount++
+//            }
+            output.write(data, 0, count)
+        }
+        onDownloadExpansionComplete()
+        output.flush()
+        output.close()
+        bis.close()
+    }
+
+    private fun downloadFile(body: ResponseBody?){
+        var fileName : String = ""
+        var destination : String = ""
+
+        fileName = """${System.currentTimeMillis()}.apk"""
+        destination = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/"
+        destination += fileName
+
+
+        val path = destination
+        Log.d("pathdownload",path)
+
+        fileDownloaded = File(
+            path
+        )
+
+        var count: Int
+        val data = ByteArray(1024 * 4)
+        val fileSize = body!!.contentLength()
+        val bis: InputStream = BufferedInputStream(body.byteStream(), 1024 * 8)
+        val output: OutputStream = FileOutputStream(fileDownloaded)
         var total: Long = 0
         val startTime = System.currentTimeMillis()
         var timeCount = 1
@@ -143,6 +215,31 @@ class DownloadService : IntentService("Download Service") {
         LocalBroadcastManager.getInstance(this@DownloadService).sendBroadcast(intent)
     }
 
+    private fun onDownloadExpansionComplete() {
+        val download = Download()
+        download.progress = 100
+        sendIntent(download)
+//        notificationManager!!.cancel(0)
+//        notificationBuilder!!.setProgress(0, 0, false)
+//        notificationBuilder!!.setContentText("File Downloaded")
+//        notificationManager!!.notify(0, notificationBuilder!!.build())
+
+        if (appModelSelected.expansion_file != null){
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.setDataAndType(
+//                        for android 5.0
+//                        Uri.fromFile(updatedApk),
+                FileProvider.getUriForFile(applicationContext, applicationContext.packageName+".provider", fileDownloaded),
+                "application/vnd.android.package-archive"
+            )
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION )
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK )
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION )
+            startActivity(intent)
+        }
+
+    }
+
     private fun onDownloadComplete() {
         val download = Download()
         download.progress = 100
@@ -173,16 +270,23 @@ class DownloadService : IntentService("Download Service") {
 
         })
 
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.setDataAndType(
+        if (appModelSelected.expansion_file != null ){
+            initDownloadExpansion(appModelSelected.expansion_file!!)
+        }
+
+        if (appModelSelected.expansion_file == null){
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.setDataAndType(
 //                        for android 5.0
 //                        Uri.fromFile(updatedApk),
-            FileProvider.getUriForFile(applicationContext, applicationContext.packageName+".provider", updatedApk),
-            "application/vnd.android.package-archive"
-        )
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION )
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK )
-        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION )
-        startActivity(intent)
+                FileProvider.getUriForFile(applicationContext, applicationContext.packageName+".provider", fileDownloaded),
+                "application/vnd.android.package-archive"
+            )
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION )
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK )
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION )
+            startActivity(intent)
+        }
+
     }
 }

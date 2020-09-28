@@ -5,6 +5,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.*
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,16 +23,25 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.exoplayer2.ExoPlaybackException
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.source.dash.DashMediaSource
+import com.google.android.exoplayer2.upstream.DataSource
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.squareup.picasso.Picasso
 import id.mjs.etalaseapp.R
-import id.mjs.etalaseapp.adapter.AdapterRecyclerView
 import id.mjs.etalaseapp.adapter.HomeCardViewAdapter
+import id.mjs.etalaseapp.adapter.MediaAdapter
 import id.mjs.etalaseapp.adapter.ReviewAdapter
 import id.mjs.etalaseapp.model.Download
 import id.mjs.etalaseapp.model.request.UpdateDataRequest
 import id.mjs.etalaseapp.model.response.AppDataResponse
 import id.mjs.etalaseapp.model.response.Review
 import id.mjs.etalaseapp.model.response.ReviewDataResponse
+import id.mjs.etalaseapp.receiver.ApkInstalledReceiver
 import id.mjs.etalaseapp.receiver.DownloadReceiver
 import id.mjs.etalaseapp.services.DownloadService
 import id.mjs.etalaseapp.ui.detail.DetailActivity
@@ -41,12 +51,14 @@ import id.mjs.etalaseapp.ui.searchapp.SearchAppActivity
 import id.mjs.etalaseapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_download.*
 import kotlinx.android.synthetic.main.input_review_dialog.view.*
+import kotlinx.android.synthetic.main.layout_media_image_fullscreen.view.*
+import kotlinx.android.synthetic.main.layout_media_video_fullscreen.view.*
 import kotlinx.android.synthetic.main.update_review_dialog.view.*
 import java.io.File
 import java.io.InputStream
 import java.text.DecimalFormat
 
-class DownloadActivity : AppCompatActivity() {
+class DownloadActivity : AppCompatActivity(), Player.EventListener {
 
     companion object {
         const val MESSAGE_PROGRESS = "message_progress"
@@ -75,8 +87,17 @@ class DownloadActivity : AppCompatActivity() {
 
     private lateinit var mediaRecyclerView: RecyclerView
 
-    private lateinit var listViewType : ArrayList<String>
-    private lateinit var adapterRecyclerView : AdapterRecyclerView
+    private lateinit var listUrlMedia : ArrayList<String>
+    private lateinit var mediaAdapter : MediaAdapter
+
+    private lateinit var simpleExoplayer: SimpleExoPlayer
+    private var playbackPosition: Long = 0
+
+    val br = ApkInstalledReceiver()
+
+    private val dataSourceFactory: DataSource.Factory by lazy {
+        DefaultDataSourceFactory(this, "exoplayer-sample")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,32 +108,93 @@ class DownloadActivity : AppCompatActivity() {
         jwt = sharedPreferences.getString("token", "").toString()
         emailUser = sharedPreferences.getString("email", "").toString()
 
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED)
+        intentFilter.addDataScheme("package")
+        registerReceiver(br, intentFilter)
     }
 
-    private fun exoPlayerLayoutInit(){
-        mediaRecyclerView = findViewById(R.id.recycler_view_media)
-        mediaRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false)
-
-        listViewType = ArrayList()
-
-        if (appModelSelected.media != null){
-            for (url in appModelSelected.media!!){
-                val data = Utils.baseUrl + url
-                listViewType.add(data)
-            }
-        }
-
-        Log.d("listViewType",listViewType.toString())
-
-        adapterRecyclerView = AdapterRecyclerView(listViewType)
-        mediaRecyclerView.adapter = adapterRecyclerView
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(br)
     }
 
     override fun onResume() {
         super.onResume()
-        exoPlayerLayoutInit()
+        mediaLayoutInit()
         showLoading(true)
         getDataFromAPI()
+    }
+
+    private fun mediaLayoutInit(){
+        mediaRecyclerView = findViewById(R.id.recycler_view_media)
+        mediaRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false)
+
+        listUrlMedia = ArrayList()
+
+        if (appModelSelected.media != null){
+            for (url in appModelSelected.media!!){
+                val data = Utils.baseUrl + url
+                listUrlMedia.add(data)
+            }
+        }
+
+        Log.d("listViewType",listUrlMedia.toString())
+
+        mediaAdapter = MediaAdapter(listUrlMedia)
+        mediaRecyclerView.adapter = mediaAdapter
+
+        mediaAdapter.setOnItemClickCallback(object : MediaAdapter.OnItemClickCallback{
+            override fun onItemClicked(position: Int) {
+                Log.d("mediaAdapterClick",position.toString())
+
+                if (Utils.getItemType(listUrlMedia[position]) == Utils.ITEM_IMAGE){
+                    showMediaImageFullscreen(listUrlMedia[position])
+                }
+                else{
+                    showMediaVideoFullscreen(listUrlMedia[position])
+                }
+
+            }
+        })
+
+    }
+
+    private fun initializePlayer(url : String, dialogView: View) {
+        simpleExoplayer = SimpleExoPlayer.Builder(this).build()
+        preparePlayer(url, "default")
+        dialogView.mediaExoplayerView.player = simpleExoplayer
+        simpleExoplayer.seekTo(playbackPosition)
+        simpleExoplayer.playWhenReady = false
+        simpleExoplayer.addListener(this)
+    }
+
+    private fun preparePlayer(videoUrl: String, type: String) {
+        Log.d("type",type)
+        val uri = Uri.parse(videoUrl)
+        val mediaSource = buildMediaSource(uri, type)
+        simpleExoplayer.prepare(mediaSource)
+    }
+
+    private fun buildMediaSource(uri: Uri, type: String): MediaSource {
+        return if (type == "dash") {
+            DashMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(uri)
+        } else {
+            ProgressiveMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(uri)
+        }
+    }
+
+    override fun onPlayerError(error: ExoPlaybackException) {
+        // handle error
+    }
+
+    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+//        if (playbackState == Player.STATE_BUFFERING)
+////            mediaProgressBar.visibility = View.VISIBLE
+//        else if (playbackState == Player.STATE_READY || playbackState == Player.STATE_ENDED)
+//            mediaProgressBar.visibility = View.INVISIBLE
     }
 
     private fun showLoading(status : Boolean){
@@ -416,10 +498,6 @@ class DownloadActivity : AppCompatActivity() {
 
     }
 
-    private fun reloadRate(data : ReviewDataResponse){
-
-    }
-
     private fun showUpdateReviewDialog(){
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         val viewGroup = findViewById<ViewGroup>(R.id.content)
@@ -487,6 +565,32 @@ class DownloadActivity : AppCompatActivity() {
             })
             alertDialog.dismiss()
         }
+    }
+
+    private fun showMediaImageFullscreen(url : String){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        val viewGroup = findViewById<ViewGroup>(R.id.content)
+        val dialogView: View = LayoutInflater.from(this)
+            .inflate(R.layout.layout_media_image_fullscreen, viewGroup, false)
+        builder.setView(dialogView)
+        val alertDialog = builder.create()
+        alertDialog.show()
+
+        val picasso = Picasso.get()
+        picasso.load(url)
+            .into(dialogView.media_image_fullscreen)
+    }
+
+    private fun showMediaVideoFullscreen(url : String){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        val viewGroup = findViewById<ViewGroup>(R.id.content)
+        val dialogView: View = LayoutInflater.from(this)
+            .inflate(R.layout.layout_media_video_fullscreen, viewGroup, false)
+        builder.setView(dialogView)
+        val alertDialog = builder.create()
+        alertDialog.show()
+
+        initializePlayer(url, dialogView)
     }
 
     private fun checkPermission(): Boolean {
@@ -574,6 +678,8 @@ class DownloadActivity : AppCompatActivity() {
 //                    progress_text_download!!.text = "File Download Complete"
 //                    setAlarmManager(appModelSelected.idApps!!,60* 60 * 1000)
                 } else {
+                    progress_text_download.visibility = View.VISIBLE
+                    progress_bar_download.visibility = View.VISIBLE
                     progress_bar_download.isIndeterminate = false
                     progress_text_download!!.text = String.format("Downloaded (%d/%d) MB", download.currentFileSize, download.totalFileSize)
                 }
