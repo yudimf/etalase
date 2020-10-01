@@ -186,7 +186,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:background="#2C98F0"
-                android:text="Buka Apliasi"
+                android:text="Buka Aplikasi"
                 android:textColor="#fff"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

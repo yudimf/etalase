@@ -20,11 +20,9 @@ import id.mjs.etalaseapp.model.AppInfo
 import id.mjs.etalaseapp.model.request.UpdateDataRequest
 import id.mjs.etalaseapp.model.request.UpdateRequest
 import id.mjs.etalaseapp.model.response.AppDataResponse
-import id.mjs.etalaseapp.ui.checkforupdate.CheckForUpdateActivity
-import id.mjs.etalaseapp.ui.checkforupdate.CheckForUpdateViewModel
+import id.mjs.etalaseapp.services.DownloadService
+import id.mjs.etalaseapp.services.UpdateService
 import id.mjs.etalaseapp.ui.download.DownloadActivity
-import id.mjs.etalaseapp.ui.login.LoginActivity
-import kotlinx.android.synthetic.main.activity_list_app.*
 import kotlinx.android.synthetic.main.fragment_downloaded_apps.*
 
 
@@ -50,7 +48,7 @@ class DownloadedAppsFragment : Fragment() {
     lateinit var jwt : String
 
     private val updateRequest = UpdateRequest()
-    private var listAppDataResponse = ArrayList<AppDataResponse>()
+    private var listAppUpdate = ArrayList<AppDataResponse>()
 
     private lateinit var gridAppsAdapter : GridAppsAdapter
 
@@ -84,9 +82,9 @@ class DownloadedAppsFragment : Fragment() {
             if (it != null){
                 val data = it.data
                 if(data != null){
-                    listAppDataResponse.addAll(data)
+                    listAppUpdate.addAll(data)
                 }
-                Log.d("listAppDataResponse",listAppDataResponse.toString())
+                Log.d("listAppDataResponse",listAppUpdate.toString())
                 compare()
             }
             showLoading(false)
@@ -95,7 +93,7 @@ class DownloadedAppsFragment : Fragment() {
 
     private fun compare(){
         var temp = ArrayList<AppInfo>()
-        for (dataResponse in listAppDataResponse){
+        for (dataResponse in listAppUpdate){
             for (appInfo in tempList){
                 if (dataResponse.package_name == appInfo.packageName){
                     temp.add(appInfo)
@@ -126,7 +124,7 @@ class DownloadedAppsFragment : Fragment() {
 
         gridAppsAdapter.setOnItemClickCallback(object : GridAppsAdapter.OnItemClickCallback{
             override fun onItemClicked(dataApp: AppInfo) {
-                for (appDataResponse in listAppDataResponse){
+                for (appDataResponse in listAppUpdate){
                     if (appDataResponse.package_name == dataApp.packageName){
                         dataTemp = appDataResponse
                     }
@@ -137,18 +135,10 @@ class DownloadedAppsFragment : Fragment() {
                 intent.putExtra(DownloadActivity.EXTRA_APP_MODEL,dataTemp)
                 startActivity(intent)
             }
-
         })
 
         btn_check_for_update.setOnClickListener {
-            if (jwt.isEmpty()){
-                val intent = Intent(context , LoginActivity::class.java)
-                startActivity(intent)
-            }
-            else{
-                val intent = Intent(context, CheckForUpdateActivity::class.java)
-                startActivity(intent)
-            }
+            getApps()
         }
     }
 
@@ -194,6 +184,41 @@ class DownloadedAppsFragment : Fragment() {
 
     private fun isSystemPackage(pkgInfo: PackageInfo): Boolean {
         return pkgInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
+    }
+
+    private fun getApps(){
+        viewModel.checkForUpdate(jwt,updateRequest).observe(viewLifecycleOwner, Observer {
+            val data = it.data
+            if(data != null){
+                if (data.size == 0){
+//                    showNoAppsFound()
+                }
+                else{
+                    var count = 0
+                    for (appData in data){
+                        Log.d("apps_status",appData.apps_status.toString())
+//                        if (appData.apps_status == "UPDATE"){
+                        if (true){
+                            listAppUpdate.add(appData)
+                            val intent = Intent(context, UpdateService::class.java)
+                            intent.putExtra(UpdateService.EXTRA_APP_MODEL,appData)
+                            context?.startService(intent)
+                            Log.d("listAppUpdate",appData.apk_file.toString())
+                            count++
+                        }
+                    }
+                    if (count == 0){
+//                        showNoAppsFound()
+                    }
+                }
+            }
+            else{
+                Log.d("no_apps_check","asup")
+//                showNoAppsFound()
+            }
+//            appsAdapter.notifyDataSetChanged()
+            showLoading(false)
+        })
     }
 
 }

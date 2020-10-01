@@ -74,7 +74,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:padding="2dp"
-        android:background="#19555555"
+        android:background="#0D555555"
         android:id="@+id/reply_review"
         android:visibility="visible"
         android:layout_width="match_parent"

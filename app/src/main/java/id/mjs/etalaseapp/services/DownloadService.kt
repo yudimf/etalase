@@ -38,12 +38,8 @@ class DownloadService : IntentService("Download Service") {
 
     lateinit var appModelSelected : AppDataResponse
 
-    private var isExpansionFileDownloaded = false
-
     companion object {
         const val EXTRA_APP_MODEL = "extra_app_model"
-        const val APK_TYPE = 11
-        const val OBB_TYPE = 12
     }
 
     lateinit var sharedPreferences : SharedPreferences
@@ -81,7 +77,6 @@ class DownloadService : IntentService("Download Service") {
     }
 
     private fun initDownload(url : String){
-//        val request = ApiMain().services.getSampleApps()
         val request : Call<ResponseBody> = ApiMain().services.getApp(url)
 
         try {

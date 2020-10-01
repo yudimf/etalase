@@ -1,0 +1,234 @@
+package id.mjs.etalaseapp.services
+
+import android.app.IntentService
+import android.app.NotificationManager
+import android.content.Intent
+import android.content.Context
+import android.content.SharedPreferences
+import android.os.Environment
+import android.util.Log
+import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import androidx.core.content.FileProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import id.mjs.etalaseapp.model.Download
+import id.mjs.etalaseapp.model.response.AppDataResponse
+import id.mjs.etalaseapp.model.response.StatusDownloadedResponse
+import id.mjs.etalaseapp.retrofit.ApiMain
+import id.mjs.etalaseapp.ui.download.DownloadActivity
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.*
+import kotlin.math.pow
+import kotlin.math.roundToInt
+
+class UpdateService : IntentService("UpdateService") {
+
+    private var notificationBuilder: NotificationCompat.Builder? = null
+    private var notificationManager: NotificationManager? = null
+    private lateinit var fileDownloaded : File
+    private lateinit var expansionFileDownloaded : File
+    private var totalFileSize = 0
+    private var totalExpansionFileSize = 0
+
+    lateinit var appModelSelected : AppDataResponse
+
+    companion object {
+        const val EXTRA_APP_MODEL = "extra_app_model"
+    }
+
+    lateinit var sharedPreferences : SharedPreferences
+    private lateinit var jwt : String
+
+    override fun onHandleIntent(intent: Intent?) {
+        appModelSelected = intent?.getParcelableExtra<AppDataResponse>(EXTRA_APP_MODEL) as AppDataResponse
+
+        sharedPreferences = getSharedPreferences("UserPref", Context.MODE_PRIVATE)!!
+        jwt = sharedPreferences.getString("token", "").toString()
+
+        initDownload(appModelSelected.apk_file.toString())
+    }
+
+    private fun initDownload(url : String){
+        val request : Call<ResponseBody> = ApiMain().services.getApp(url)
+
+        try {
+            downloadFile(request.execute().body())
+        }catch (e: IOException) {
+            e.printStackTrace()
+            Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun downloadFile(body: ResponseBody?){
+        var fileName : String = ""
+        var destination : String = ""
+
+        fileName = appModelSelected.package_name.toString()
+        destination = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/update/"
+        val dir = File(destination)
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+        destination += fileName
+
+        val path = destination
+
+        fileDownloaded = File(
+            path
+        )
+
+        var count: Int
+        val data = ByteArray(1024 * 4)
+        val fileSize = body!!.contentLength()
+        val bis: InputStream = BufferedInputStream(body.byteStream(), 1024 * 8)
+        val output: OutputStream = FileOutputStream(fileDownloaded)
+        var total: Long = 0
+        val startTime = System.currentTimeMillis()
+        var timeCount = 1
+        while (bis.read(data).also { count = it } != -1) {
+            Log.d("asupdieulah","ya")
+            total += count.toLong()
+            totalFileSize = (fileSize / 1024.0.pow(2.0)).toInt()
+            val current = (total / 1024.0.pow(2.0)).roundToInt().toDouble()
+            val progress = (total * 100 / fileSize).toInt()
+            val currentTime = System.currentTimeMillis() - startTime
+            val download = Download()
+            download.totalFileSize = totalFileSize
+//            if (currentTime > 1000 * timeCount) {
+            Log.d("currentSize",current.toString())
+            download.currentFileSize = current.toInt()
+            download.progress = progress
+            sendNotification(download)
+            timeCount++
+//            }
+            output.write(data, 0, count)
+        }
+        onDownloadComplete()
+        output.flush()
+        output.close()
+        bis.close()
+    }
+
+    private fun sendNotification(download: Download) {
+        Log.d("sendNotification",download.toString())
+        sendIntent(download)
+//        notificationBuilder!!.setProgress(100,download.progress,false)
+//        notificationBuilder!!.setContentText(String.format("Downloaded (%d/%d) MB", download.currentFileSize, download.totalFileSize))
+//        notificationManager!!.notify(0, notificationBuilder!!.build())
+    }
+
+    private fun sendIntent(download: Download) {
+        val intent = Intent(DownloadActivity.MESSAGE_PROGRESS)
+        intent.putExtra("download", download)
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+    }
+
+    private fun onDownloadComplete() {
+        val download = Download()
+        download.progress = 100
+        sendIntent(download)
+//        notificationManager!!.cancel(0)
+//        notificationBuilder!!.setProgress(0, 0, false)
+//        notificationBuilder!!.setContentText("File Downloaded")
+//        notificationManager!!.notify(0, notificationBuilder!!.build())
+
+        ApiMain().services.postStatusDownload(jwt,appModelSelected.idApps).enqueue(object :
+            Callback<StatusDownloadedResponse> {
+            override fun onFailure(call: Call<StatusDownloadedResponse>, t: Throwable) {
+                Log.d("failpostdownload","failpostdownload")
+            }
+
+            override fun onResponse(call: Call<StatusDownloadedResponse>, response: Response<StatusDownloadedResponse>) {
+                if (response.isSuccessful){
+                    val it = response.body()
+                    Log.d("statusPostDownload",it?.message.toString())
+                    Toast.makeText(application,it?.message.toString(),Toast.LENGTH_SHORT).show()
+                }
+                else{
+                    Log.d("failpostdownload","failpostdownload")
+                }
+            }
+
+        })
+
+        if (appModelSelected.expansion_file != null ){
+            initDownloadExpansion(appModelSelected.expansion_file!!)
+        }
+
+    }
+
+    private fun initDownloadExpansion(url : String){
+        val request : Call<ResponseBody> = ApiMain().services.getExtensionFile(url)
+
+        try {
+            downloadExpansionFile(request.execute().body())
+        }catch (e: IOException) {
+            e.printStackTrace()
+            Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun downloadExpansionFile(body: ResponseBody?){
+        var fileName : String = ""
+        var destination : String = ""
+
+        fileName = appModelSelected.expansion_file.toString()
+        destination = Environment.getExternalStorageDirectory().absolutePath+"/Android/obb/"+appModelSelected.package_name+"/"
+        val dir = File(destination)
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+        destination += fileName
+
+        val path = destination
+
+        expansionFileDownloaded = File(
+            path
+        )
+
+        var count: Int
+        val data = ByteArray(1024 * 4)
+        val fileSize = body!!.contentLength()
+        val bis: InputStream = BufferedInputStream(body.byteStream(), 1024 * 8)
+        val output: OutputStream = FileOutputStream(expansionFileDownloaded)
+        var total: Long = 0
+        val startTime = System.currentTimeMillis()
+        var timeCount = 1
+        while (bis.read(data).also { count = it } != -1) {
+            Log.d("asupdieulah","ya")
+            total += count.toLong()
+            totalExpansionFileSize = (fileSize / 1024.0.pow(2.0)).toInt()
+            val current = (total / 1024.0.pow(2.0)).roundToInt().toDouble()
+            val progress = (total * 100 / fileSize).toInt()
+            val currentTime = System.currentTimeMillis() - startTime
+            val download = Download()
+            download.totalFileSize = totalExpansionFileSize
+//            if (currentTime > 1000 * timeCount) {
+            Log.d("currentSize",current.toString())
+            download.currentFileSize = current.toInt()
+            download.progress = progress
+            sendNotification(download)
+            timeCount++
+//            }
+            output.write(data, 0, count)
+        }
+        onDownloadExpansionComplete()
+        output.flush()
+        output.close()
+        bis.close()
+    }
+
+    private fun onDownloadExpansionComplete() {
+        val download = Download()
+        download.progress = 100
+        sendIntent(download)
+//        notificationManager!!.cancel(0)
+//        notificationBuilder!!.setProgress(0, 0, false)
+//        notificationBuilder!!.setContentText("File Downloaded")
+//        notificationManager!!.notify(0, notificationBuilder!!.build())
+
+    }
+}

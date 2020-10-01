@@ -15,4 +15,8 @@ class DownloadedAppsViewModel(application: Application) : AndroidViewModel(appli
         return appRepository.getInstalledApps(jwt,data)
     }
 
+    fun checkForUpdate(jwt : String?, data : UpdateRequest) : MutableLiveData<AppResponse> {
+        return appRepository.getInstalledApps(jwt,data)
+    }
+
 }
