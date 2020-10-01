@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -50,7 +51,10 @@ import id.mjs.etalaseapp.ui.review.ReviewActivity
 import id.mjs.etalaseapp.ui.searchapp.SearchAppActivity
 import id.mjs.etalaseapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_download.*
+import kotlinx.android.synthetic.main.activity_download.review_rating_bar
 import kotlinx.android.synthetic.main.input_review_dialog.view.*
+import kotlinx.android.synthetic.main.item_review.*
+import kotlinx.android.synthetic.main.item_review.view.*
 import kotlinx.android.synthetic.main.layout_media_image_fullscreen.view.*
 import kotlinx.android.synthetic.main.layout_media_video_fullscreen.view.*
 import kotlinx.android.synthetic.main.update_review_dialog.view.*
@@ -313,7 +317,8 @@ class DownloadActivity : AppCompatActivity(), Player.EventListener {
     }
 
     private fun initReviewLayout(){
-        reviewAdapter = ReviewAdapter(listReview)
+        reviewAdapter = ReviewAdapter(listReview, appModelSelected.developers?.picture.toString(),
+            appModelSelected.developers?.name.toString())
         rv_review.setHasFixedSize(true)
         rv_review.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv_review.adapter = reviewAdapter
@@ -416,7 +421,8 @@ class DownloadActivity : AppCompatActivity(), Player.EventListener {
         picasso.load(Utils.baseUrl+"apps/"+appModelSelected.app_icon)
             .into(image_view_download_1)
         app_name_download_1.text = appModelSelected.name
-        apps_developer_download.text = appModelSelected.developers?.name.toString()
+        val textDeveloper = appModelSelected.rate.toString() +"+ "+ appModelSelected.developers?.name.toString()
+        apps_developer_download.text = textDeveloper
 
         var formatAverage = DecimalFormat("#.0").format(appModelSelected.avg_ratings!!.toFloat())
         if (formatAverage == ".0"){

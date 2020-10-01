@@ -17,12 +17,36 @@ class HomeViewModel (application: Application) : AndroidViewModel(application) {
         return adsRepository.getAds(signature)
     }
 
+    fun getAllApp(jwt : String) : MutableLiveData<AppResponse>{
+        return appRepository.getAllApp(jwt)
+    }
+
     fun getAllAppAnonymous(signature: String) : MutableLiveData<AppResponse>{
         return appRepository.getAllAppAnonymous(signature)
     }
 
-    fun getAllApp(jwt : String) : MutableLiveData<AppResponse>{
-        return appRepository.getAllApp(jwt)
+    fun getPopularGames(jwt : String) : MutableLiveData<AppResponse>{
+        return appRepository.getPopularGames(jwt)
+    }
+
+    fun getPopularGamesAnonymous(signature: String) : MutableLiveData<AppResponse>{
+        return appRepository.getPopularGamesAnonymous(signature)
+    }
+
+    fun getPopularApps(jwt : String) : MutableLiveData<AppResponse>{
+        return appRepository.getPopularApps(jwt)
+    }
+
+    fun getPopularAppsAnonymous(signature: String) : MutableLiveData<AppResponse>{
+        return appRepository.getPopularAppsAnonymous(signature)
+    }
+
+    fun getBestSellerApps(jwt : String) : MutableLiveData<AppResponse>{
+        return appRepository.getBestSellerApps(jwt)
+    }
+
+    fun getBestSellerAppsAnonymous(signature: String) : MutableLiveData<AppResponse>{
+        return appRepository.getBestSellerAppsAnonymous(signature)
     }
 
 }

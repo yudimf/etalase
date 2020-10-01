@@ -14,7 +14,7 @@ import id.mjs.etalaseapp.utils.Utils
 import kotlinx.android.synthetic.main.item_list_apps.view.*
 import kotlinx.android.synthetic.main.item_review.view.*
 
-class ReviewAdapter(private val list : ArrayList<Review>) : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
+class ReviewAdapter(private val list : ArrayList<Review>, private val imageDev : String, private val nameDev : String) : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
 
     private var onItemClickCallback : AppsAdapter.OnItemClickCallback? = null
 
@@ -32,7 +32,19 @@ class ReviewAdapter(private val list : ArrayList<Review>) : RecyclerView.Adapter
                 review_rating_bar.rating = review.ratings?.toFloat()!!
                 review_date.text = review.comment_at
                 review_detail.text = review.comment
-
+                if (review.reply != null && review.reply!!.isNotEmpty()){
+                    reply_review.visibility = View.VISIBLE
+//                    val picasso2 = Picasso.get()
+//                    picasso2.load(Utils.baseUrl+imageDev)
+//                        .into(reply_dev_image_view)
+                    Log.d("imageDev",imageDev)
+                    developer_reply_name.text = nameDev
+                    developer_reply_date.text = review.reply_at.toString()
+                    developer_reply_detail.text = review.reply.toString()
+                }
+                else{
+                    reply_review.visibility = View.GONE
+                }
 //                titik_tiga.setOnClickListener {
 //                    Log.d("titik_tiga","asup")
 //

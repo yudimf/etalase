@@ -54,12 +54,6 @@ class HomeFragment : Fragment() {
 
     private lateinit var searchBar : MaterialSearchBar
 
-//    private var sampleImages = arrayOf(
-//        "https://raw.githubusercontent.com/yudimf/sample_image/master/black_ic.jpeg",
-//        "https://raw.githubusercontent.com/yudimf/sample_image/master/black_ic.jpeg",
-//        "https://raw.githubusercontent.com/yudimf/sample_image/master/black_ic.jpeg"
-//    )
-
     private var sampleImages = ArrayList<String>()
 
     private var adsImage = ArrayList<AdsDataResponse>()
@@ -185,7 +179,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun setRecycleView(){
-        addAppList()
+        addPopularGames()
+        addPopularApps()
+        addBestSellerApps()
 
         rv_list_apps.setHasFixedSize(true)
         rv_list_apps.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
@@ -224,50 +220,86 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun addAppList(){
+    private fun addPopularGames(){
         val jwt = sharedPreferences.getString("token", "")
         listAppDataResponse.clear()
         if (jwt?.length != 0){
-            viewModel.getAllApp(jwt.toString()).observe(viewLifecycleOwner, Observer {
+            viewModel.getPopularGames(jwt.toString()).observe(viewLifecycleOwner, Observer {
                 if (it != null){
                     val data = it.data
                     if (data != null) {
-                        for (appData in data){
-//                            listAppDataResponse.addAll(data)
-                            if (appData.type == "Games"){
-                                listAppDataResponse.add(appData)
-                            }
-                            else{
-                                listAppDataResponse2.add(appData)
-                                listAppDataResponse3.add(appData)
-                            }
-                        }
+                        listAppDataResponse.addAll(data)
                     }
                     homeCardViewAdapter.notifyDataSetChanged()
+                }
+                showLoading(false)
+            })
+        }
+        else{
+            viewModel.getPopularGamesAnonymous(Utils.signature).observe(viewLifecycleOwner, Observer {
+                if (it != null){
+                    val data = it.data
+                    if (data != null) {
+                        listAppDataResponse.addAll(data)
+                    }
+                    homeCardViewAdapter.notifyDataSetChanged()
+                }
+                showLoading(false)
+            })
+        }
+    }
+
+    private fun addPopularApps(){
+        val jwt = sharedPreferences.getString("token", "")
+        listAppDataResponse2.clear()
+        if (jwt?.length != 0){
+            viewModel.getPopularApps(jwt.toString()).observe(viewLifecycleOwner, Observer {
+                if (it != null){
+                    val data = it.data
+                    if (data != null) {
+                        listAppDataResponse2.addAll(data)
+                    }
                     homeCardViewAdapter2.notifyDataSetChanged()
+                }
+                showLoading(false)
+            })
+        }
+        else{
+            viewModel.getPopularAppsAnonymous(Utils.signature).observe(viewLifecycleOwner, Observer {
+                if (it != null){
+                    val data = it.data
+                    if (data != null) {
+                        listAppDataResponse2.addAll(data)
+                    }
+                    homeCardViewAdapter2.notifyDataSetChanged()
+                }
+                showLoading(false)
+            })
+        }
+    }
+
+    private fun addBestSellerApps(){
+        val jwt = sharedPreferences.getString("token", "")
+        listAppDataResponse3.clear()
+        if (jwt?.length != 0){
+            viewModel.getBestSellerApps(jwt.toString()).observe(viewLifecycleOwner, Observer {
+                if (it != null){
+                    val data = it.data
+                    if (data != null) {
+                        listAppDataResponse3.addAll(data)
+                    }
                     homeCardViewAdapter3.notifyDataSetChanged()
                 }
                 showLoading(false)
             })
         }
         else{
-            viewModel.getAllAppAnonymous(Utils.signature).observe(viewLifecycleOwner, Observer {
+            viewModel.getBestSellerAppsAnonymous(Utils.signature).observe(viewLifecycleOwner, Observer {
                 if (it != null){
                     val data = it.data
                     if (data != null) {
-                        for (appData in data){
-//                            listAppDataResponse.addAll(data)
-                            if (appData.type == "Games"){
-                                listAppDataResponse.add(appData)
-                            }
-                            else{
-                                listAppDataResponse2.add(appData)
-                                listAppDataResponse3.add(appData)
-                            }
-                        }
+                        listAppDataResponse3.addAll(data)
                     }
-                    homeCardViewAdapter.notifyDataSetChanged()
-                    homeCardViewAdapter2.notifyDataSetChanged()
                     homeCardViewAdapter3.notifyDataSetChanged()
                 }
                 showLoading(false)

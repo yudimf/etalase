@@ -92,6 +92,24 @@ interface ApiServices {
     @GET("api/v1/apps")
     fun getAllApp(@Header("jwt") jwt : String?) : Call<AppResponse>
 
+    @GET("api/v1/apps?type_apps=Games&sort_by=POPULER")
+    fun getPopularGames(@Header("jwt") jwt : String?) : Call<AppResponse>
+
+    @GET("api/v1/apps?type_apps=Games&sort_by=POPULER")
+    fun getPopularGamesAnonymous(@Header("signature") signature : String?) : Call<AppResponse>
+
+    @GET("api/v1/apps?type_apps=Application&sort_by=POPULER")
+    fun getPopularApps(@Header("jwt") jwt : String?) : Call<AppResponse>
+
+    @GET("api/v1/apps?type_apps=Application&sort_by=POPULER")
+    fun getPopularAppsAnonymous(@Header("signature") signature : String?) : Call<AppResponse>
+
+    @GET("api/v1/apps?type_apps=Application&sort_by=TERLARIS")
+    fun getBestSellerApps(@Header("jwt") jwt : String?) : Call<AppResponse>
+
+    @GET("api/v1/apps?type_apps=Application&sort_by=TERLARIS")
+    fun getBestSellerAppsAnonymous(@Header("signature") signature : String?) : Call<AppResponse>
+
     @GET("api/v1/apps")
     fun getAllAppAnonymous(@Header("signature") signature: String?) : Call<AppResponse>
 

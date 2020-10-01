@@ -47,6 +47,24 @@ class AppRepository {
         return listAppDataResponse
     }
 
+    fun getAllApp(jwt : String) : MutableLiveData<AppResponse>{
+        val listAppDataResponse = MutableLiveData<AppResponse>()
+
+        ApiMain().services.getAllApp(jwt).enqueue(object : Callback<AppResponse>{
+            override fun onFailure(call: Call<AppResponse>, t: Throwable) {
+                listAppDataResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<AppResponse>, response: Response<AppResponse>) {
+                if (response.isSuccessful){
+                    listAppDataResponse.postValue(response.body())
+                }
+            }
+
+        })
+        return listAppDataResponse
+    }
+
     fun getAllAppAnonymous(signature : String) : MutableLiveData<AppResponse> {
         val listAppDataResponse = MutableLiveData<AppResponse>()
 
@@ -64,10 +82,10 @@ class AppRepository {
         return listAppDataResponse
     }
 
-    fun getAllApp(jwt : String) : MutableLiveData<AppResponse>{
+    fun getPopularGames(jwt : String) : MutableLiveData<AppResponse>{
         val listAppDataResponse = MutableLiveData<AppResponse>()
 
-        ApiMain().services.getAllApp(jwt).enqueue(object : Callback<AppResponse>{
+        ApiMain().services.getPopularGames(jwt).enqueue(object : Callback<AppResponse>{
             override fun onFailure(call: Call<AppResponse>, t: Throwable) {
                 listAppDataResponse.postValue(null)
             }
@@ -78,6 +96,93 @@ class AppRepository {
                 }
             }
 
+        })
+        return listAppDataResponse
+    }
+
+    fun getPopularGamesAnonymous(signature : String) : MutableLiveData<AppResponse> {
+        val listAppDataResponse = MutableLiveData<AppResponse>()
+
+        ApiMain().services.getPopularGamesAnonymous(signature).enqueue(object : Callback<AppResponse>{
+            override fun onFailure(call: Call<AppResponse>, t: Throwable) {
+                listAppDataResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<AppResponse>, response: Response<AppResponse>) {
+                if (response.isSuccessful){
+                    listAppDataResponse.postValue(response.body())
+                }
+            }
+        })
+        return listAppDataResponse
+    }
+
+    fun getPopularApps(jwt : String) : MutableLiveData<AppResponse>{
+        val listAppDataResponse = MutableLiveData<AppResponse>()
+
+        ApiMain().services.getPopularApps(jwt).enqueue(object : Callback<AppResponse>{
+            override fun onFailure(call: Call<AppResponse>, t: Throwable) {
+                listAppDataResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<AppResponse>, response: Response<AppResponse>) {
+                if (response.isSuccessful){
+                    listAppDataResponse.postValue(response.body())
+                }
+            }
+
+        })
+        return listAppDataResponse
+    }
+
+    fun getPopularAppsAnonymous(signature : String) : MutableLiveData<AppResponse> {
+        val listAppDataResponse = MutableLiveData<AppResponse>()
+
+        ApiMain().services.getPopularAppsAnonymous(signature).enqueue(object : Callback<AppResponse>{
+            override fun onFailure(call: Call<AppResponse>, t: Throwable) {
+                listAppDataResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<AppResponse>, response: Response<AppResponse>) {
+                if (response.isSuccessful){
+                    listAppDataResponse.postValue(response.body())
+                }
+            }
+        })
+        return listAppDataResponse
+    }
+
+    fun getBestSellerApps(jwt : String) : MutableLiveData<AppResponse>{
+        val listAppDataResponse = MutableLiveData<AppResponse>()
+
+        ApiMain().services.getBestSellerApps(jwt).enqueue(object : Callback<AppResponse>{
+            override fun onFailure(call: Call<AppResponse>, t: Throwable) {
+                listAppDataResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<AppResponse>, response: Response<AppResponse>) {
+                if (response.isSuccessful){
+                    listAppDataResponse.postValue(response.body())
+                }
+            }
+
+        })
+        return listAppDataResponse
+    }
+
+    fun getBestSellerAppsAnonymous(signature : String) : MutableLiveData<AppResponse> {
+        val listAppDataResponse = MutableLiveData<AppResponse>()
+
+        ApiMain().services.getBestSellerAppsAnonymous(signature).enqueue(object : Callback<AppResponse>{
+            override fun onFailure(call: Call<AppResponse>, t: Throwable) {
+                listAppDataResponse.postValue(null)
+            }
+
+            override fun onResponse(call: Call<AppResponse>, response: Response<AppResponse>) {
+                if (response.isSuccessful){
+                    listAppDataResponse.postValue(response.body())
+                }
+            }
         })
         return listAppDataResponse
     }

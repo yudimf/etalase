@@ -87,7 +87,7 @@ class UserRepository {
 
         ApiMain().services.registerUser(email,password,name,sdkVersion,birthday,bodyPhoto,imei1,imei2,deviceBrand,deviceModel,firebaseId).enqueue(object:Callback<LoginResponse>{
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                Log.d("error",t.message.toString())
+                Log.d("registerresponse",t.message.toString())
                 registerResponse.postValue(null)
             }
 
