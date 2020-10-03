@@ -36,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
     lateinit var manager: TelephonyManager
     private var stringImei1 : String = "12345678"
     private var stringImei2 : String = "87654321"
-    private var firebaseID : String = ""
+    private var firebaseID : String = "test"
     private lateinit var viewModel: LoginViewModel
 
     companion object {

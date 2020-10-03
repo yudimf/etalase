@@ -1,21 +1,24 @@
 package id.mjs.etalaseapp.services
 
 import android.app.IntentService
+import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Intent
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import androidx.core.content.FileProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.model.Download
 import id.mjs.etalaseapp.model.response.AppDataResponse
 import id.mjs.etalaseapp.model.response.StatusDownloadedResponse
 import id.mjs.etalaseapp.retrofit.ApiMain
 import id.mjs.etalaseapp.ui.download.DownloadActivity
+import id.mjs.etalaseapp.ui.myapps.downloadedapps.DownloadedAppsFragment
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -33,20 +36,54 @@ class UpdateService : IntentService("UpdateService") {
     private var totalFileSize = 0
     private var totalExpansionFileSize = 0
 
+    private var isUpdateFinish = false
+
+    private var waitingIntentCount = 0
+
     lateinit var appModelSelected : AppDataResponse
 
     companion object {
         const val EXTRA_APP_MODEL = "extra_app_model"
+        const val valCHANNEL_ID = "my_channel_01"
+        const val notifyID = 1
     }
 
     lateinit var sharedPreferences : SharedPreferences
     private lateinit var jwt : String
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        waitingIntentCount++
+        Log.d("waitingIntentCount+",waitingIntentCount.toString())
+        return super.onStartCommand(intent, flags, startId)
+    }
+
     override fun onHandleIntent(intent: Intent?) {
+        waitingIntentCount--
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
         appModelSelected = intent?.getParcelableExtra<AppDataResponse>(EXTRA_APP_MODEL) as AppDataResponse
 
         sharedPreferences = getSharedPreferences("UserPref", Context.MODE_PRIVATE)!!
         jwt = sharedPreferences.getString("token", "").toString()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "my_channel_01"
+            val name: CharSequence = "my_channel"
+            val description = "This is my channel"
+            val importance = NotificationManager.IMPORTANCE_LOW
+            val mChannel = NotificationChannel(valCHANNEL_ID, name, importance)
+            mChannel.description = description
+            notificationManager!!.createNotificationChannel(mChannel)
+        }
+
+        notificationBuilder = NotificationCompat.Builder(this)
+            .setSmallIcon(R.drawable.ic_download)
+            .setContentTitle(appModelSelected.name)
+            .setContentText("Downloading File")
+            .setAutoCancel(true)
+            .setChannelId(valCHANNEL_ID)
+
+        notificationManager?.notify(appModelSelected.idApps!!, notificationBuilder?.build())
 
         initDownload(appModelSelected.apk_file.toString())
     }
@@ -113,16 +150,25 @@ class UpdateService : IntentService("UpdateService") {
     }
 
     private fun sendNotification(download: Download) {
-        Log.d("sendNotification",download.toString())
         sendIntent(download)
-//        notificationBuilder!!.setProgress(100,download.progress,false)
-//        notificationBuilder!!.setContentText(String.format("Downloaded (%d/%d) MB", download.currentFileSize, download.totalFileSize))
-//        notificationManager!!.notify(0, notificationBuilder!!.build())
+        Log.d("sendNotification",download.progress.toString())
+        if (download.progress < 100){
+            notificationBuilder!!.setProgress(100,download.progress,false)
+            notificationBuilder!!.setContentText("Downloading "+appModelSelected.name+ " "+download.currentFileSize+"/"+download.totalFileSize+"MB")
+            notificationManager!!.notify(appModelSelected.idApps!!, notificationBuilder!!.build())
+        }
+        else{
+            notificationBuilder!!.setProgress(100,download.progress,false)
+            notificationBuilder!!.setContentText("Download Complete")
+            notificationManager!!.notify(appModelSelected.idApps!!, notificationBuilder!!.build())
+        }
     }
 
     private fun sendIntent(download: Download) {
-        val intent = Intent(DownloadActivity.MESSAGE_PROGRESS)
+        val intent = Intent(DownloadedAppsFragment.MESSAGE_PROGRESS)
         intent.putExtra("download", download)
+        intent.putExtra("appName", appModelSelected.name)
+        intent.putExtra("isUpdateFinish", isUpdateFinish)
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
@@ -130,10 +176,10 @@ class UpdateService : IntentService("UpdateService") {
         val download = Download()
         download.progress = 100
         sendIntent(download)
-//        notificationManager!!.cancel(0)
-//        notificationBuilder!!.setProgress(0, 0, false)
-//        notificationBuilder!!.setContentText("File Downloaded")
-//        notificationManager!!.notify(0, notificationBuilder!!.build())
+        Log.d("waitingIntentCount",waitingIntentCount.toString())
+        notificationBuilder!!.setProgress(100,download.progress,false)
+        notificationBuilder!!.setContentText("Download Complete")
+        notificationManager!!.notify(appModelSelected.idApps!!, notificationBuilder!!.build())
 
         ApiMain().services.postStatusDownload(jwt,appModelSelected.idApps).enqueue(object :
             Callback<StatusDownloadedResponse> {
@@ -157,7 +203,30 @@ class UpdateService : IntentService("UpdateService") {
         if (appModelSelected.expansion_file != null ){
             initDownloadExpansion(appModelSelected.expansion_file!!)
         }
+        else{
+            if (waitingIntentCount == 0){
+                Log.d("waitingIntentCount","Update Selesai")
+                isUpdateFinish = true
+                sendIntent(download)
+                installUpdatedApps()
+            }
+        }
 
+    }
+
+    private fun installUpdatedApps(){
+
+        val path = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/update/"
+        Log.d("installUpdatedApps", "Path: $path")
+        val directory = File(path)
+        val files = directory.listFiles()
+        Log.d("installUpdatedApps", "Size: "+ files.size)
+        for (element in files) {
+            Log.d("installUpdatedApps", "FileName:" + path+element.name)
+            val intent = Intent(this, InstallService::class.java)
+            intent.putExtra(InstallService.EXTRA_FILE_PATH,path+element.name)
+            startService(intent)
+        }
     }
 
     private fun initDownloadExpansion(url : String){
@@ -225,10 +294,15 @@ class UpdateService : IntentService("UpdateService") {
         val download = Download()
         download.progress = 100
         sendIntent(download)
-//        notificationManager!!.cancel(0)
-//        notificationBuilder!!.setProgress(0, 0, false)
-//        notificationBuilder!!.setContentText("File Downloaded")
-//        notificationManager!!.notify(0, notificationBuilder!!.build())
+        notificationBuilder!!.setProgress(100,download.progress,false)
+        notificationBuilder!!.setContentText("Download Complete")
+        notificationManager!!.notify(appModelSelected.idApps!!, notificationBuilder!!.build())
 
+        if (waitingIntentCount == 0){
+            Log.d("waitingIntentCount","Update Selesai")
+            isUpdateFinish = true
+            sendIntent(download)
+            installUpdatedApps()
+        }
     }
 }

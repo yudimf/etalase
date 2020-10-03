@@ -8,6 +8,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -16,9 +17,11 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import id.mjs.etalaseapp.R
+import id.mjs.etalaseapp.services.InstallService
 import id.mjs.etalaseapp.ui.listapp.ListAppViewModel
 import id.mjs.etalaseapp.ui.login.LoginActivity
 import id.mjs.etalaseapp.ui.main.MainActivity
+import java.io.File
 
 
 class SplashScreenActivity : AppCompatActivity() {
@@ -59,10 +62,23 @@ class SplashScreenActivity : AppCompatActivity() {
 
         jwt = sharedPreferences.getString("token", "").toString()
 
+        clearCache()
+
         if (checkPhoneStatePermission()){
             initProcess()
         }
 
+    }
+
+    private fun clearCache(){
+        val path = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/update/"
+        Log.d("installUpdatedApps", "Path: $path")
+        val directory = File(path)
+        val files = directory.listFiles()
+        Log.d("installUpdatedApps", "Size: "+ files.size)
+        for (element in files) {
+            element?.delete()
+        }
     }
 
     private fun initProcess(){

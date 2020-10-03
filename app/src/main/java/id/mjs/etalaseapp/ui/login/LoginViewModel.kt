@@ -15,4 +15,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         return userRepository.login(data)
     }
 
+    fun login2(email: String,password: String,sdkVersion : String, imei1:String, imei2:String,devicebrand:String,deviceModel:String,firebaseId:String) : MutableLiveData<LoginResponse> {
+        return userRepository.login2(email,password,sdkVersion,imei1,imei2,devicebrand,deviceModel,firebaseId)
+    }
+
 }

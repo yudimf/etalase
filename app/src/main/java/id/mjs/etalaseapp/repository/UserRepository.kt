@@ -25,6 +25,39 @@ class UserRepository {
         ApiMain().services.login(data).enqueue(object : Callback<LoginResponse>{
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 loginResponse.postValue(null)
+                Log.d("loginfail",t.message.toString())
+            }
+
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+
+                if (response.isSuccessful){
+                    loginResponse.postValue(response.body())
+                }
+                else{
+                    val gson = Gson()
+                    val adapter: TypeAdapter<LoginResponse> =
+                        gson.getAdapter(LoginResponse::class.java)
+                    try {
+                        if (response.errorBody() != null)
+                            loginResponse.postValue(adapter.fromJson(response.errorBody()!!.string()))
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        })
+        return loginResponse
+    }
+
+    fun login2(email: String,password: String,sdkVersion : String, imei1:String, imei2:String,devicebrand:String,deviceModel:String,firebaseId:String) : MutableLiveData<LoginResponse> {
+        val loginResponse = MutableLiveData<LoginResponse>()
+
+        ApiMain().services.login2(email,password,sdkVersion,imei1,imei2,devicebrand,deviceModel
+//            firebaseId
+        ).enqueue(object : Callback<LoginResponse>{
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                loginResponse.postValue(null)
+                Log.d("loginfail",t.message.toString())
             }
 
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {

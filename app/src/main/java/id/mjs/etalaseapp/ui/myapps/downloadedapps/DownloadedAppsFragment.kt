@@ -1,8 +1,6 @@
 package id.mjs.etalaseapp.ui.myapps.downloadedapps
 
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.os.Bundle
@@ -13,16 +11,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.adapter.GridAppsAdapter
 import id.mjs.etalaseapp.model.AppInfo
+import id.mjs.etalaseapp.model.Download
 import id.mjs.etalaseapp.model.request.UpdateDataRequest
 import id.mjs.etalaseapp.model.request.UpdateRequest
 import id.mjs.etalaseapp.model.response.AppDataResponse
-import id.mjs.etalaseapp.services.DownloadService
 import id.mjs.etalaseapp.services.UpdateService
 import id.mjs.etalaseapp.ui.download.DownloadActivity
+import kotlinx.android.synthetic.main.activity_download.*
 import kotlinx.android.synthetic.main.fragment_downloaded_apps.*
 
 
@@ -37,6 +37,11 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class DownloadedAppsFragment : Fragment() {
+
+    companion object{
+        const val MESSAGE_PROGRESS = "message_progress"
+        const val MESSAGE_APPS_UPDATED = "message_apps_updated"
+    }
 
     private lateinit var viewModel: DownloadedAppsViewModel
 
@@ -139,8 +144,13 @@ class DownloadedAppsFragment : Fragment() {
 
         btn_check_for_update.setOnClickListener {
             getApps()
+            showProgressUpdate(true)
         }
+
+        registerReceiver()
     }
+
+
 
     private fun addList(){
         val pm  = activity?.packageManager
@@ -219,6 +229,55 @@ class DownloadedAppsFragment : Fragment() {
 //            appsAdapter.notifyDataSetChanged()
             showLoading(false)
         })
+    }
+
+    private fun registerReceiver() {
+        val bManager = LocalBroadcastManager.getInstance(requireContext())
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(MESSAGE_PROGRESS)
+        bManager.registerReceiver(broadcastReceiver, intentFilter)
+    }
+
+    private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver(){
+        override fun onReceive(p0: Context?, intent: Intent?) {
+            Log.d("intentaction", intent?.action.toString())
+            if (intent?.action == MESSAGE_PROGRESS) {
+                val download: Download = intent.getParcelableExtra("download")!!
+                val appName = intent.getStringExtra("appName")
+                val isUpdateFinish = intent.getBooleanExtra("isUpdateFinish",false)
+                progress_bar_update_all.progress = download.progress
+                if (download.progress < 100) {
+                    showProgressUpdate(true)
+                    progress_bar_update_all.isIndeterminate = false
+                    progress_text_update_all.text = String.format("Downloading %s (%d/%d) MB", appName, download.currentFileSize, download.totalFileSize)
+                }
+
+                if (isUpdateFinish){
+                    showProgressUpdate(false)
+                }
+
+            }
+            else if (intent?.action == MESSAGE_APPS_UPDATED){
+                Log.d("asupasup","asup")
+                showProgressUpdate(false)
+            }
+
+        }
+
+    }
+
+    private fun showProgressUpdate(status : Boolean){
+        if (!status){
+            btn_check_for_update.visibility = View.VISIBLE
+            progress_bar_update_all.visibility = View.INVISIBLE
+            progress_text_update_all.visibility = View.INVISIBLE
+        }
+        else{
+            btn_check_for_update.visibility = View.INVISIBLE
+            progress_bar_update_all.visibility = View.VISIBLE
+            progress_text_update_all.visibility = View.VISIBLE
+            progress_bar_update_all.isIndeterminate = true
+        }
     }
 
 }

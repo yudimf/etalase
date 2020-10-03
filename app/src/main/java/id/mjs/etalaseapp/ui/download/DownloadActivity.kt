@@ -115,12 +115,12 @@ class DownloadActivity : AppCompatActivity(), Player.EventListener {
         val intentFilter = IntentFilter()
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED)
         intentFilter.addDataScheme("package")
-        registerReceiver(br, intentFilter)
+//        registerReceiver(br, intentFilter)
     }
 
     override fun onPause() {
         super.onPause()
-        unregisterReceiver(br)
+//        unregisterReceiver(br)
     }
 
     override fun onResume() {
@@ -680,7 +680,8 @@ class DownloadActivity : AppCompatActivity(), Player.EventListener {
                 progress_bar_download!!.progress = download.progress
                 if (download.progress == 100) {
                     progress_text_download.visibility = View.INVISIBLE
-                    progress_bar_download.visibility = View.INVISIBLE
+                    progress_bar_download.isIndeterminate = true
+//                    progress_bar_download.visibility = View.INVISIBLE
 //                    progress_text_download!!.text = "File Download Complete"
 //                    setAlarmManager(appModelSelected.idApps!!,60* 60 * 1000)
                 } else {

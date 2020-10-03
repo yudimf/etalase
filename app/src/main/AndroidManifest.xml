@@ -27,8 +27,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <service
-            android:name=".services.UpdateService"
+            android:name=".services.InstallService"
             android:exported="false"></service>
+        <service
+            android:name=".services.UpdateService"
+            android:exported="false" />
 
         <receiver
             android:name=".receiver.ApkInstalledReceiver"

@@ -30,6 +30,19 @@ interface ApiServices {
     @POST("api/v1/login")
     fun login(@Body data : LoginRequest) : Call<LoginResponse>
 
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/login")
+    fun login2(@Query("email") email : String,
+               @Query("password") password : String,
+               @Query("sdk_version") sdk_version : String,
+               @Query("imei_1") imei_1 : String,
+               @Query("imei_2") imei_2 : String,
+               @Query("deviceBrand") deviceBrand : String,
+               @Query("device_model") device_model : String
+//               @Query("firebase_id") firebase_id : String)
+            )
+            : Call<LoginResponse>
+
     @POST("api/v1/forgot-password")
     fun forgotPassword(@Query("email") email:String) : Call<ForgotPasswordResponse>
 

@@ -40,6 +40,8 @@ class DownloadService : IntentService("Download Service") {
 
     companion object {
         const val EXTRA_APP_MODEL = "extra_app_model"
+        const val valCHANNEL_ID = "my_channel_01"
+        const val notifyID = 1
     }
 
     lateinit var sharedPreferences : SharedPreferences
@@ -68,10 +70,11 @@ class DownloadService : IntentService("Download Service") {
         notificationBuilder = NotificationCompat.Builder(this)
             .setSmallIcon(R.drawable.ic_download)
             .setContentTitle("Download")
-            .setContentText("Downloading File")
+            .setContentText("Downloading Application")
             .setAutoCancel(true)
+            .setChannelId(valCHANNEL_ID)
 
-//        notificationManager?.notify(0, notificationBuilder?.build())
+        notificationManager?.notify(appModelSelected.idApps!!, notificationBuilder?.build())
 
         initDownload(appModelSelected.apk_file.toString())
     }
@@ -199,9 +202,16 @@ class DownloadService : IntentService("Download Service") {
     private fun sendNotification(download: Download) {
         Log.d("sendNotification",download.toString())
         sendIntent(download)
-//        notificationBuilder!!.setProgress(100,download.progress,false)
-//        notificationBuilder!!.setContentText(String.format("Downloaded (%d/%d) MB", download.currentFileSize, download.totalFileSize))
-//        notificationManager!!.notify(0, notificationBuilder!!.build())
+        if (download.progress < 100){
+            notificationBuilder!!.setProgress(100,download.progress,false)
+            notificationBuilder!!.setContentText(String.format("Downloaded (%d/%d) MB", download.currentFileSize, download.totalFileSize))
+            notificationManager!!.notify(appModelSelected.idApps!!, notificationBuilder!!.build())
+        }
+        else{
+            notificationBuilder!!.setProgress(100,download.progress,false)
+            notificationBuilder!!.setContentText(String.format("Download Complete"))
+            notificationManager!!.notify(appModelSelected.idApps!!, notificationBuilder!!.build())
+        }
     }
 
     private fun sendIntent(download: Download) {
@@ -216,8 +226,8 @@ class DownloadService : IntentService("Download Service") {
         sendIntent(download)
 //        notificationManager!!.cancel(0)
 //        notificationBuilder!!.setProgress(0, 0, false)
-//        notificationBuilder!!.setContentText("File Downloaded")
-//        notificationManager!!.notify(0, notificationBuilder!!.build())
+//        notificationBuilder!!.setContentText("Application and Data Downloaded")
+//        notificationManager!!.notify(appModelSelected.idApps!!+1, notificationBuilder!!.build())
 
         if (appModelSelected.expansion_file != null){
             val intent = Intent(Intent.ACTION_VIEW)
@@ -241,8 +251,8 @@ class DownloadService : IntentService("Download Service") {
         sendIntent(download)
 //        notificationManager!!.cancel(0)
 //        notificationBuilder!!.setProgress(0, 0, false)
-//        notificationBuilder!!.setContentText("File Downloaded")
-//        notificationManager!!.notify(0, notificationBuilder!!.build())
+//        notificationBuilder!!.setContentText("Application and Data Downloaded")
+//        notificationManager!!.notify(appModelSelected.idApps!!+1, notificationBuilder!!.build())
 
         Log.d("installing","masuk")
 

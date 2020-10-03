@@ -1,6 +1,7 @@
 package id.mjs.etalaseapp.utils
 
 import id.mjs.etalaseapp.adapter.MediaAdapter
+import kotlin.math.pow
 
 object Utils {
 //    const val baseUrl : String = "http://api.etalase.web.id/"
@@ -11,10 +12,7 @@ object Utils {
     const val ITEM_IMAGE = 2
 
     fun convertBiteToMB(size : Int) : Int{
-        var temp : Float = size.toFloat()
-
-        temp = temp / 1024 / 1024
-        return temp.toInt()
+        return (size / 1024.0.pow(2.0)).toInt()
     }
 
     fun getExtension(url: String) : String{
