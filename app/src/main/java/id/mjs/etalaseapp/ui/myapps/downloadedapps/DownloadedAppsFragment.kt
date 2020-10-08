@@ -4,6 +4,7 @@ import android.content.*
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,7 @@ import id.mjs.etalaseapp.services.UpdateService
 import id.mjs.etalaseapp.ui.download.DownloadActivity
 import kotlinx.android.synthetic.main.activity_download.*
 import kotlinx.android.synthetic.main.fragment_downloaded_apps.*
+import java.io.File
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -143,6 +145,7 @@ class DownloadedAppsFragment : Fragment() {
         })
 
         btn_check_for_update.setOnClickListener {
+            clearCache()
             getApps()
             showProgressUpdate(true)
         }
@@ -150,7 +153,18 @@ class DownloadedAppsFragment : Fragment() {
         registerReceiver()
     }
 
-
+    private fun clearCache(){
+        val path = activity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/update/"
+        Log.d("installUpdatedApps", "Path: $path")
+        val directory = File(path)
+        val files = directory.listFiles()
+//        Log.d("installUpdatedApps", "Size: "+ files.size)
+        if (files != null && files.isNotEmpty()){
+            for (element in files) {
+                element?.delete()
+            }
+        }
+    }
 
     private fun addList(){
         val pm  = activity?.packageManager
@@ -207,8 +221,8 @@ class DownloadedAppsFragment : Fragment() {
                     var count = 0
                     for (appData in data){
                         Log.d("apps_status",appData.apps_status.toString())
-//                        if (appData.apps_status == "UPDATE"){
-                        if (true){
+                        if (appData.apps_status == "UPDATE"){
+//                        if (true){
                             listAppUpdate.add(appData)
                             val intent = Intent(context, UpdateService::class.java)
                             intent.putExtra(UpdateService.EXTRA_APP_MODEL,appData)

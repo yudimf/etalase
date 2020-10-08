@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="id.mjs.etalaseapp.ui.home.HomeFragment"
+        android:name="id.mjs.etalaseapp.ui.home.viewpager.HomeViewPagerFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home_apps" />
 
     <fragment
         android:id="@+id/navigation_category"
-        android:name="id.mjs.etalaseapp.ui.category.CategoryFragment"
+        android:name="id.mjs.etalaseapp.ui.category.viewpager.CategoryFragment"
         android:label="Category"
         tools:layout="@layout/fragment_category" />
 

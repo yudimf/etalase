@@ -43,7 +43,7 @@ class SplashScreenActivity : AppCompatActivity() {
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
             Log.d("permission","fail")
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE),
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 REQUEST_PHONE_STATE
             )
             return false
@@ -71,13 +71,16 @@ class SplashScreenActivity : AppCompatActivity() {
     }
 
     private fun clearCache(){
-        val path = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/update/"
+//        val path = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/update/"
+        val path = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()
         Log.d("installUpdatedApps", "Path: $path")
         val directory = File(path)
         val files = directory.listFiles()
-        Log.d("installUpdatedApps", "Size: "+ files.size)
-        for (element in files) {
-            element?.delete()
+//        Log.d("installUpdatedApps", "Size: "+ files.size)
+        if (files != null && files.isNotEmpty()){
+            for (element in files) {
+                element?.delete()
+            }
         }
     }
 

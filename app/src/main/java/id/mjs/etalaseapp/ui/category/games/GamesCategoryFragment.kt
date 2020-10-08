@@ -1,4 +1,4 @@
-package id.mjs.etalaseapp.ui.gamescategory
+package id.mjs.etalaseapp.ui.category.games
 
 import android.content.Context
 import android.content.Intent
@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.adapter.CategoryAdapter
 import id.mjs.etalaseapp.model.Category
-import id.mjs.etalaseapp.ui.appscategory.AppCategoryViewModel
 import id.mjs.etalaseapp.ui.listapp.ListAppActivity
 import id.mjs.etalaseapp.utils.Utils
 
@@ -63,6 +62,8 @@ class GamesCategoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         addCategories()
+
+
     }
 
     private fun addCategories(){

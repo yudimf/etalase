@@ -16,6 +16,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.model.Download
 import id.mjs.etalaseapp.model.response.AppDataResponse
+import id.mjs.etalaseapp.model.response.AppDetailResponse
 import id.mjs.etalaseapp.model.response.StatusDownloadedResponse
 import id.mjs.etalaseapp.retrofit.ApiMain
 import id.mjs.etalaseapp.ui.download.DownloadActivity
@@ -255,25 +256,42 @@ class DownloadService : IntentService("Download Service") {
 //        notificationManager!!.notify(appModelSelected.idApps!!+1, notificationBuilder!!.build())
 
         Log.d("installing","masuk")
-
-        ApiMain().services.postStatusDownload(jwt,appModelSelected.idApps).enqueue(object :
-            Callback<StatusDownloadedResponse> {
-            override fun onFailure(call: Call<StatusDownloadedResponse>, t: Throwable) {
-                Log.d("failpostdownload","failpostdownload")
-            }
-
-            override fun onResponse(call: Call<StatusDownloadedResponse>, response: Response<StatusDownloadedResponse>) {
-                if (response.isSuccessful){
-                    val it = response.body()
-                    Log.d("statusPostDownload",it?.message.toString())
-                    Toast.makeText(application,it?.message.toString(),Toast.LENGTH_SHORT).show()
+        if (appModelSelected.apps_status == "UPDATE"){
+            ApiMain().services.postStatusUpdate(jwt,appModelSelected.idApps).enqueue(object : Callback<AppDetailResponse>{
+                override fun onFailure(call: Call<AppDetailResponse>, t: Throwable) {
+                    Log.d("failpostupdate","failpostupdate")
                 }
-                else{
-                    Log.d("failpostdownload","failpostdownload")
+                override fun onResponse(call: Call<AppDetailResponse>, response: Response<AppDetailResponse>) {
+                    if (response.isSuccessful){
+                        val it = response.body()
+                        Log.d("statusPostDownload",it?.message.toString())
+                        Toast.makeText(application,"Update "+it?.message.toString(),Toast.LENGTH_SHORT).show()
+                    }
+                    else{
+                        Log.d("failpostdownload","failpostdownload")
+                    }
                 }
-            }
 
-        })
+            })
+        }
+        else{
+            ApiMain().services.postStatusDownloaded(jwt,appModelSelected.idApps).enqueue(object : Callback<AppDetailResponse>{
+                override fun onFailure(call: Call<AppDetailResponse>, t: Throwable) {
+                    Log.d("failpostupdate","failpostupdate")
+                }
+                override fun onResponse(call: Call<AppDetailResponse>, response: Response<AppDetailResponse>) {
+                    if (response.isSuccessful){
+                        val it = response.body()
+                        Log.d("statusPostDownload",it?.message.toString())
+                        Toast.makeText(application,"Update "+it?.message.toString(),Toast.LENGTH_SHORT).show()
+                    }
+                    else{
+                        Log.d("failpostdownload","failpostdownload")
+                    }
+                }
+
+            })
+        }
 
         if (appModelSelected.expansion_file != null ){
             initDownloadExpansion(appModelSelected.expansion_file!!)

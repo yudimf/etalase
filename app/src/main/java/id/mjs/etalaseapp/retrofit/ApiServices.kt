@@ -105,16 +105,16 @@ interface ApiServices {
     @GET("api/v1/apps")
     fun getAllApp(@Header("jwt") jwt : String?) : Call<AppResponse>
 
-    @GET("api/v1/apps?type_apps=Games&sort_by=POPULER")
-    fun getPopularGames(@Header("jwt") jwt : String?) : Call<AppResponse>
+    @GET("api/v1/apps?type_apps=Games&sort_by=TERLARIS")
+    fun getBestSellerGames(@Header("jwt") jwt : String?) : Call<AppResponse>
 
-    @GET("api/v1/apps?type_apps=Games&sort_by=POPULER")
+    @GET("api/v1/apps?type_apps=Games&sort_by=TERLARIS")
     fun getPopularGamesAnonymous(@Header("signature") signature : String?) : Call<AppResponse>
 
-    @GET("api/v1/apps?type_apps=Application&sort_by=POPULER")
+    @GET("api/v1/apps?sort_by=POPULER")
     fun getPopularApps(@Header("jwt") jwt : String?) : Call<AppResponse>
 
-    @GET("api/v1/apps?type_apps=Application&sort_by=POPULER")
+    @GET("api/v1/apps?sort_by=POPULER")
     fun getPopularAppsAnonymous(@Header("signature") signature : String?) : Call<AppResponse>
 
     @GET("api/v1/apps?type_apps=Application&sort_by=TERLARIS")
@@ -168,5 +168,11 @@ interface ApiServices {
 
     @POST("api/v1/apps/{appId}/detail")
     fun getDetailAppAnonymous(@Header("signature") signature : String?, @Path("appId") appId : Int?, @Body data : UpdateDataRequest) : Call<AppDetailResponse>
+
+    @GET("api/v1/apps/action/UPDATE/{app_id}")
+    fun postStatusUpdate(@Header("jwt") jwt : String?, @Path("app_id") appId : Int?) : Call<AppDetailResponse>
+
+    @GET("api/v1/apps/action/DOWNLOAD/{app_id}")
+    fun postStatusDownloaded(@Header("jwt") jwt : String?, @Path("app_id") appId : Int?) : Call<AppDetailResponse>
 
 }

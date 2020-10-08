@@ -1,4 +1,4 @@
-package id.mjs.etalaseapp.ui.gamescategory
+package id.mjs.etalaseapp.ui.category.games
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

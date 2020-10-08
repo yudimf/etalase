@@ -82,10 +82,10 @@ class AppRepository {
         return listAppDataResponse
     }
 
-    fun getPopularGames(jwt : String) : MutableLiveData<AppResponse>{
+    fun getBestSellerGames(jwt : String) : MutableLiveData<AppResponse>{
         val listAppDataResponse = MutableLiveData<AppResponse>()
 
-        ApiMain().services.getPopularGames(jwt).enqueue(object : Callback<AppResponse>{
+        ApiMain().services.getBestSellerGames(jwt).enqueue(object : Callback<AppResponse>{
             override fun onFailure(call: Call<AppResponse>, t: Throwable) {
                 listAppDataResponse.postValue(null)
             }
@@ -494,6 +494,29 @@ class AppRepository {
             }
 
             override fun onResponse(call: Call<StatusDownloadedResponse>, response: Response<StatusDownloadedResponse>) {
+                if (response.isSuccessful){
+                    responseStatus.postValue(response.body())
+                }
+                else{
+                    responseStatus.postValue(null)
+                }
+            }
+
+        })
+
+        return responseStatus
+    }
+
+    fun postStatusUpload(jwt : String, appsId : Int) : MutableLiveData<AppDetailResponse>{
+        val responseStatus = MutableLiveData<AppDetailResponse>()
+
+        ApiMain().services.postStatusUpdate(jwt,appsId).enqueue(object : Callback<AppDetailResponse>{
+            override fun onFailure(call: Call<AppDetailResponse>, t: Throwable) {
+                Log.d("onFailure",t.message.toString())
+                responseStatus.postValue(null)
+            }
+
+            override fun onResponse(call: Call<AppDetailResponse>, response: Response<AppDetailResponse>) {
                 if (response.isSuccessful){
                     responseStatus.postValue(response.body())
                 }

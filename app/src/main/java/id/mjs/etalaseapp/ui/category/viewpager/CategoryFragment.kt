@@ -1,4 +1,4 @@
-package id.mjs.etalaseapp.ui.category
+package id.mjs.etalaseapp.ui.category.viewpager
 
 import android.content.Intent
 import android.graphics.Typeface
@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.mancj.materialsearchbar.MaterialSearchBar
@@ -21,15 +20,12 @@ import java.lang.reflect.Field
 
 class CategoryFragment : Fragment() {
 
-    private lateinit var categoryViewModel: CategoryViewModel
-
     private lateinit var viewPager: ViewPager
     private lateinit var tabs: TabLayout
 
     lateinit var searchBar : MaterialSearchBar
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?,  savedInstanceState: Bundle?): View? {
-        categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_category, container, false)
 
         searchBar = root.findViewById(R.id.searchBarCategory)

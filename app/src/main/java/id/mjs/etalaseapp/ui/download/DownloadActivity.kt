@@ -37,6 +37,7 @@ import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.adapter.HomeCardViewAdapter
 import id.mjs.etalaseapp.adapter.MediaAdapter
 import id.mjs.etalaseapp.adapter.ReviewAdapter
+import id.mjs.etalaseapp.model.Category
 import id.mjs.etalaseapp.model.Download
 import id.mjs.etalaseapp.model.request.UpdateDataRequest
 import id.mjs.etalaseapp.model.response.AppDataResponse
@@ -46,6 +47,7 @@ import id.mjs.etalaseapp.receiver.ApkInstalledReceiver
 import id.mjs.etalaseapp.receiver.DownloadReceiver
 import id.mjs.etalaseapp.services.DownloadService
 import id.mjs.etalaseapp.ui.detail.DetailActivity
+import id.mjs.etalaseapp.ui.listapp.ListAppActivity
 import id.mjs.etalaseapp.ui.login.LoginActivity
 import id.mjs.etalaseapp.ui.review.ReviewActivity
 import id.mjs.etalaseapp.ui.searchapp.SearchAppActivity
@@ -314,6 +316,13 @@ class DownloadActivity : AppCompatActivity(), Player.EventListener {
             }
 
         })
+
+        header_aplikasi_serupa.setOnClickListener {
+            val intent = Intent(this, ListAppActivity::class.java)
+            val category = Category(appModelSelected.category_id!!.toInt(),"Aplikasi Serupa", "")
+            intent.putExtra(ListAppActivity.EXTRA_CATEGORY,category)
+            startActivity(intent)
+        }
     }
 
     private fun initReviewLayout(){

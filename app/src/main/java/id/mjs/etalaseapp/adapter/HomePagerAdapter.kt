@@ -3,17 +3,18 @@ package id.mjs.etalaseapp.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import id.mjs.etalaseapp.ui.category.apps.AppsCategoryFragment
-import id.mjs.etalaseapp.ui.category.games.GamesCategoryFragment
+import id.mjs.etalaseapp.ui.home.apps.AppsHomeFragment
+import id.mjs.etalaseapp.ui.home.games.GamesHomeFragment
 
-class CategoryPagerAdapter (fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class HomePagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> {
-                AppsCategoryFragment()
+                AppsHomeFragment()
             }
             else -> {
-                return GamesCategoryFragment()
+                return GamesHomeFragment()
             }
         }
     }
