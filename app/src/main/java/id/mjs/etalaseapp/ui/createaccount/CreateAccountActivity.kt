@@ -36,6 +36,7 @@ import id.mjs.etalaseapp.utils.DatePickerHelper
 import kotlinx.android.synthetic.main.activity_create_account.*
 import kotlinx.android.synthetic.main.activity_create_account.create_account_image
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.alert_dialog.view.*
 import kotlinx.android.synthetic.main.verification_dialog.view.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -144,9 +145,24 @@ class CreateAccountActivity : AppCompatActivity(), SupportedDatePickerDialog.OnD
                 })
             }
             else{
-                Toast.makeText(applicationContext,"Silahkan Lengkapi Data",Toast.LENGTH_LONG).show()
+//                Toast.makeText(applicationContext,"Silahkan Lengkapi Data",Toast.LENGTH_LONG).show()
+                showAlertDialog("Silahkan Lengkapi Data")
             }
 
+        }
+    }
+
+    private fun showAlertDialog(description : String){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        val viewGroup = findViewById<ViewGroup>(R.id.content)
+        val dialogView: View = LayoutInflater.from(this)
+            .inflate(R.layout.alert_dialog, viewGroup, false)
+        builder.setView(dialogView)
+        val alertDialog = builder.create()
+        alertDialog.show()
+        dialogView.alert_description.text = description
+        dialogView.btn_alert_dialog.setOnClickListener {
+            alertDialog.dismiss()
         }
     }
 

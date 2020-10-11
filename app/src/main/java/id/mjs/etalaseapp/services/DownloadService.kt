@@ -69,8 +69,8 @@ class DownloadService : IntentService("Download Service") {
         }
 
         notificationBuilder = NotificationCompat.Builder(this)
-            .setSmallIcon(R.drawable.ic_download)
-            .setContentTitle("Download")
+            .setSmallIcon(R.drawable.ic_etalase)
+            .setContentTitle(appModelSelected.name)
             .setContentText("Downloading Application")
             .setAutoCancel(true)
             .setChannelId(valCHANNEL_ID)
@@ -139,7 +139,12 @@ class DownloadService : IntentService("Download Service") {
             download.totalFileSize = totalExpansionFileSize
 //            if (currentTime > 1000 * timeCount) {
             Log.d("currentSize",current.toString())
-            download.currentFileSize = current.toInt()
+            if (current < totalExpansionFileSize){
+                download.currentFileSize = current.toInt()
+            }
+            else{
+                download.currentFileSize = totalExpansionFileSize
+            }
             download.progress = progress
             sendNotification(download)
             timeCount++
@@ -187,7 +192,12 @@ class DownloadService : IntentService("Download Service") {
             download.totalFileSize = totalFileSize
 //            if (currentTime > 1000 * timeCount) {
                 Log.d("currentSize",current.toString())
-                download.currentFileSize = current.toInt()
+                if (current <= totalFileSize){
+                    download.currentFileSize = current.toInt()
+                }
+                else{
+                    download.currentFileSize = totalFileSize
+                }
                 download.progress = progress
                 sendNotification(download)
                 timeCount++

@@ -10,7 +10,8 @@
     <com.mancj.materialsearchbar.MaterialSearchBar
         style="@style/MaterialSearchBarLight"
         app:mt_placeholder="Telusuri Aplikasi dan Game"
-        app:mt_roundedSearchBarEnabled="true"
+        app:mt_roundedSearchBarEnabled="false"
+        app:mt_searchBarColor="#08000000"
         app:mt_maxSuggestionsCount="0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

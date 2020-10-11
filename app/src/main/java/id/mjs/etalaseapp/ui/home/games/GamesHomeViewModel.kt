@@ -21,8 +21,18 @@ class GamesHomeViewModel(application: Application) : AndroidViewModel(applicatio
         return appRepository.getBestSellerGames(jwt)
     }
 
-    fun getPopularGamesAnonymous(signature: String) : MutableLiveData<AppResponse> {
+    fun getBestSellerAnonymous(signature: String) : MutableLiveData<AppResponse> {
+        return appRepository.getBestSellerGamesAnonymous(signature)
+    }
+
+    fun getPopularGames(jwt : String) : MutableLiveData<AppResponse> {
+        return appRepository.getPopularGames(jwt)
+    }
+
+    fun getPopularAnonymous(signature: String) : MutableLiveData<AppResponse> {
         return appRepository.getPopularGamesAnonymous(signature)
     }
+
+
 
 }

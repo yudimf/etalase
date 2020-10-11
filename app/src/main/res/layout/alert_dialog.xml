@@ -8,7 +8,7 @@
 
     <TextView
         android:paddingTop="20dp"
-        android:text="Cek Email Kamu"
+        android:text="Pemberitahuan"
         android:textSize="22dp"
         android:textAlignment="center"
         android:textStyle="bold"
@@ -17,21 +17,23 @@
 
     <ImageView
         android:layout_gravity="center"
-        android:src="@drawable/ic_email_verification"
+        android:src="@drawable/error_red"
         android:layout_width="145dp"
         android:layout_height="110dp"/>
 
     <TextView
+        android:id="@+id/alert_description"
         android:textAlignment="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Verifikasi email"/>
+        android:text="Alert Description"/>
 
     <TextView
+        android:visibility="gone"
         android:textAlignment="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Link verifikasi telah dikirim"/>
+        android:text="Link verifikasi telah"/>
 
     <TextView
         android:visibility="gone"
@@ -41,7 +43,7 @@
         android:text="Kami kirimkan ke Email Anda"/>
 
     <Button
-        android:id="@+id/btn_back_verification_dialog"
+        android:id="@+id/btn_alert_dialog"
         android:layout_marginTop="10dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"

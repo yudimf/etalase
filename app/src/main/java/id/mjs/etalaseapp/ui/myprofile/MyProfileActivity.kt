@@ -6,9 +6,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.github.dhaval2404.imagepicker.ImagePicker
@@ -23,6 +26,7 @@ import id.mjs.etalaseapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_create_account.*
 import kotlinx.android.synthetic.main.activity_list_app.*
 import kotlinx.android.synthetic.main.activity_my_profile.*
+import kotlinx.android.synthetic.main.alert_dialog.view.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -132,13 +136,15 @@ class MyProfileActivity : AppCompatActivity(), SupportedDatePickerDialog.OnDateS
                 else{
                     when (it.code) {
                         "501" -> {
-                            alert_my_profile.text = it.message
+                            showAlertDialog(it.message!!)
+//                            alert_my_profile.text = it.message
 //                            Toast.makeText(applicationContext,it.message, Toast.LENGTH_LONG).show()
-                            alert_my_profile.setTextColor(resources.getColor(R.color.colorSuccess))
+//                            alert_my_profile.setTextColor(resources.getColor(R.color.colorSuccess))
                         }
                         else -> {
-                            alert_my_profile.text = it.message
-                            alert_my_profile.setTextColor(resources.getColor(R.color.colorDanger))
+                            showAlertDialog(it.message!!)
+//                            alert_my_profile.text = it.message
+//                            alert_my_profile.setTextColor(resources.getColor(R.color.colorDanger))
 //                            Toast.makeText(applicationContext,it.message, Toast.LENGTH_LONG).show()
                         }
                     }
@@ -149,6 +155,20 @@ class MyProfileActivity : AppCompatActivity(), SupportedDatePickerDialog.OnDateS
 
         userInfoBirthday.setOnClickListener {
             showSpinnerDate()
+        }
+    }
+
+    private fun showAlertDialog(description : String){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        val viewGroup = findViewById<ViewGroup>(R.id.content)
+        val dialogView: View = LayoutInflater.from(this)
+            .inflate(R.layout.alert_dialog, viewGroup, false)
+        builder.setView(dialogView)
+        val alertDialog = builder.create()
+        alertDialog.show()
+        dialogView.alert_description.text = description
+        dialogView.btn_alert_dialog.setOnClickListener {
+            alertDialog.dismiss()
         }
     }
 

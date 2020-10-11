@@ -11,11 +11,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.ScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Picasso
 import com.synnapps.carouselview.CarouselView
 import com.synnapps.carouselview.ImageListener
@@ -82,18 +82,24 @@ class AppsHomeFragment : Fragment() {
             intent.putExtra(ListAppActivity.EXTRA_APP_DATA,listPopularApp)
             startActivity(intent)
         }
+
+        swipe_layout_home_app.setOnRefreshListener {
+            addPopularApps()
+            addBestSellerApps()
+        }
+
     }
 
     private fun showLoading(status : Boolean){
         val progressBarHome = view?.findViewById<ProgressBar>(R.id.progressBarHome)
-        val scrollViewHome = view?.findViewById<ScrollView>(R.id.scroll_view_home)
+        val swipeLayout = view?.findViewById<SwipeRefreshLayout>(R.id.swipe_layout_home_app)
         if (status){
             progressBarHome?.visibility = View.VISIBLE
-            scrollViewHome?.visibility = View.GONE
+            swipeLayout?.visibility = View.GONE
         }
         else{
             progressBarHome?.visibility = View.GONE
-            scrollViewHome?.visibility = View.VISIBLE
+            swipeLayout?.visibility = View.VISIBLE
         }
     }
 
@@ -163,6 +169,7 @@ class AppsHomeFragment : Fragment() {
                     popularAppsAdapter.notifyDataSetChanged()
                 }
                 showLoading(false)
+                swipe_layout_home_app.isRefreshing = false
             })
         }
         else{
@@ -175,6 +182,7 @@ class AppsHomeFragment : Fragment() {
                     popularAppsAdapter.notifyDataSetChanged()
                 }
                 showLoading(false)
+                swipe_layout_home_app.isRefreshing = false
             })
         }
     }
@@ -192,6 +200,7 @@ class AppsHomeFragment : Fragment() {
                     bestSellerAppsAdapter.notifyDataSetChanged()
                 }
                 showLoading(false)
+                swipe_layout_home_app.isRefreshing = false
             })
         }
         else{
@@ -204,6 +213,7 @@ class AppsHomeFragment : Fragment() {
                     bestSellerAppsAdapter.notifyDataSetChanged()
                 }
                 showLoading(false)
+                swipe_layout_home_app.isRefreshing = false
             })
         }
     }

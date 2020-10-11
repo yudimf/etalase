@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <ProgressBar
-            android:visibility="visible"
+            android:visibility="gone"
             android:id="@+id/progress_bar_download_activity"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
             />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:visibility="gone"
+            android:visibility="visible"
             android:id="@+id/layout_download_activity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -454,7 +454,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_review"
-                android:layout_margin="16dp"
+                android:layout_margin="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/layout_rating_ulasan"

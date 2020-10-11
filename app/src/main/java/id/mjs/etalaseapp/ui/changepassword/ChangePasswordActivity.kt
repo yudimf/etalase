@@ -76,8 +76,6 @@ class ChangePasswordActivity : AppCompatActivity() {
             et_email_change.setText(it.data?.email.toString())
         })
 
-
-
     }
 
     private fun passwordListener(){

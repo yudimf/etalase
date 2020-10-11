@@ -1,7 +1,6 @@
 package id.mjs.etalaseapp.ui.login
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -12,7 +11,11 @@ import android.os.Build
 import android.os.Bundle
 import android.telephony.TelephonyManager
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -29,6 +32,7 @@ import id.mjs.etalaseapp.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.android.gms.tasks.OnCompleteListener
+import kotlinx.android.synthetic.main.alert_dialog.view.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -153,7 +157,9 @@ class LoginActivity : AppCompatActivity() {
                     }
                     else{
 //                        Toast.makeText(applicationContext,it.message,Toast.LENGTH_SHORT).show()
-                        text_login_alert.text = it.message
+                        val message = it.message
+                        showAlertDialog(message!!)
+//                        text_login_alert.text = it.message
                     }
                     btnLoginActive(true)
                 }
@@ -162,6 +168,20 @@ class LoginActivity : AppCompatActivity() {
                     btnLoginActive(true)
                 }
             })
+        }
+    }
+
+    private fun showAlertDialog(description : String){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        val viewGroup = findViewById<ViewGroup>(R.id.content)
+        val dialogView: View = LayoutInflater.from(this)
+            .inflate(R.layout.alert_dialog, viewGroup, false)
+        builder.setView(dialogView)
+        val alertDialog = builder.create()
+        alertDialog.show()
+        dialogView.alert_description.text = description
+        dialogView.btn_alert_dialog.setOnClickListener {
+            alertDialog.dismiss()
         }
     }
 

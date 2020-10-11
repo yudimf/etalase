@@ -263,7 +263,8 @@ class DownloadedAppsFragment : Fragment() {
                 if (download.progress < 100) {
                     showProgressUpdate(true)
                     progress_bar_update_all.isIndeterminate = false
-                    progress_text_update_all.text = String.format("Downloading %s (%d/%d) MB", appName, download.currentFileSize, download.totalFileSize)
+                    val text = String.format("Downloaded %d", download.progress) + "%"
+                    progress_text_update_all.text = text
                 }
 
                 if (isUpdateFinish){

@@ -697,7 +697,8 @@ class DownloadActivity : AppCompatActivity(), Player.EventListener {
                     progress_text_download.visibility = View.VISIBLE
                     progress_bar_download.visibility = View.VISIBLE
                     progress_bar_download.isIndeterminate = false
-                    progress_text_download!!.text = String.format("Downloaded (%d/%d) MB", download.currentFileSize, download.totalFileSize)
+                    val text = String.format("Downloaded %d", download.progress) + "%"
+                    progress_text_download!!.text = text
                 }
             }
         }
