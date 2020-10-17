@@ -19,6 +19,7 @@ import id.mjs.etalaseapp.adapter.CategoryAdapter
 import id.mjs.etalaseapp.model.Category
 import id.mjs.etalaseapp.ui.listapp.ListAppActivity
 import id.mjs.etalaseapp.utils.Utils
+import kotlinx.android.synthetic.main.fragment_games_category.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -54,21 +55,23 @@ class GamesCategoryFragment : Fragment() {
         recyclerView.adapter = adapter
 
         onItemClickListener()
-        showLoading(true)
 
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        showLoading(true)
         addCategories()
-
+        swipe_layout_category_games.setOnRefreshListener {
+            addCategories()
+        }
 
     }
 
     private fun addCategories(){
         val jwt = sharedPreferences.getString("token", "")
-
+        listCategory.clear()
         if (jwt?.length != 0){
             viewModel.getCategories(jwt.toString()).observe(viewLifecycleOwner, Observer {
                 if (it != null){
@@ -78,6 +81,7 @@ class GamesCategoryFragment : Fragment() {
                     }
                     adapter.notifyDataSetChanged()
                     showLoading(false)
+                    swipe_layout_category_games.isRefreshing = false
                 }
             })
         }
@@ -90,6 +94,7 @@ class GamesCategoryFragment : Fragment() {
                     }
                     adapter.notifyDataSetChanged()
                     showLoading(false)
+                    swipe_layout_category_games.isRefreshing = false
                 }
             })
         }
@@ -106,6 +111,7 @@ class GamesCategoryFragment : Fragment() {
         else{
             progressBar?.visibility = View.GONE
             recycleView?.visibility = View.VISIBLE
+            swipe_layout_category_games.isRefreshing = false
         }
     }
 

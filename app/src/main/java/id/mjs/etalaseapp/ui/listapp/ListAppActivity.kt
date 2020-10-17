@@ -43,7 +43,13 @@ class ListAppActivity : AppCompatActivity() {
 
         initLayout()
 
+
+        Log.d("asup dioe",status.toString())
         if (status){
+            swipe_layout_list_app.setOnRefreshListener {
+                swipe_layout_list_app.isRefreshing = false
+            }
+
             val data = intent.getParcelableArrayListExtra<AppDataResponse>(EXTRA_APP_DATA)
             if (data != null && data.isNotEmpty()){
                 listAppDataResponse.addAll(data!!)
@@ -52,8 +58,11 @@ class ListAppActivity : AppCompatActivity() {
         }
         else{
             getAppsByCategory()
-        }
 
+            swipe_layout_list_app.setOnRefreshListener {
+                getAppsByCategory()
+            }
+        }
 
     }
 
@@ -80,11 +89,11 @@ class ListAppActivity : AppCompatActivity() {
 
     private fun showLoading(status : Boolean){
         if (status){
-            layout_progress_list_app?.visibility = View.VISIBLE
+            progress_bar_list_app?.visibility = View.VISIBLE
             recycle_view_list_app?.visibility = View.GONE
         }
         else{
-            layout_progress_list_app?.visibility = View.GONE
+            progress_bar_list_app?.visibility = View.GONE
             recycle_view_list_app?.visibility = View.VISIBLE
         }
     }
@@ -123,6 +132,7 @@ class ListAppActivity : AppCompatActivity() {
 
     private fun getAppsByCategory(){
         val jwt = sharedPreferences.getString("token", "")
+        listAppDataResponse.clear()
         if (jwt?.length != 0){
             viewModel.getAppsByCategory(jwt.toString(),categorySelected.categoryId).observe(this,
                 Observer {
@@ -135,6 +145,7 @@ class ListAppActivity : AppCompatActivity() {
                         appsAdapter.notifyDataSetChanged()
                     }
                     showLoading(false)
+                    swipe_layout_list_app.isRefreshing = false
                 })
         }
         else{
@@ -149,6 +160,7 @@ class ListAppActivity : AppCompatActivity() {
                         appsAdapter.notifyDataSetChanged()
                     }
                     showLoading(false)
+                    swipe_layout_list_app.isRefreshing = false
                 })
         }
     }

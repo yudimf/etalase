@@ -54,16 +54,15 @@ class MyAppsFragment : Fragment() {
         viewPager.adapter = fragmentAdapter
         tabs.setupWithViewPager(viewPager)
 
-        if (jwt.isEmpty()){
+        return if (jwt.isEmpty()){
             activity?.finish()
-//                showAlertLogin()
+    //                showAlertLogin()
             val intent = Intent(context, LoginActivity::class.java)
             intent.putExtra(LoginActivity.STATUS_FROM_PROFILE,true)
             startActivity(intent)
-            return null
-        }
-        else{
-            return root
+            null
+        } else{
+            root
         }
     }
 

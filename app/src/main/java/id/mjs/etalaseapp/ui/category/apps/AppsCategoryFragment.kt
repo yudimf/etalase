@@ -14,11 +14,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.adapter.CategoryAdapter
 import id.mjs.etalaseapp.model.Category
 import id.mjs.etalaseapp.ui.listapp.ListAppActivity
 import id.mjs.etalaseapp.utils.Utils
+import kotlinx.android.synthetic.main.fragment_apps_category.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,6 +38,8 @@ class AppsCategoryFragment : Fragment() {
     private var listCategory = ArrayList<Category>()
     lateinit var adapter : CategoryAdapter
     lateinit var viewModel : AppCategoryViewModel
+
+    private lateinit var swipeRefreshLayout : SwipeRefreshLayout
 
     private lateinit var recyclerView : RecyclerView
 
@@ -59,6 +63,7 @@ class AppsCategoryFragment : Fragment() {
     private fun showLoading(status : Boolean){
         val progressBar = view?.findViewById<ProgressBar>(R.id.progressBarCategory)
         val recycleView = view?.findViewById<RecyclerView>(R.id.rv_apps_category)
+        val swipeRefreshLayout = view?.findViewById<SwipeRefreshLayout>(R.id.swipe_layout_category_apps)
         Log.d("showLoading",status.toString())
         if (status){
             progressBar?.visibility = View.VISIBLE
@@ -67,6 +72,7 @@ class AppsCategoryFragment : Fragment() {
         else{
             progressBar?.visibility = View.GONE
             recycleView?.visibility = View.VISIBLE
+            swipeRefreshLayout?.visibility = View.VISIBLE
         }
     }
 
@@ -82,12 +88,21 @@ class AppsCategoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.swipe_layout_category_apps)
+
+
+        swipeRefreshLayout.setOnRefreshListener {
+            Log.d("addCategories","setOnRefreshListener")
+            addCategories()
+        }
+
         addCategories()
     }
 
     private fun addCategories(){
         val jwt = sharedPreferences.getString("token", "")
-
+        listCategory.clear()
+        Log.d("addCategories","addCategories")
         if (jwt?.length != 0){
             viewModel.getCategories(jwt.toString()).observe(viewLifecycleOwner, Observer {
                 if (it != null){
@@ -97,6 +112,7 @@ class AppsCategoryFragment : Fragment() {
                     }
                     adapter.notifyDataSetChanged()
                     showLoading(false)
+                    swipeRefreshLayout?.isRefreshing = false
                 }
             })
         }
@@ -109,6 +125,7 @@ class AppsCategoryFragment : Fragment() {
                     }
                     adapter.notifyDataSetChanged()
                     showLoading(false)
+                    swipeRefreshLayout?.isRefreshing = false
                 }
             })
         }

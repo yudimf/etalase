@@ -74,12 +74,12 @@ class DownloadedAppsFragment : Fragment() {
 
     private fun showLoading(status : Boolean){
         if (status){
-            progress_bar_downloaded_apps?.visibility = View.VISIBLE
-            rv_grid_apps?.visibility = View.GONE
+            progress_bar_update_my_app?.visibility = View.VISIBLE
+            layout_my_app?.visibility = View.GONE
         }
         else{
-            progress_bar_downloaded_apps?.visibility = View.GONE
-            rv_grid_apps?.visibility = View.VISIBLE
+            progress_bar_update_my_app?.visibility = View.GONE
+            layout_my_app?.visibility = View.VISIBLE
         }
     }
 
@@ -119,6 +119,7 @@ class DownloadedAppsFragment : Fragment() {
         if (jwt.isNotEmpty()){
             addList()
             getInstalledApps()
+            checkUpdateApps()
         }
         else{
             btn_check_for_update.visibility = View.GONE
@@ -237,6 +238,44 @@ class DownloadedAppsFragment : Fragment() {
                 }
             }
             else{
+                Log.d("no_apps_check","asup")
+//                showNoAppsFound()
+            }
+//            appsAdapter.notifyDataSetChanged()
+            showLoading(false)
+        })
+    }
+
+    private fun checkUpdateApps(){
+        var appsUpdate = ArrayList<AppDataResponse>()
+        viewModel.checkForUpdate(jwt,updateRequest).observe(viewLifecycleOwner, Observer {
+            val data = it.data
+            if(data != null){
+                if (data.size == 0){
+//                    showNoAppsFound()
+                    layout_button_update.visibility = View.GONE
+                }
+                else{
+                    var count = 0
+                    for (appData in data){
+                        Log.d("apps_status",appData.apps_status.toString())
+                        if (appData.apps_status == "UPDATE"){
+//                        if (true){
+                            appsUpdate.add(appData)
+                            count++
+                        }
+                    }
+                    if (count == 0){
+                        layout_button_update.visibility = View.GONE
+//                        showNoAppsFound()
+                    }
+                    else{
+                        layout_button_update.visibility = View.VISIBLE
+                    }
+                }
+            }
+            else{
+                layout_button_update.visibility = View.GONE
                 Log.d("no_apps_check","asup")
 //                showNoAppsFound()
             }

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,24 +16,24 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.github.razir.progressbutton.bindProgressButton
+import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.showProgress
 import com.ibotta.android.support.pickerdialogs.SupportedDatePickerDialog
+import com.squareup.picasso.MemoryPolicy
+import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.PicassoProvider
 import id.mjs.etalaseapp.R
-import id.mjs.etalaseapp.model.response.UserInfoResponse
-import id.mjs.etalaseapp.retrofit.ApiMain
-import id.mjs.etalaseapp.ui.searchapp.SearchAppViewModel
 import id.mjs.etalaseapp.utils.DatePickerHelper
 import id.mjs.etalaseapp.utils.Utils
-import kotlinx.android.synthetic.main.activity_create_account.*
-import kotlinx.android.synthetic.main.activity_list_app.*
 import kotlinx.android.synthetic.main.activity_my_profile.*
 import kotlinx.android.synthetic.main.alert_dialog.view.*
+import kotlinx.android.synthetic.main.alert_dialog.view.alert_description
+import kotlinx.android.synthetic.main.success_alert_dialog.view.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -103,6 +104,8 @@ class MyProfileActivity : AppCompatActivity(), SupportedDatePickerDialog.OnDateS
     }
 
     private fun btnListener(){
+
+
         btn_back_my_profile.setOnClickListener {
             finish()
         }
@@ -116,32 +119,44 @@ class MyProfileActivity : AppCompatActivity(), SupportedDatePickerDialog.OnDateS
                 .start()
         }
 
+        bindProgressButton(btn_update_profile)
         btn_update_profile.setOnClickListener {
+
             val requestFile : RequestBody?
             var bodyPhoto : MultipartBody.Part? = null
             if (isFileAssign){
                 requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),photoFile)
                 bodyPhoto = MultipartBody.Part.createFormData("photo",photoFile.name,requestFile)
                 Log.d("isFileAssign",photoFile.toString())
+                Log.d("isFileAssign",bodyPhoto.body.toString())
+                Log.d("isFileAssign", bodyPhoto.body.contentType()!!.type)
+                Log.d("isFileAssign", bodyPhoto.body.contentLength().toString())
             }
 
             val email = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),userInfoEmail.text.toString())
             val name = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),userInfoName.text.toString())
             val birthday = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),stringBirthDate)
 
+            btn_update_profile.showProgress {
+                progressColor = Color.WHITE
+            }
+
             viewModel.updateProfile(jwt,email,name,birthday,bodyPhoto).observe(this, androidx.lifecycle.Observer {
                 if (it==null){
                     Toast.makeText(applicationContext,"Connection Fail", Toast.LENGTH_LONG).show()
+                    btn_update_profile.hideProgress("Update Profile")
                 }
                 else{
                     when (it.code) {
                         "501" -> {
-                            showAlertDialog(it.message!!)
+                            btn_update_profile.hideProgress("Update Profile")
+                            showSuccessAlertDialog(it.message!!)
 //                            alert_my_profile.text = it.message
 //                            Toast.makeText(applicationContext,it.message, Toast.LENGTH_LONG).show()
 //                            alert_my_profile.setTextColor(resources.getColor(R.color.colorSuccess))
                         }
                         else -> {
+                            btn_update_profile.hideProgress("Update Profile")
                             showAlertDialog(it.message!!)
 //                            alert_my_profile.text = it.message
 //                            alert_my_profile.setTextColor(resources.getColor(R.color.colorDanger))
@@ -168,6 +183,20 @@ class MyProfileActivity : AppCompatActivity(), SupportedDatePickerDialog.OnDateS
         alertDialog.show()
         dialogView.alert_description.text = description
         dialogView.btn_alert_dialog.setOnClickListener {
+            alertDialog.dismiss()
+        }
+    }
+
+    private fun showSuccessAlertDialog(description : String){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        val viewGroup = findViewById<ViewGroup>(R.id.content)
+        val dialogView: View = LayoutInflater.from(this)
+            .inflate(R.layout.success_alert_dialog, viewGroup, false)
+        builder.setView(dialogView)
+        val alertDialog = builder.create()
+        alertDialog.show()
+        dialogView.success_alert_description.text = description
+        dialogView.btn_success_alert_dialog.setOnClickListener {
             alertDialog.dismiss()
         }
     }
@@ -199,11 +228,16 @@ class MyProfileActivity : AppCompatActivity(), SupportedDatePickerDialog.OnDateS
             if (it != null){
                 Log.d("getUserInfo","getUserInfo")
                 val data = it?.data
+
                 val picasso = Picasso.get()
                 Log.d("potopet",Utils.baseUrl+data?.picture.toString())
-                picasso.load(Utils.baseUrl+data?.picture.toString())
-//                    .placeholder(R.drawable.ic_upload_image)
-                    .error(R.drawable.ic_upload_image)
+                val photoPath = Utils.baseUrl+data?.picture.toString()
+                picasso.invalidate(photoPath)
+                picasso.load(photoPath)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .placeholder(R.drawable.ic_upload_image)
+//                    .error(R.drawable.ic_upload_image)
                     .into(my_profile_logo)
                 userInfoName.setText(data?.name.toString())
                 userInfoEmail.setText(data?.email.toString())
@@ -212,6 +246,7 @@ class MyProfileActivity : AppCompatActivity(), SupportedDatePickerDialog.OnDateS
                 val date = sdf.parse(data?.birthDate)
                 val cal = Calendar.getInstance()
                 cal.time = date
+                stringBirthDate = sdf.format(cal.time)
 
                 val myFormat2 = "dd-MM-yyyy" //In which you need put here
                 val sdf2 = SimpleDateFormat(myFormat2, Locale.US)
