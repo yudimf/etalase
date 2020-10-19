@@ -4,8 +4,8 @@ import id.mjs.etalaseapp.adapter.MediaAdapter
 import kotlin.math.pow
 
 object Utils {
-//    const val baseUrl : String = "http://api.etalase.web.id/"
-    const val baseUrl : String = "https://api-etalase-app.bagustech.id/"
+    const val baseUrl : String = "http://api.etalase.web.id/"
+//    const val baseUrl : String = "https://api-etalase-app.bagustech.id/"
     const val signature : String = "hfauef874h2bfjb2ufh2b"
 
     const val ITEM_VIDEO = 1

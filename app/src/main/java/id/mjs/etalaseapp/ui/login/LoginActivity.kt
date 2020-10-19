@@ -38,8 +38,8 @@ class LoginActivity : AppCompatActivity() {
 
     lateinit var sharedPreferences : SharedPreferences
     lateinit var manager: TelephonyManager
-    private var stringImei1 : String = "12345678"
-    private var stringImei2 : String = "87654321"
+    private var stringImei1 : String = "0"
+    private var stringImei2 : String = "0"
     private var firebaseID : String = "test"
     private lateinit var viewModel: LoginViewModel
 
@@ -79,10 +79,17 @@ class LoginActivity : AppCompatActivity() {
             })
 
         try {
-            manager =
-                getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            stringImei1 = manager.getDeviceId(0)
-            stringImei2 = manager.getDeviceId(1)
+            val myVersion = Build.VERSION.SDK_INT
+            if (myVersion >= Build.VERSION_CODES.Q){
+                stringImei1 = "0"
+                stringImei2 = "0"
+            }
+            else{
+                manager =
+                    getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                stringImei1 = manager.getDeviceId(0)
+                stringImei2 = manager.getDeviceId(1)
+            }
 
         }
         catch (ex:Exception){
@@ -216,7 +223,7 @@ class LoginActivity : AppCompatActivity() {
 
         powered_by.setOnClickListener{
             val openURL = Intent(Intent.ACTION_VIEW)
-            openURL.data = Uri.parse("https://ar-tek.co.id/")
+            openURL.data = Uri.parse("https://arteksinergi.co.id/")
             startActivity(openURL)
         }
     }

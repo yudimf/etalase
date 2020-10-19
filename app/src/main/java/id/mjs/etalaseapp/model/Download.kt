@@ -9,6 +9,7 @@ class Download : Parcelable {
     var progress = 0
     var currentFileSize = 0
     var totalFileSize = 0
+    var isComplete = false
 
     override fun describeContents(): Int {
         return 0

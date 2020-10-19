@@ -28,14 +28,12 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
-import com.google.firebase.iid.FirebaseInstanceId
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
 import com.ibotta.android.support.pickerdialogs.SupportedDatePickerDialog
 import id.mjs.etalaseapp.R
 import id.mjs.etalaseapp.utils.DatePickerHelper
 import kotlinx.android.synthetic.main.activity_create_account.*
-import kotlinx.android.synthetic.main.activity_create_account.create_account_image
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.alert_dialog.view.*
 import kotlinx.android.synthetic.main.verification_dialog.view.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -52,14 +50,14 @@ class CreateAccountActivity : AppCompatActivity(), SupportedDatePickerDialog.OnD
     private lateinit var photoFile : File
     private lateinit var filePath : String
     lateinit var manager: TelephonyManager
-    lateinit var stringImei1 : String
-    lateinit var stringImei2 : String
+    private lateinit var stringImei1 : String
+    private lateinit var stringImei2 : String
     private var isFileAssign : Boolean = false
     private var validatePassword : Boolean = false
     private var validatePasswordConfirmation : Boolean = false
     private var stringBirthDate : String = "1996-01-01"
     lateinit var datePicker: DatePickerHelper
-    private var firebaseID : String = ""
+    private var firebaseID : String = "0"
 
     private lateinit var viewModel : CreateAccountViewModel
 
@@ -81,10 +79,17 @@ class CreateAccountActivity : AppCompatActivity(), SupportedDatePickerDialog.OnD
         datePicker = DatePickerHelper(this, true)
 
         checkPhoneStatePermission()
-        manager =
-            getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        stringImei1 = manager.getDeviceId(0)
-        stringImei2 = manager.getDeviceId(1)
+        val myVersion = Build.VERSION.SDK_INT
+        if (myVersion >= Build.VERSION_CODES.Q){
+            stringImei1 = "0"
+            stringImei2 = "0"
+        }
+        else{
+            manager =
+                getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            stringImei1 = manager.getDeviceId(0)
+            stringImei2 = manager.getDeviceId(1)
+        }
 
         FirebaseInstanceId.getInstance().instanceId
             .addOnCompleteListener(OnCompleteListener { task ->
@@ -113,12 +118,19 @@ class CreateAccountActivity : AppCompatActivity(), SupportedDatePickerDialog.OnD
             val name = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),et_name_register.text.toString())
             val sdkVersion = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),Build.VERSION.SDK_INT.toString())
             val birthday = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),stringBirthDate)
-            val imei1 = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),stringImei1)
-            val imei2 = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),stringImei2)
-            val brand = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),Build.MANUFACTURER)
-            val model = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),Build.MODEL)
+
+            val imei1 = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), stringImei1)
+            val imei2 = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), stringImei2)
+            val brand = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),Build.MANUFACTURER.toString())
+            val model = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),Build.MODEL.toString())
             val firebaseId = RequestBody.create("multipart/form-data".toMediaTypeOrNull(),firebaseID)
 
+
+            Log.d("stringImei",Build.MANUFACTURER)
+            Log.d("stringImei",Build.MODEL)
+            Log.d("stringImei",firebaseID)
+            Log.d("stringImei1",stringImei1)
+            Log.d("stringImei2",stringImei2)
             if (validateInput()){
                 showLoadingBtnRegistration(true)
                 val requestFile : RequestBody?
@@ -138,7 +150,8 @@ class CreateAccountActivity : AppCompatActivity(), SupportedDatePickerDialog.OnD
                             showDialog()
                         }
                         else if(it.code == "505"){
-                            Toast.makeText(applicationContext,it.message,Toast.LENGTH_LONG).show()
+//                            Toast.makeText(applicationContext,it.message,Toast.LENGTH_LONG).show()
+                            showAlertDialog(it.message!!)
                         }
                     }
                     showLoadingBtnRegistration(false)

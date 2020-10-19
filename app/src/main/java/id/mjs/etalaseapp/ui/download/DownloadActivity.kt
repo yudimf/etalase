@@ -700,6 +700,12 @@ class DownloadActivity : AppCompatActivity(), Player.EventListener {
                     val text = String.format("Downloaded %d", download.progress) + "%"
                     progress_text_download!!.text = text
                 }
+
+                if (download.isComplete){
+                    progress_bar_download.isIndeterminate = false
+                    progress_bar_download.visibility = View.GONE
+                }
+
             }
         }
     }

@@ -234,6 +234,7 @@ class DownloadService : IntentService("Download Service") {
     private fun onDownloadExpansionComplete() {
         val download = Download()
         download.progress = 100
+        download.isComplete = true
         sendIntent(download)
 //        notificationManager!!.cancel(0)
 //        notificationBuilder!!.setProgress(0, 0, false)
@@ -259,6 +260,9 @@ class DownloadService : IntentService("Download Service") {
     private fun onDownloadComplete() {
         val download = Download()
         download.progress = 100
+        if (appModelSelected.expansion_file == null){
+            download.isComplete = true
+        }
         sendIntent(download)
 //        notificationManager!!.cancel(0)
 //        notificationBuilder!!.setProgress(0, 0, false)
