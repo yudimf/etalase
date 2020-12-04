@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -137,6 +138,12 @@ class GamesHomeFragment : Fragment() {
                     carouselView.pageCount = sampleImages.size
                     carouselView.setImageListener(imageListener)
                 }
+                else{
+                    Toast.makeText(context,"Connection Fail for getting best seller apps", Toast.LENGTH_SHORT).show()
+                }
+            }
+            else{
+                Toast.makeText(context,"Connection Fail for getting best seller apps", Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -165,7 +172,13 @@ class GamesHomeFragment : Fragment() {
                     if (data != null) {
                         listBestSellerGame.addAll(data)
                     }
+                    else{
+                        Toast.makeText(context,"Connection Fail for getting best seller apps", Toast.LENGTH_SHORT).show()
+                    }
                     bestSellerGamesAdapter.notifyDataSetChanged()
+                }
+                else{
+                    Toast.makeText(context,"Connection Fail for getting best seller games", Toast.LENGTH_SHORT).show()
                 }
                 showLoading(false)
                 swipe_layout_home_game.isRefreshing = false
@@ -178,7 +191,13 @@ class GamesHomeFragment : Fragment() {
                     if (data != null) {
                         listBestSellerGame.addAll(data)
                     }
+                    else{
+                        Toast.makeText(context,"Connection Fail for getting best seller apps", Toast.LENGTH_SHORT).show()
+                    }
                     bestSellerGamesAdapter.notifyDataSetChanged()
+                }
+                else{
+                    Toast.makeText(context,"Connection Fail for getting best seller apps", Toast.LENGTH_SHORT).show()
                 }
                 showLoading(false)
                 swipe_layout_home_game.isRefreshing = false
@@ -196,7 +215,13 @@ class GamesHomeFragment : Fragment() {
                     if (data != null) {
                         listPopularGame.addAll(data)
                     }
+                    else{
+                        Toast.makeText(context,"Connection Fail for getting best seller apps", Toast.LENGTH_SHORT).show()
+                    }
                     popularGamesAdapter.notifyDataSetChanged()
+                }
+                else{
+                    Toast.makeText(context,"Connection Fail for getting best seller apps", Toast.LENGTH_SHORT).show()
                 }
                 showLoading(false)
                 swipe_layout_home_game.isRefreshing = false
@@ -209,7 +234,13 @@ class GamesHomeFragment : Fragment() {
                     if (data != null) {
                         listPopularGame.addAll(data)
                     }
+                    else{
+                        Toast.makeText(context,"Connection Fail for getting best seller apps", Toast.LENGTH_SHORT).show()
+                    }
                     popularGamesAdapter.notifyDataSetChanged()
+                }
+                else{
+                    Toast.makeText(context,"Connection Fail for getting best seller apps", Toast.LENGTH_SHORT).show()
                 }
                 showLoading(false)
                 swipe_layout_home_game.isRefreshing = false

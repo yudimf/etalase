@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +29,7 @@ import id.mjs.etalaseapp.model.response.AppDataResponse
 import id.mjs.etalaseapp.ui.download.DownloadActivity
 import id.mjs.etalaseapp.ui.listapp.ListAppActivity
 import id.mjs.etalaseapp.utils.Utils
+import kotlinx.android.synthetic.main.alert_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_home_apps.*
 
 
@@ -122,6 +125,9 @@ class AppsHomeFragment : Fragment() {
                     carouselView.pageCount = sampleImages.size
                     carouselView.setImageListener(imageListener)
                 }
+                else{
+                    Toast.makeText(context,"Connection Fail for getting ads", Toast.LENGTH_SHORT).show()
+                }
             }
         })
 
@@ -168,6 +174,9 @@ class AppsHomeFragment : Fragment() {
                     }
                     popularAppsAdapter.notifyDataSetChanged()
                 }
+                else{
+                    Toast.makeText(context,"Connection Fail for getting popular apps", Toast.LENGTH_SHORT).show()
+                }
                 showLoading(false)
                 swipe_layout_home_app.isRefreshing = false
             })
@@ -180,6 +189,9 @@ class AppsHomeFragment : Fragment() {
                         listPopularApp.addAll(data)
                     }
                     popularAppsAdapter.notifyDataSetChanged()
+                }
+                else{
+                    Toast.makeText(context,"Connection Fail for getting popular apps", Toast.LENGTH_SHORT).show()
                 }
                 showLoading(false)
                 swipe_layout_home_app.isRefreshing = false
@@ -199,6 +211,9 @@ class AppsHomeFragment : Fragment() {
                     }
                     bestSellerAppsAdapter.notifyDataSetChanged()
                 }
+                else{
+                    Toast.makeText(context,"Connection Fail for getting best seller apps", Toast.LENGTH_SHORT).show()
+                }
                 showLoading(false)
                 swipe_layout_home_app.isRefreshing = false
             })
@@ -211,6 +226,9 @@ class AppsHomeFragment : Fragment() {
                         listBestSellerApp.addAll(data)
                     }
                     bestSellerAppsAdapter.notifyDataSetChanged()
+                }
+                else{
+                    Toast.makeText(context,"Connection Fail for getting best seller apps", Toast.LENGTH_SHORT).show()
                 }
                 showLoading(false)
                 swipe_layout_home_app.isRefreshing = false

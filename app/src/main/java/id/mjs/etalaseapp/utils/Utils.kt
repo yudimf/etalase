@@ -32,6 +32,9 @@ object Utils {
     fun getItemType(url: String) : Int{
         return if (getExtension(url) == "mp4" || getExtension(url) == "MP4" ||
                     getExtension(url) == "m4A" || getExtension(url) == "M4A" ||
+                    getExtension(url) == "fm4A" || getExtension(url) == "FMP4" ||
+                    getExtension(url) == "webm" || getExtension(url) == "WEBM" ||
+                    getExtension(url) == "mp3" || getExtension(url) == "MP3" ||
                     getExtension(url) == "mkv" || getExtension(url) == "MKV" ||
                     getExtension(url) == "wav" || getExtension(url) == "WAV" ||
                     getExtension(url) == "flv" || getExtension(url) == "FLV"){
